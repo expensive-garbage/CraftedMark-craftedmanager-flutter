@@ -1,6 +1,8 @@
 
-import 'package:crafted_manager/contacts/contact_detail.dart';
+import 'package:crafted_manager/contacts/contact_detail_widget.dart';
+import 'package:crafted_manager/contacts/contact_lists.dart';
 import 'package:flutter/cupertino.dart';
+import 'main_menu.dart';
 import 'menu_item.dart';
 
 class MenuView extends StatefulWidget {

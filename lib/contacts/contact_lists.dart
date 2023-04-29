@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../postgres.dart';
 import 'contact_detail_widget.dart';
+import 'package:crafted_manager/postgres.dart';
 
-import 'contact_detail.dart';
+class ContactsList extends StatefulWidget {
+  const ContactsList({Key? key}) : super(key: key);
+
+  @override
+  ContactsListState createState() => ContactsListState();
+}
 
 class ContactsListState extends State<ContactsList> {
   List<Map<String, dynamic>>? _contacts;
@@ -35,12 +40,13 @@ class ContactsListState extends State<ContactsList> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => ContactDetail(
+                  builder: (context) => ContactDetailWidget(
                     id: contact['id'],
                     firstname: contact['firstname'],
                     lastname: contact['lastname'],
                     phone: contact['phone'],
                     email: contact['email'],
+                    brand: contact['brand'],
                     address1: contact['address1'],
                     address2: contact['address2'],
                     city: contact['city'],
@@ -50,9 +56,9 @@ class ContactsListState extends State<ContactsList> {
                     accountNumber: contact['accountnumber'],
                     type: contact['type'],
                     notes: contact['notes'],
-                    createdDate: contact['createddate'],
-                    createdBy: contact['createdby'],
-                    updatedDate: contact['updateddate'],
+                    createdDate: contact ['createddate'], // convert to string
+                    createdBy: contact ['createdby'],
+                    updatedDate: contact['updateddate'], // convert to string
                     updatedBy: contact['updatedby'],
                   ),
                 ),
@@ -70,7 +76,6 @@ class ContactsListState extends State<ContactsList> {
           );
         },
         separatorBuilder: (context, index) => const Divider(
-          color: CupertinoColors.systemGrey4,
           thickness: 0.5,
           height: 1,
         ),

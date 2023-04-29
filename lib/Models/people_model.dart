@@ -14,9 +14,9 @@ class People {
   final String? accountNumber;
   final String? type;
   final String? notes;
-  final DateTime createdDate;
+  final String createdDate;
   final String? createdBy;
-  final DateTime updatedDate;
+  final String updatedDate;
   final String? updatedBy;
 
   People({
@@ -58,9 +58,9 @@ class People {
       accountNumber: map['accountnumber'],
       type: map['type'],
       notes: map['notes'],
-      createdDate: DateTime.parse(map['createddate']),
+      createdDate: DateTime (map['createddate']),
       createdBy: map['createdby'],
-      updatedDate: DateTime.parse(map['updateddate']),
+      updatedDate: DateTime (map['updateddate']),
       updatedBy: map['updatedby'],
     );
   }
