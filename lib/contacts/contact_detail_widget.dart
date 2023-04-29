@@ -56,62 +56,89 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
         middle: Text('${widget.firstname} ${widget.lastname}'),
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildInfoRow('ID', '${widget.id}'),
-                _buildInfoRow('First Name', widget.firstname),
-                _buildInfoRow('Last Name', widget.lastname),
-                _buildInfoRow('Phone', widget.phone),
-                if (widget.email != null) _buildInfoRow('Email', widget.email!),
-                if (widget.brand != null) _buildInfoRow('Brand', widget.brand!),
-                if (widget.address1 != null) _buildInfoRow('Address 1', widget.address1!),
-                if (widget.address2 != null) _buildInfoRow('Address 2', widget.address2!),
-                if (widget.city != null) _buildInfoRow('City', widget.city!),
-                if (widget.state != null) _buildInfoRow('State', widget.state!),
-                if (widget.zip != null) _buildInfoRow('ZIP', widget.zip!),
-                if (widget.customerBasedPricing != null) _buildInfoRow('Customer-Based Pricing', widget.customerBasedPricing!.toString()),
-                if (widget.accountNumber != null) _buildInfoRow('Account Number', widget.accountNumber!),
-                if (widget.type != null) _buildInfoRow('Type', widget.type!),
-                if (widget.notes != null) _buildInfoRow('Notes', widget.notes!),
-                _buildInfoRow('Created Date', '${widget.createdDate}'),
-                _buildInfoRow('Created By', widget.createdBy),
-                _buildInfoRow('Updated Date', '${widget.updatedDate}'),
-                _buildInfoRow('Updated By', widget.updatedBy),
-              ],
+        child: ListView(
+          children: [
+            SizedBox(height: 24),
+            Text(
+              '${widget.firstname} ${widget.lastname}',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-          ),
+            SizedBox(height: 24),
+            _buildContactActionRow('Phone', widget.phone, Icon(CupertinoIcons.phone)),
+            SizedBox(height: 8),
+            _buildContactActionRow('Email', widget.email, Icon(CupertinoIcons.mail)),
+            SizedBox(height: 24),
+            _buildAddressSection(),
+            SizedBox(height: 24),
+            _buildDetailSection(),
+            SizedBox(height: 24),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildContactActionRow(String label, String value, Icon icon) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+          Row(
+            children: [
+              icon,
+              SizedBox(width: 12),
+              Text(label, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
           ),
-          Flexible(
-            child: Text(
-              value,
-              style: TextStyle(fontSize: 16),
-            ),
+          Text(
+            value,
+            style: TextStyle(fontSize: 18),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAddressSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text('Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(height: 8),
+        _buildInfoRow('${widget.address1}, ${widget.address2}, ${widget.city}, ${widget.state} ${widget.zip}'),
+      ],
+    );
+  }
+
+  Widget _buildDetailSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text('Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(height: 8),
+        _buildInfoRow('Brand: ${widget.brand}'),
+        _buildInfoRow('Account Number: ${widget.accountNumber}'),
+        _buildInfoRow('Type: ${widget.type}'),
+        _buildInfoRow('Customer-Based Pricing: ${widget.customerBasedPricing}'),
+        _buildInfoRow('Notes: ${widget.notes}'),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      child: Text(
+        value,
+        style: TextStyle(fontSize: 16),
       ),
     );
   }
