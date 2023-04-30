@@ -19,8 +19,20 @@ Future<List<Map<String, dynamic>>> fetchData(String tableName) async {
   final result = await connection.query('SELECT * FROM $tableName');
   await connection.close();
 
+  return result != null ? result.map((row) => row.toColumnMap()).toList() : [];
+}
+
+
+Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery, Map<String, dynamic> substitutionValues) async {
+  final connection = await connectToPostgres();
+  final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
+  await connection.close();
+
   return result.map((row) => row.toColumnMap()).toList();
 }
+
+
+
 
 Future<void> insertData(String tableName, Map<String, dynamic> data) async {
   final connection = await connectToPostgres();
@@ -49,14 +61,6 @@ Future<void> deleteData(String tableName, int id) async {
   final connection = await connectToPostgres();
   await connection.execute('DELETE FROM $tableName WHERE id = @id', substitutionValues: {'id': id});
   await connection.close();
-}
-
-Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery) async {
-  final connection = await connectToPostgres();
-  final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery');
-  await connection.close();
-
-  return result.map((row) => row.toColumnMap()).toList();
 }
 
 void main() async {

@@ -1,53 +1,37 @@
-import 'package:uuid/uuid.dart' show Uuid;
-
-class Product {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
+class Products {
+  final String productId;
+  final String productName;
   final String category;
-  final int stock;
-  final double costPerUnit;
-  final String size;
-  final String type;
+  final String description;
+  final String price;
+  final int stockQuantity;
+  final String supplierId;
+  final String manufacturerId;
+  final String itemSource;
 
-  Product({
-    String? id,
-    required this.name,
+  Products({
+    required this.productId,
+    required this.productName,
+    required this.category,
     required this.description,
     required this.price,
-    required this.category,
-    required this.stock,
-    required this.costPerUnit,
-    required this.size,
-    required this.type,
-  }) : id = id ?? const Uuid().v4();
+    required this.stockQuantity,
+    required this.supplierId,
+    required this.manufacturerId,
+    required this.itemSource,
+  });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      category: json['category'],
-      stock: json['stock'],
-      costPerUnit: json['costPerUnit'],
-      size: json['size'],
-      type: json['type'],
+  factory Products.fromJson(Map<String, dynamic> json) {
+    return Products(
+      productId: json['product_id'],
+      productName: json['product_name'] ?? '',
+      category: json['category'] ?? '',
+      description: json['description'] ?? '',
+      price: json['price'] ?? '',
+      stockQuantity: json['stock_quantity'] ?? 0,
+      supplierId: json['supplier_id'] ?? '',
+      manufacturerId: json['manufacturer_id'] ?? '',
+      itemSource: json['item_source'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'price': price,
-      'category': category,
-      'stock': stock,
-      'costPerUnit': costPerUnit,
-      'size': size,
-      'type': type,
-    };
   }
 }

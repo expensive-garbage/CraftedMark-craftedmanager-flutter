@@ -1,5 +1,7 @@
 
 import 'package:crafted_manager/contacts/contact_detail_widget.dart';
+import 'package:crafted_manager/Products/products.dart';
+import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/contacts/contact_lists.dart';
 import 'package:flutter/cupertino.dart';
 import 'main_menu.dart';
@@ -44,13 +46,19 @@ class MenuViewState extends State<MenuView> {
       MenuItem(title: "Suppliers", iconData: CupertinoIcons.car_fill),
       MenuItem(title: "Vendors", iconData: CupertinoIcons.building_2_fill),
     ]),
-    MenuItem(title: "Inventory", iconData: CupertinoIcons.cube_box_fill, subItems: [
-      MenuItem(title: "Ingredient Inventory", iconData: CupertinoIcons.clear_fill),
-      MenuItem(title: "Packaging Inventory", iconData: CupertinoIcons.shift_fill),
-    ]),
+    MenuItem(
+      title: "Products",
+      iconData: CupertinoIcons.cube_box_fill,
+      destination: ProductList(),
+      subItems: [
+        MenuItem(title: "Ingredient Inventory", iconData: CupertinoIcons.clear_fill),
+        MenuItem(title: "Packaging Inventory", iconData: CupertinoIcons.shift_fill),
+      ],
+    ),
     MenuItem(title: "Accounting", iconData: CupertinoIcons.chart_pie_fill),
     MenuItem(title: "Employee", iconData: CupertinoIcons.person_crop_circle),
   ];
+
 
   @override
   Widget build(BuildContext context) {
