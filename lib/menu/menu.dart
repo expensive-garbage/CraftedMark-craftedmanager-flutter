@@ -1,6 +1,5 @@
-
 import 'package:crafted_manager/contacts/contact_detail_widget.dart';
-import 'package:crafted_manager/Products/products.dart';
+import 'package:crafted_manager/Products/products.dart'; // Update the import path
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/contacts/contact_lists.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,6 @@ class MenuView extends StatefulWidget {
 }
 
 class MenuViewState extends State<MenuView> {
-
   @override
   void initState() {
     super.initState();
@@ -49,7 +47,7 @@ class MenuViewState extends State<MenuView> {
     MenuItem(
       title: "Products",
       iconData: CupertinoIcons.cube_box_fill,
-      destination: ProductList(),
+      destination: ProductList(), // Update this line
       subItems: [
         MenuItem(title: "Ingredient Inventory", iconData: CupertinoIcons.clear_fill),
         MenuItem(title: "Packaging Inventory", iconData: CupertinoIcons.shift_fill),
@@ -58,7 +56,6 @@ class MenuViewState extends State<MenuView> {
     MenuItem(title: "Accounting", iconData: CupertinoIcons.chart_pie_fill),
     MenuItem(title: "Employee", iconData: CupertinoIcons.person_crop_circle),
   ];
-
 
   @override
   Widget build(BuildContext context) {
