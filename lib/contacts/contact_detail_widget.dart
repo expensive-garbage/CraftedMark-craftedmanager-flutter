@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String id;
-  final String firstname;
-  final String lastname;
+  final String? firstname;
+  final String? lastname;
   final String phone;
   final String email;
   final String brand;
@@ -21,11 +21,11 @@ class ContactDetailWidget extends StatefulWidget {
   final DateTime? updatedDate;
   final String updatedBy;
 
-  ContactDetailWidget({
+  const ContactDetailWidget({
     Key? key,
     required this.id,
-    required this.firstname,
-    required this.lastname,
+    this.firstname,
+    this.lastname,
     required this.phone,
     required this.email,
     required this.brand,
@@ -47,7 +47,6 @@ class ContactDetailWidget extends StatefulWidget {
   @override
   _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
 }
-
 class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   bool _editing = false;
 
@@ -74,7 +73,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CupertinoFormSection(
-                  header: Text('Basic Information'),
+                  header: const Text('Basic Information'),
                   children: [
                     _buildFormRow('First Name', widget.firstname),
                     _buildFormRow('Last Name', widget.lastname),
@@ -83,7 +82,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                   ],
                 ),
                 CupertinoFormSection(
-                  header: Text('Address'),
+                  header: const Text('Address'),
                   children: [
                     _buildFormRow('Address 1', widget.address1),
                     _buildFormRow('Address 2', widget.address2),
@@ -93,7 +92,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                   ],
                 ),
                 CupertinoFormSection(
-                  header: Text('Additional Information'),
+                  header: const Text('Additional Information'),
                   children: [
                     _buildFormRow('Brand', widget.brand),
                     _buildFormRow('Account Number', widget.accountNumber),
@@ -109,14 +108,15 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
         ),
       ),
     );
-  } // Add closing brace here for the class _ContactDetailWidgetState
-  Widget _buildFormRow(String label, String value) {
+  }
+
+  Widget _buildFormRow(String label, String? value) {
     return CupertinoFormRow(
       prefix: SizedBox(
         width: 150,
         child: Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       child: _editing
@@ -124,7 +124,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
         initialValue: value,
         onChanged: (newValue) {},
       )
-          : Text(value),
+          : Text(value ?? 'N/A'),
     );
   }
 
@@ -134,19 +134,15 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
         width: 150,
         child: Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       child: _editing
           ? CupertinoSwitch(
         value: value,
-        onChanged: (newValue) {
-          setState(() {
-            value = newValue;
-          });
-        },
+        onChanged: (newValue) {},
       )
-          : (value ? Text('Yes') : Text('No')),
+          : Text(value ? 'Yes' : 'No'),
     );
   }
 }

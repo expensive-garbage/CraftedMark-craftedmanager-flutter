@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'menu/menu.dart'; // Import the ParentView widget
+import 'contacts/contact_lists.dart';
+import 'inventory/inventory_list.dart';
+import 'sales/orders.dart';
+import 'menu/menu.dart';
 
 void main() {
   runApp(const CraftedManager());
@@ -15,7 +18,7 @@ class CraftedManager extends StatelessWidget {
       theme: CupertinoThemeData(
         primaryColor: CupertinoColors.activeBlue,
       ),
-      home: MenuView(), // Use ParentView as the home widget
+      home: MenuView(),
     );
   }
 }

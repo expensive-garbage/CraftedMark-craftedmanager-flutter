@@ -1,37 +1,91 @@
-class Products {
-  final int productId;
-  final String productName;
-  final String category;
-  final String description;
-  final String price;
-  final double stockQuantity;
-  final String supplierId;
-  final String manufacturerId;
-  final String itemSource;
+class People {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String phone;
+  final String email;
+  final String brand;
+  final String? address1;
+  final String? address2;
+  final String? city;
+  final String? state;
+  final String? zip;
+  final bool customerBasedPricing;
+  final String? accountNumber;
+  final String type;
+  final String? notes;
+  final DateTime createdDate;
+  final String? createdBy;
+  final DateTime updatedDate;
+  final String? updatedBy;
 
-  Products({
-    required this.productId,
-    required this.productName,
-    required this.category,
-    required this.description,
-    required this.price,
-    required this.stockQuantity,
-    required this.supplierId,
-    required this.manufacturerId,
-    required this.itemSource,
+  People({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    required this.email,
+    required this.brand,
+    this.address1,
+    this.address2,
+    this.city,
+    this.state,
+    this.zip,
+    required this.customerBasedPricing,
+    this.accountNumber,
+    required this.type,
+    this.notes,
+    required this.createdDate,
+    required this.createdBy,
+    required this.updatedDate,
+    required this.updatedBy,
   });
-  print('Before fromJson');
-  factory Products.fromJson(Map<String, dynamic> json) {
-    print{'Parsing JSON data'};
-    return Products(
-      productId: json['product_id'],
-      productName: json['product_name'] ?? '', // use an empty string if the value is null
-      category: json['category'] ?? '',
-      description: json['description'] ?? '',
-      price: json['price'] ?? '',
-      stockQuantity: json['stock_quantity'] ?? 0,
-      supplierId: json['supplier_id'] ?? '',
-      manufacturerId: json['manufacturer_id'] ?? '',
-      itemSource: json['item_source'] ?? '';
+
+  factory People.fromJson(Map<String, dynamic> json) {
+    return People(
+      id: json['id'],
+      firstName: json['firstname'],
+      lastName: json['lastname'],
+      phone: json['phone'],
+      email: json['email'],
+      brand: json['brand'],
+      address1: json['address1'],
+      address2: json['address2'],
+      city: json['city'],
+      state: json['state'],
+      zip: json['zip'],
+      customerBasedPricing: json['customerbasedpricing'],
+      accountNumber: json['accountnumber'],
+      type: json['type'],
+      notes: json['notes'],
+      createdDate: DateTime.parse(json['createddate']),
+      createdBy: json['createdby'],
+      updatedDate: DateTime.parse(json['updateddate']),
+      updatedBy: json['updatedby'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstname': firstName,
+      'lastname': lastName,
+      'phone': phone,
+      'email': email,
+      'brand': brand,
+      'address1': address1,
+      'address2': address2,
+      'city': city,
+      'state': state,
+      'zip': zip,
+      'customerbasedpricing': customerBasedPricing,
+      'accountnumber': accountNumber,
+      'type': type,
+      'notes': notes,
+      'createddate': createdDate.toIso8601String(),
+      'createdby': createdBy,
+      'updateddate': updatedDate.toIso8601String(),
+      'updatedby': updatedBy,
+    };
+  }
+}

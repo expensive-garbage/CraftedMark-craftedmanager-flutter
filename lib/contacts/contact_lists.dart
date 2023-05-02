@@ -56,22 +56,24 @@ class ContactsListState extends State<ContactsList> {
                     accountNumber: contact['accountnumber'],
                     type: contact['type'],
                     notes: contact['notes'],
-                    createdDate: contact ['createddate'], // convert to string
-                    createdBy: contact ['createdby'],
+                    createdDate: contact['createddate'], // convert to string
+                    createdBy: contact['createdby'],
                     updatedDate: contact['updateddate'], // convert to string
                     updatedBy: contact['updatedby'],
                   ),
                 ),
               );
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${contact['firstname']} ${contact['lastname']}'),
-                if (contact.containsKey('brand'))
-                  Text(contact['brand']),
-                Text(contact['phone']),
-              ],
+            child: ListTile(
+              title: Text('${contact['firstname'] ?? ''} ${contact['lastname'] ?? ''}'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (contact.containsKey('brand'))
+                    Text(contact['brand'] ?? ''),
+                  Text(contact['phone'] ?? ''),
+                ],
+              ),
             ),
           );
         },

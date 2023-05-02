@@ -1,10 +1,8 @@
-import 'package:crafted_manager/contacts/contact_detail_widget.dart';
-import 'package:crafted_manager/Products/products.dart'; // Update the import path
-import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/contacts/contact_lists.dart';
+import 'package:crafted_manager/Products/product_page.dart'; // Update the import path
+import 'package:crafted_manager/contacts/contact_lists.dart' show ContactsList;
 import 'package:flutter/cupertino.dart';
-import 'main_menu.dart';
 import 'menu_item.dart';
+import 'package:crafted_manager/models/product_model.dart'; // Import the Product model
 
 class MenuView extends StatefulWidget {
   const MenuView({Key? key}) : super(key: key);
@@ -47,7 +45,7 @@ class MenuViewState extends State<MenuView> {
     MenuItem(
       title: "Products",
       iconData: CupertinoIcons.cube_box_fill,
-      destination: ProductList(), // Update this line
+      destination: ProductList(onProductTap: (Product product) {  }, products: []), // Update this line
       subItems: [
         MenuItem(title: "Ingredient Inventory", iconData: CupertinoIcons.clear_fill),
         MenuItem(title: "Packaging Inventory", iconData: CupertinoIcons.shift_fill),
