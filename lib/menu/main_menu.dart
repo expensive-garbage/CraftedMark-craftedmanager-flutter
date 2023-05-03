@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'menu_item_widget.dart';
-import 'menu_item.dart';
+import 'package:crafted_manager/Models/product_model.dart';
+import 'menu.dart';
+import 'package:crafted_manager/Products/postgres_product.dart';
 
 class MainMenu extends StatelessWidget {
-  final List<MenuItem> menuItems;
-  final Function(MenuItem) onMenuItemSelected;
+  final Function(Product) onMenuItemSelected;
 
   const MainMenu({
     Key? key,
-    required this.menuItems,
     required this.onMenuItemSelected,
   }) : super(key: key);
 
@@ -22,18 +22,35 @@ class MainMenu extends StatelessWidget {
       ),
       child: Builder(builder: (context) {
         return CupertinoScrollbar(
-          child: ListView.builder(
-            itemCount: menuItems.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = menuItems[index];
-
-              if (item.subItems.isEmpty) {
-                return MenuItemWidget(
-                  item: item,
-                  onTap: () => onMenuItemSelected(item),
-                );
+          child: FutureBuilder<List<Product>>(
+            future: ProductPostgres.getAllProducts(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
               } else {
-                return _buildCupertinoExpansionTile(context, item);
+                final products = snapshot.data;
+                if (products != null) {
+                  return ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final product = products[index];
+
+                      // Replace this with your custom product menu item widget
+                      return MenuItemWidget(
+                        item: MenuItem(
+                          title: product.name,
+                          description: product.description,
+                          iconData: Icons.arrow_right, // Add the IconData here
+                        ),
+                        onTap: () => onMenuItemSelected(product),
+                      );
+                    },
+                  );
+                } else {
+                  return Text('No products available');
+                }
               }
             },
           ),
@@ -41,81 +58,23 @@ class MainMenu extends StatelessWidget {
       }),
     );
   }
+}
 
-  Widget _buildCupertinoExpansionTile(BuildContext context, MenuItem item) {
-    return Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.blue,
-        ),
-      ),
-      child: Column(
-        children: [
-          CupertinoContextMenu(
-            actions: item.subItems
-                .map((subItem) => _buildContextMenuItem(context, subItem))
-                .toList(),
-            child: CupertinoButton(
-              onPressed: () {
-                item.isExpanded = !item.isExpanded;
-                if(item.isExpanded){
-                  HapticFeedback.mediumImpact();
-                } else {
-                  HapticFeedback.lightImpact();
-                }
-              },
-              padding: EdgeInsets.zero,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: MenuItemWidget(
-                      item: item,
-                      onTap: () => onMenuItemSelected(item),
-                    ),
-                  ),
-                  RotationTransition(
-                    turns: AlwaysStoppedAnimation(
-                      item.isExpanded ? 0.25 : 0,
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.chevron_down,
-                      color: CupertinoColors.secondaryLabel,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (item.isExpanded)
-            Column(
-              children: item.subItems
-                  .map((subItem) => MenuItemWidget(
-                item: subItem,
-                isSubItem: true,
-                onTap: () => onMenuItemSelected(subItem),
-              ))
-                  .toList(),
-            ),
-          Container(
-            height: 1,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: CupertinoColors.systemGrey4,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+class MenuItem {
+  final String title;
+  final IconData iconData;
+  final String? description;
+  bool _isExpanded;
 
-  Widget _buildContextMenuItem(BuildContext context, MenuItem item) {
-    return CupertinoContextMenuAction(
-      child: MenuItemWidget(item: item),
-      onPressed: () => onMenuItemSelected(item),
-    );
+  MenuItem({
+    required this.title,
+    required this.iconData,
+    this.description,
+    bool isExpanded = false,
+  }) : _isExpanded = isExpanded;
+
+  bool get isExpanded => _isExpanded;
+  set isExpanded(bool value) {
+    _isExpanded = value;
   }
 }

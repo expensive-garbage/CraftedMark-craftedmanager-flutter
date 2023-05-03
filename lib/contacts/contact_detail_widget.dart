@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String id;
@@ -47,6 +48,7 @@ class ContactDetailWidget extends StatefulWidget {
   @override
   _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
 }
+
 class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   bool _editing = false;
 
@@ -54,7 +56,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('${widget.firstname} ${widget.lastname}'),
+        middle: Text('${widget.firstname ?? ''} ${widget.lastname ?? ''}'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text(_editing ? 'Save' : 'Edit'),
@@ -109,7 +111,6 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       ),
     );
   }
-
   Widget _buildFormRow(String label, String? value) {
     return CupertinoFormRow(
       prefix: SizedBox(
@@ -121,12 +122,13 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       ),
       child: _editing
           ? CupertinoTextFormFieldRow(
-        initialValue: value,
+        initialValue: value ?? '',
         onChanged: (newValue) {},
       )
           : Text(value ?? 'N/A'),
     );
   }
+
 
   Widget _buildFormRowWithSwitch(String label, bool value) {
     return CupertinoFormRow(

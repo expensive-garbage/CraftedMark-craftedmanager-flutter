@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'menu_item.dart';
 
+import 'package:flutter/cupertino.dart';
+import 'menu_item.dart';
+
 class MenuItemWidget extends StatelessWidget {
   final MenuItem item;
   final bool isSubItem;
@@ -22,7 +25,7 @@ class MenuItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Row(
           children: [
-            Icon(_getIconData(item.iconData as String), color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white),
+            Icon(item.iconData, color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white), // Remove the cast
             const SizedBox(width: 16.0),
             Text(
               item.title,
@@ -32,7 +35,7 @@ class MenuItemWidget extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (item.subItems.isNotEmpty)
+            if (item.subItems?.isNotEmpty ?? false)
               RotationTransition(
                 turns: AlwaysStoppedAnimation(item.isExpanded ? 0.25 : 0),
                 child: Icon(CupertinoIcons.chevron_down, color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white),
@@ -41,16 +44,5 @@ class MenuItemWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  IconData _getIconData(String iconName) {
-    // Map your iconName to the corresponding IconData
-    switch (iconName) {
-      case 'speedometer':
-        return CupertinoIcons.speedometer;
-    // Add other iconName cases here
-      default:
-        return CupertinoIcons.question;
-    }
   }
 }
