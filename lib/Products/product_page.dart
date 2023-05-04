@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:crafted_manager/models/product_model.dart';
-import 'package:crafted_manager/Products/product_detail.dart';
 
 class ProductList extends StatelessWidget {
   final List<Product> products;

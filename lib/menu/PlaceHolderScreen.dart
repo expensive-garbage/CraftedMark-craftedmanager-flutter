@@ -14,7 +14,7 @@ class PlaceholderScreen extends StatelessWidget {
       child: Center(
         child: Text(
           'Placeholder for $title',
-          style: TextStyle(fontSize: 24),
+          style: const TextStyle(fontSize: 24),
         ),
       ),
     );

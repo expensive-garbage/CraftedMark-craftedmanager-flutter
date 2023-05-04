@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'menu.dart';
-import 'package:crafted_manager/Products/product_page.dart';
 
 class MenuItem {
   final String title;
@@ -9,7 +7,7 @@ class MenuItem {
   final Widget? destination;
   final List<MenuItem>? subItems;
   final List<Product>? products;
-  bool _isExpanded;
+  bool isExpanded;
 
   MenuItem({
     required this.title,
@@ -17,11 +15,6 @@ class MenuItem {
     this.destination,
     this.subItems,
     this.products,
-    bool isExpanded = false,
-  }) : _isExpanded = isExpanded;
-
-  bool get isExpanded => _isExpanded;
-  set isExpanded(bool value) {
-    _isExpanded = value;
-  }
+    this.isExpanded = false,
+  });
 }

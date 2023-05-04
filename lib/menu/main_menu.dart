@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'menu_item_widget.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'menu.dart';
+import 'package:crafted_manager/menu/menu_item.dart';
 import 'package:crafted_manager/Products/postgres_product.dart';
 
 class MainMenu extends StatelessWidget {
@@ -26,7 +25,7 @@ class MainMenu extends StatelessWidget {
             future: ProductPostgres.getAllProducts(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -49,7 +48,7 @@ class MainMenu extends StatelessWidget {
                     },
                   );
                 } else {
-                  return Text('No products available');
+                  return const Text('No products available');
                 }
               }
             },
@@ -57,24 +56,5 @@ class MainMenu extends StatelessWidget {
         );
       }),
     );
-  }
-}
-
-class MenuItem {
-  final String title;
-  final IconData iconData;
-  final String? description;
-  bool _isExpanded;
-
-  MenuItem({
-    required this.title,
-    required this.iconData,
-    this.description,
-    bool isExpanded = false,
-  }) : _isExpanded = isExpanded;
-
-  bool get isExpanded => _isExpanded;
-  set isExpanded(bool value) {
-    _isExpanded = value;
   }
 }

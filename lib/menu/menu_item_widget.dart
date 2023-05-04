@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'menu_item.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'menu_item.dart';
 
 class MenuItemWidget extends StatelessWidget {
   final MenuItem item;

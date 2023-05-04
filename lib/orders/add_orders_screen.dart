@@ -13,12 +13,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Add Order'),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Add Order'),
       ),
       child: SafeArea(
         child: ListView(
-          children: [
+          children: const [
             // Add the Client Information Section
             // Add the Shipping Information Section
             // Add the Order Details Section
