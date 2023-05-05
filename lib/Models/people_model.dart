@@ -54,7 +54,7 @@ class People {
       city: json['city'],
       state: json['state'],
       zip: json['zip'],
-      customerBasedPricing: json['customerbasedpricing'] == null ? null : json['customerbasedpricing'],
+      customerBasedPricing: json['customerbasedpricing'],
       accountNumber: json['accountnumber'],
       type: json['type'],
       notes: json['notes'],

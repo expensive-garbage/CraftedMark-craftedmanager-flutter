@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'menu/menu.dart';
-// Add the missing semicolon
-// Update the import path
+import 'package:crafted_manager/menu/main_menu.dart';
+import 'package:crafted_manager/Models/product_model.dart';
 
 void main() {
   runApp(const CraftedManager());
@@ -17,7 +16,11 @@ class CraftedManager extends StatelessWidget {
       theme: const CupertinoThemeData(
         primaryColor: CupertinoColors.activeBlue,
       ),
-      home: MenuView(),
+      home: MainMenu(
+        onMenuItemSelected: (Product product) {
+          // Handle menu item selection here
+        },
+      ),
     );
   }
 }

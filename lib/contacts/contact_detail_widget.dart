@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String id;
@@ -46,7 +45,7 @@ class ContactDetailWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
+  _ContactDetailWidgetState createState() => ContactDetailWidgetState();
 }
 
 class _ContactDetailWidgetState extends State<ContactDetailWidget> {

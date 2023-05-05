@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/foundation.dart';
 import 'package:postgres/postgres.dart';
 
@@ -35,6 +37,7 @@ Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQue
   final connection = await connectToPostgres();
   final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
   await connection.close();
+  // ignore: avoid_print
   print('Closed connection to PostgreSQL');
 
   if (kDebugMode) {

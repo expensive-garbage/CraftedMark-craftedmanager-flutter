@@ -1,5 +1,3 @@
-import 'package:crafted_manager/postgres.dart';
-import 'package:flutter/foundation.dart';
 import 'package:postgres/postgres.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 
@@ -14,12 +12,10 @@ class ProductPostgres {
 
   static Future<void> openConnection() async {
     await _connection.open();
-    print('Connected to PostgreSQL');
   }
 
   static Future<void> closeConnection() async {
     await _connection.close();
-    print('Closed connection to PostgreSQL');
   }
 
   static Future<List<Product>> getAllProducts() async {
@@ -54,7 +50,6 @@ class ProductPostgres {
       'quantitySold': product['quantitySold'],
       'quantityInStock': product['quantityInStock'],
     });
-    print('Added product to database: $product');
   }
 static Future<void> updateProduct(int id, Map<String, dynamic> updatedProduct) async {
   final result = await _connection.execute('UPDATE products SET name = @name, category = @category, sub_category = @subCategory, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @costOfGood, manufacturing_price = @manufacturingPrice, wholesale_price = @wholesalePrice, retail_price = @retailPrice, stock_quantity = @stockQuantity, backordered = @backordered, supplier_id = @supplierId, manufacturer_id = @manufacturerId, manufacturer_name = @manufacturerName, item_source = @itemSource, quantity_sold = @quantitySold, quantity_in_stock = @quantityInStock WHERE id = @id', substitutionValues: {
@@ -81,7 +76,6 @@ static Future<void> updateProduct(int id, Map<String, dynamic> updatedProduct) a
   if (result == 0) {
     throw Exception('Product with id $id not found');
   }
-  print('Updated product in database with id $id: $updatedProduct');
 }
 
 static Future<void> deleteProduct(String id) async {
@@ -89,6 +83,5 @@ static Future<void> deleteProduct(String id) async {
   if (result == 0) {
     throw Exception('Product with id $id not found');
   }
-  print('Deleted product from database with id $id');
 }
 }
