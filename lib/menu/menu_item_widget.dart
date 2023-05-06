@@ -1,46 +1,60 @@
 import 'package:flutter/cupertino.dart';
-import 'menu_item.dart';
+import 'package:flutter/material.dart';
+import 'package:crafted_manager/menu/menu_item.dart';
 
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/menu/menu_item_widget.dart';
+import 'package:crafted_manager/Products/postgres_product.dart';
 
-class MenuItemWidget extends StatelessWidget {
-  final MenuItem item;
-  final bool isSubItem;
-  final VoidCallback? onTap;
+class MainMenu extends StatelessWidget {
+  final Function(Product) onMenuItemSelected;
 
-  const MenuItemWidget({
+  const MainMenu({
     Key? key,
-    required this.item,
-    this.isSubItem = false,
-    this.onTap,
+    required this.onMenuItemSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        color: isSubItem ? CupertinoColors.systemGrey6 : CupertinoColors.activeBlue,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: Row(
-          children: [
-            Icon(item.iconData, color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white), // Remove the cast
-            const SizedBox(width: 16.0),
-            Text(
-              item.title,
-              style: TextStyle(
-                color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white,
-                fontSize: 16.0,
-              ),
-            ),
-            const Spacer(),
-            if (item.subItems?.isNotEmpty ?? false)
-              RotationTransition(
-                turns: AlwaysStoppedAnimation(item.isExpanded ? 0.25 : 0),
-                child: Icon(CupertinoIcons.chevron_down, color: isSubItem ? CupertinoColors.systemGrey : CupertinoColors.white),
-              ),
-          ],
-        ),
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Menu'),
       ),
+      child: Builder(builder: (context) {
+        return CupertinoScrollbar(
+          child: FutureBuilder<List<Product>>(
+            future: ProductPostgres.getAllProducts(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final products = snapshot.data;
+                if (products != null) {
+                  return ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final product = products[index];
+
+                      // Replace this with your custom product menu item widget
+                      return MenuItemWidget(
+                        item: MenuItem(
+                          title: product.name,
+                          iconData: Icons.arrow_right, // Add the IconData here
+                        ),
+                        onTap: () => onMenuItemSelected(product),
+                      );
+                    },
+                  );
+                } else {
+                  return const Text('No products available');
+                }
+              }
+            },
+          ),
+        );
+      }),
     );
   }
 }

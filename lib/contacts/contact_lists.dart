@@ -23,6 +23,7 @@ class ContactsListState extends State<ContactsList> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(

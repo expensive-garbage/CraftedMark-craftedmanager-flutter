@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:crafted_manager/menu/menu_item.dart';
 import 'menu_item_widget.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/menu/menu_item.dart';
+import 'package:crafted_manager/menu/menu.dart';
 import 'package:crafted_manager/Products/postgres_product.dart';
 
 class MainMenu extends StatelessWidget {
