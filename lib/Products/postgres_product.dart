@@ -1,4 +1,8 @@
 import 'package:postgres/postgres.dart';
+import 'package:async/async.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:core';
+import 'package:crafted_manager/postgres.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 
 class ProductPostgres {
@@ -23,57 +27,62 @@ class ProductPostgres {
     return results.map((row) => Product.fromMap(row.toColumnMap())).toList();
   }
 
-  static Future<List<Map<String, dynamic>>> searchProducts(String keyword) async {
-    final results = await _connection.query('SELECT * FROM products WHERE name ILIKE @keyword OR description ILIKE @keyword', substitutionValues: {'keyword': '%$keyword%'});
-    return results;
+  static Future<List<Map<String, dynamic>>> fetchAllOrders() async {
+    List<Map<String, dynamic>> orderList = [];
+
+    try {
+      var results = await _connection.query('SELECT * FROM orders');
+
+      for (var row in results) {
+        Map<String, dynamic> order = {
+          "order_id": row['order_id'],
+          "people_id": row['people_id'],
+          "order_date": row['order_date'],
+          "shipping_address": row['shipping_address'],
+          "billing_address": row['billing_address'],
+          "total_amount": row['total_amount'],
+          "order_status": row['order_status'],
+        };
+        orderList.add(order);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return orderList;
+  }
+
+  static Future<List<Map<String, dynamic>>> searchProducts(
+      String keyword) async {
+    final results = await _connection.query(
+        'SELECT * FROM products WHERE name ILIKE @keyword OR description ILIKE @keyword',
+        substitutionValues: {'keyword': '%$keyword%'});
+    return results.map((row) => row.toColumnMap()).toList();
   }
 
   static Future<void> addProduct(Map<String, dynamic> product) async {
-    await _connection.execute('INSERT INTO products (name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier_id, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@name, @category, @subCategory, @subcat2, @flavor, @description, @costOfGood, @manufacturingPrice, @wholesalePrice, @retailPrice, @stockQuantity, @backordered, @supplierId, @manufacturerId, @manufacturerName, @itemSource, @quantitySold, @quantityInStock)', substitutionValues: {
-      'name': product['name'],
-      'category': product['category'],
-      'subCategory': product['subCategory'],
-      'subcat2': product['subcat2'],
-      'flavor': product['flavor'],
-      'description': product['description'],
-      'costOfGood': product['costOfGood'],
-      'manufacturingPrice': product['manufacturingPrice'],
-      'wholesalePrice': product['wholesalePrice'],
-      'retailPrice': product['retailPrice'],
-      'stockQuantity': product['stockQuantity'],
-      'backordered': product['backordered'],
-      'supplierId': product['supplier'].id,
-      'manufacturerId': product['manufacturerId'],
-      'manufacturerName': product['manufacturerName'],
-      'itemSource': product['itemSource'],
-      'quantitySold': product['quantitySold'],
-      'quantityInStock': product['quantityInStock'],
-    });
+    await _connection.execute(
+        'INSERT INTO products (name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier_id, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@name, @category, @subCategory, @subcat2, @flavor, @description, @costOfGood, @manufacturingPrice, @wholesalePrice, @retailPrice, @stockQuantity, @backordered, @supplierId, @manufacturerId, @manufacturerName, @itemSource, @quantitySold, @quantityInStock)',
+        substitutionValues: {
+          'name': product['name'],
+          'category': product['category'],
+          'subCategory': product['subCategory'],
+          'subcat2': product['subcat2'],
+          'flavor': product['flavor'],
+          'description': product['description'],
+          'costOfGood': product['costOfGood'],
+          'manufacturingPrice': product['manufacturingPrice'],
+          'wholesalePrice': product['wholesalePrice'],
+          'retailPrice': product['retailPrice'],
+          'stockQuantity': product['stockQuantity'],
+          'backordered': product['backordered'],
+          'supplierId': int.parse(product['supplier'].id),
+          'manufacturerId': int.parse(product['manufacturerId']),
+          'manufacturerName': product['manufacturerName'],
+          'itemSource': product['itemSource'],
+          'quantitySold': product['quantitySold'],
+          'quantityInStock': product['quantityInStock'],
+        });
   }
 
-  sstatic Future<void> updateProduct(int id, Map<String, dynamic> updatedProduct) async {
-  final result = await _connection.execute('UPDATE products SET name = @name, category = @category, sub_category = @subCategory, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @costOfGood, manufacturing_price = @manufacturingPrice, wholesale_price = @wholesalePrice, retail_price = @retailPrice, stock_quantity = @stockQuantity, backordered = @backordered, supplier_id = @supplierId, manufacturer_id = @manufacturerId, manufacturer_name = @manufacturerName, item_source = @itemSource, quantity_sold = @quantitySold, quantity_in_stock = @quantityInStock WHERE id = @id', substitutionValues: {
-    'id': id,
-    'name': updatedProduct['name'],
-    'category': updatedProduct['category'],
-    'subCategory': updatedProduct['subCategory'],
-    'subcat2': updatedProduct['subcat2'],
-    'flavor': updatedProduct['flavor'],
-    'description': updatedProduct['description'],
-    'costOfGood': updatedProduct['costOfGood'],
-    'manufacturingPrice': updatedProduct['manufacturingPrice'],
-    'wholesalePrice': updatedProduct['wholesalePrice'],
-    'retailPrice': updatedProduct['retailPrice'],
-    'stockQuantity': updatedProduct['stockQuantity'],
-    'backordered': updatedProduct['backordered'],
-    'supplierId': updatedProduct['supplier'].id,
-    'manufacturerId': updatedProduct['manufacturerId'],
-    'manufacturerName': updatedProduct['manufacturerName'],
-    'itemSource': updatedProduct['itemSource'],
-    'quantitySold': updatedProduct['quantitySold'],
-    'quantityInStock': updatedProduct['quantityInStock'],
-  });
-  if (result == 0) {
-    throw Exception('Product with id $id not found');
-  }
 }

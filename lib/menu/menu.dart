@@ -1,12 +1,40 @@
-import 'package:crafted_manager/Models/product_model.dart';
-import '../Products/postgres_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'menu_item.dart';
-import 'menu_item_widget.dart';
+import 'package:crafted_manager/menu/menu_item.dart';
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/menu/menu_item_widget.dart';
+import 'package:crafted_manager/Products/postgres_product.dart';
+
+class MainMenuWidget extends StatelessWidget {
+  final String title;
+  final IconData iconData;
+  final VoidCallback onTap;
+
+  const MainMenuWidget({
+    Key? key,
+    required this.title,
+    required this.iconData,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(iconData),
+      title: Text(title),
+      onTap: onTap,
+    );
+  }
+}
+
 
 class MainMenu extends StatelessWidget {
-  const MainMenu({Key? key}) : super(key: key);
+  final Function(Product) onMenuItemSelected;
+
+  const MainMenu({
+    Key? key,
+    required this.onMenuItemSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +52,24 @@ class MainMenu extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                final products = snapshot.data!;
-                return ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final product = products[index];
+                final products = snapshot.data;
+                if (products != null) {
+                  return ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final product = products[index];
 
-                    return MenuItemWidget(
-                      item: MenuItem(
+                      // Replace this with your custom product menu item widget
+                      return MainMenuWidget(
                         title: product.name,
-                        iconData: Icons.restaurant,
-                      ),
-                      onTap: () {
-                        // Handle menu item selection
-                      },
-                    );
-                  },
-                );
+                        iconData: Icons.arrow_right, // Add the IconData here
+                        onTap: () => onMenuItemSelected(product),
+                      );
+                    },
+                  );
+                } else {
+                  return const Text('No products available');
+                }
               }
             },
           ),

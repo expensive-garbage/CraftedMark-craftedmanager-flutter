@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:crafted_manager/menu/menu_item.dart';
 import 'menu_item_widget.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/menu/menu.dart';
 import 'package:crafted_manager/Products/postgres_product.dart';
 
 class MainMenu extends StatelessWidget {
@@ -38,10 +37,9 @@ class MainMenu extends StatelessWidget {
                       final product = products[index];
 
                       // Replace this with your custom product menu item widget
-                      return MenuItemWidget(
+                      return MainMenuWidget(
                         item: MenuItem(
                           title: product.name,
-                          description: product.description,
                           iconData: Icons.arrow_right, // Add the IconData here
                         ),
                         onTap: () => onMenuItemSelected(product),

@@ -14,6 +14,7 @@ dependencies:
   uuid: ^3.0.5
   postgres: ^2.4.0
   isolate_bloc: ^2.1.1
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:

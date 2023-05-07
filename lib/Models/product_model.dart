@@ -1,32 +1,9 @@
+import 'people_model.dart';
 
-class People {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String type;
-
-  People({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.type,
-  });
-
-  factory People.fromMap(Map<String, dynamic> map) {
-    return People(
-      id: map['id'],
-      firstName: map['first_name'],
-      lastName: map['last_name'],
-      type: map['type'],
-    );
-  }
-
-  String get fullName => '$firstName $lastName';
-}
 
 
 class Product {
-  final String id;
+  final int id; // Change the data type to int
   final String name;
   final String category;
   final String subCategory;
@@ -36,11 +13,11 @@ class Product {
   final double costOfGood;
   final double manufacturingPrice;
   final double wholesalePrice;
-  final String retailPrice;
+  final double retailPrice; // Change the data type to double
   final int stockQuantity;
   final bool backordered;
   final People supplier;
-  final String manufacturerId;
+  final int manufacturerId; // Change the data type to int
   final String manufacturerName;
   final String itemSource;
   final int quantitySold;
