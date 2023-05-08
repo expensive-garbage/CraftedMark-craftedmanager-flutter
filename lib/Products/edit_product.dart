@@ -3,7 +3,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:crafted_manager/Models/product_model.dart';
 // import 'package:crafted_manager/Models/people_model.dart';
-// import 'package:crafted_manager/Products/postgres_product.dart';
+// import 'package:crafted_manager/Products/product_db_manager.dart';
 // import 'package:crafted_manager/postgres.dart';
 //
 // class EditProductPage extends StatefulWidget {

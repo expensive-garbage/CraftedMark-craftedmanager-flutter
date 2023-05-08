@@ -1,9 +1,29 @@
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:crafted_manager/menu/menu_item.dart';
-import 'menu_item_widget.dart';
-import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/Products/postgres_product.dart';
+
+class MainMenuWidget extends StatelessWidget {
+  final String title;
+  final IconData iconData;
+  final VoidCallback onTap;
+
+  const MainMenuWidget({
+    Key? key,
+    required this.title,
+    required this.iconData,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(iconData),
+      title: Text(title),
+      onTap: onTap,
+    );
+  }
+}
 
 class MainMenu extends StatelessWidget {
   final Function(Product) onMenuItemSelected;
@@ -38,10 +58,8 @@ class MainMenu extends StatelessWidget {
 
                       // Replace this with your custom product menu item widget
                       return MainMenuWidget(
-                        item: MenuItem(
-                          title: product.name,
-                          iconData: Icons.arrow_right, // Add the IconData here
-                        ),
+                        title: product.name,
+                        iconData: Icons.arrow_right, // Add the IconData here
                         onTap: () => onMenuItemSelected(product),
                       );
                     },
