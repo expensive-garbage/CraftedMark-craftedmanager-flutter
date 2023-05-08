@@ -1,6 +1,5 @@
 import 'package:crafted_manager/postgres.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:crafted_manager/orders/database_functions.dart';
 import 'package:crafted_manager/orders/order_detail_widget.dart';
 import 'package:crafted_manager/orders/create_order.dart'; // Add this line
 
@@ -50,7 +49,7 @@ class _OrdersListState extends State<OrdersList> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => CreateOrder(),
+                builder: (context) => CreateOrderScreen(),
               ),
             );
           },
