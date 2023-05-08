@@ -1,9 +1,7 @@
 import 'package:postgres/postgres.dart';
-import 'package:async/async.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:core';
-import 'package:crafted_manager/postgres.dart';
 import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/utils.dart';
 
 class ProductPostgres {
   static final _connection = PostgreSQLConnection(
@@ -32,15 +30,15 @@ class ProductPostgres {
 
     try {
       var results = await _connection.query('SELECT * FROM orders');
-        for (var row in results) {
+        for (PostgreSQLResultRow row in results) {
           Map<String, dynamic> order = {
-            "order_id": row['order_id'],
-            "people_id": row['people_id'],
-            "order_date": row['order_date'],
-            "shipping_address": row['shipping_address'],
-            "billing_address": row['billing_address'],
-            "total_amount": row['total_amount'],
-            "order_status": row['order_status'],
+            "order_id": row.get(columnName: 'order_id'),
+            "people_id": row.get(columnName: 'people_id'),
+            "order_date": row.get(columnName: 'order_date'),
+            "shipping_address": row.get(columnName: 'shipping_address'),
+            "billing_address": row.get(columnName: 'billing_address'),
+            "total_amount": row.get(columnName: 'total_amount'),
+            "order_status": row.get(columnName: 'order_status'),
           };
           orderList.add(order);
         }
@@ -82,5 +80,4 @@ class ProductPostgres {
             'quantityInStock': product['quantityInStock'],
           });
     }
-  }
 }
