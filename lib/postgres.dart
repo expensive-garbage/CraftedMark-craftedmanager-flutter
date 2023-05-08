@@ -33,15 +33,19 @@ Future<List<Map<String, dynamic>>> fetchData(String tableName) async {
 }
 
 // Searches for data in the specified table using the provided search query and substitution values
-Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery, Map<String, dynamic> substitutionValues) async {
+Future<List<Map<String, dynamic>>> searchData(String tableName,
+    String searchQuery, Map<String, dynamic> substitutionValues) async {
   final connection = await connectToPostgres();
-  final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
+  final result = await connection.query(
+      'SELECT * FROM $tableName WHERE $searchQuery',
+      substitutionValues: substitutionValues);
   await connection.close();
   // ignore: avoid_print
   print('Closed connection to PostgreSQL');
 
   if (kDebugMode) {
-    print('Searched $tableName data with query: $searchQuery and substitution values: $substitutionValues. Result: $result');
+    print(
+        'Searched $tableName data with query: $searchQuery and substitution values: $substitutionValues. Result: $result');
   }
 
   return result.map((row) => row.toColumnMap()).toList();
@@ -66,7 +70,8 @@ Future<void> insertData(String tableName, Map<String, dynamic> data) async {
 }
 
 // Updates data in the specified table with the provided updated data
-Future<void> updateData(String tableName, int id, Map<String, dynamic> updatedData) async {
+Future<void> updateData(
+    String tableName, int id, Map<String, dynamic> updatedData) async {
   final connection = await connectToPostgres();
   final updates = updatedData.keys.map((key) => '$key = @$key').join(', ');
 
@@ -85,7 +90,8 @@ Future<void> updateData(String tableName, int id, Map<String, dynamic> updatedDa
 // Deletes data from the specified table with the provided id
 Future<void> deleteData(String tableName, int id) async {
   final connection = await connectToPostgres();
-  await connection.execute('DELETE FROM $tableName WHERE id = @id', substitutionValues: {'id': id});
+  await connection.execute('DELETE FROM $tableName WHERE id = @id',
+      substitutionValues: {'id': id});
   await connection.close();
   print('Closed connection to PostgreSQL');
 
@@ -94,6 +100,32 @@ Future<void> deleteData(String tableName, int id) async {
   }
 }
 
+// Fetches all data from the specified table
+Future<List<Map<String, dynamic>>> getAll(String tableName) async {
+  return fetchData(tableName);
+}
+
+// Searches for data in the specified table using the provided search query and substitution values
+Future<List<Map<String, dynamic>>> search(String tableName, String searchQuery,
+    Map<String, dynamic> substitutionValues) async {
+  return searchData(tableName, searchQuery, substitutionValues);
+}
+
+// Inserts data into the specified table
+Future<void> add(String tableName, Map<String, dynamic> data) async {
+  await insertData(tableName, data);
+}
+
+// Updates data in the specified table with the provided updated data
+Future<void> update(
+    String tableName, int id, Map<String, dynamic> updatedData) async {
+  await updateData(tableName, id, updatedData);
+}
+
+// Deletes data from the specified table with the provided id
+Future<void> delete(String tableName, int id) async {
+  await deleteData(tableName, id);
+}
 // // Searches for data in the specified table using the provided search query and substitution values
 // Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery, Map<String, dynamic> substitutionValues) async {
 //   final connection = await connectToPostgres();
@@ -106,7 +138,6 @@ Future<void> deleteData(String tableName, int id) async {
 //
 //   return result.map((row) => row.toColumnMap()).toList();
 // }
-
 
 // void main() async {
 //   // Example usage

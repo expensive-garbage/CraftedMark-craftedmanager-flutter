@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:crafted_manager/orders/database_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:crafted_manager/orders/database_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseScreen extends StatefulWidget {
@@ -42,21 +42,21 @@ class _DatabaseScreenState extends State<DatabaseScreen> {
         child: _schemas.isEmpty
             ? const Center(child: CupertinoActivityIndicator())
             : ListView.builder(
-          itemCount: _schemas.length,
-          itemBuilder: (BuildContext context, int index) {
-            final tableName = _schemas.keys.elementAt(index);
-            final columns = _schemas[tableName]!;
-            return ExpansionTile(
-              title: Text(tableName),
-              children: columns.map((column) {
-                return ListTile(
-                  title: Text(column['column_name'].toString()),
-                  subtitle: Text(column['data_type'].toString()),
-                );
-              }).toList(),
-            );
-          },
-        ),
+                itemCount: _schemas.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final tableName = _schemas.keys.elementAt(index);
+                  final columns = _schemas[tableName]!;
+                  return ExpansionTile(
+                    title: Text(tableName),
+                    children: columns.map((column) {
+                      return ListTile(
+                        title: Text(column['column_name'].toString()),
+                        subtitle: Text(column['data_type'].toString()),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
       ),
     );
   }

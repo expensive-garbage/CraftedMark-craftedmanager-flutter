@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:crafted_manager/models/people_model.dart';
+import 'package:crafted_manager/contact_list.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String id;
@@ -110,6 +112,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       ),
     );
   }
+
   Widget _buildFormRow(String label, String? value) {
     return CupertinoFormRow(
       prefix: SizedBox(
@@ -121,13 +124,12 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       ),
       child: _editing
           ? CupertinoTextFormFieldRow(
-        initialValue: value ?? '',
-        onChanged: (newValue) {},
-      )
+              initialValue: value ?? '',
+              onChanged: (newValue) {},
+            )
           : Text(value ?? 'N/A'),
     );
   }
-
 
   Widget _buildFormRowWithSwitch(String label, bool value) {
     return CupertinoFormRow(
@@ -140,9 +142,9 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       ),
       child: _editing
           ? CupertinoSwitch(
-        value: value,
-        onChanged: (newValue) {},
-      )
+              value: value,
+              onChanged: (newValue) {},
+            )
           : Text(value ? 'Yes' : 'No'),
     );
   }

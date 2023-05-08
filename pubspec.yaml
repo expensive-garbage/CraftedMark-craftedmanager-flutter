@@ -10,16 +10,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  uuid: ^3.0.5
-  postgres: ^2.4.0
+  cupertino_icons: ^1.0.5
+  uuid: ^3.0.7
+  postgres: ^2.6.1
   isolate_bloc: ^2.1.1
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.1.0
+  path_provider: ^2.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true
