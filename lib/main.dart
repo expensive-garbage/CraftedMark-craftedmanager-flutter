@@ -1,10 +1,5 @@
-import 'dart:convert';
-
-import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/menu/menu.dart';
-import 'package:crafted_manager/orders/database_functions.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding
@@ -27,7 +22,10 @@ class CraftedManager extends StatelessWidget {
         primaryColor: CupertinoColors.activeBlue,
       ),
       home: MenuView(
-      ),
+          //onMenuItemSelected: (Product product) {
+          // Handle menu item selection here
+          // },
+          ),
     );
   }
 }

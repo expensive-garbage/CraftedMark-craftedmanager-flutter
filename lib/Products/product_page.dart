@@ -1,11 +1,45 @@
+import 'package:crafted_manager/Models/product_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:crafted_manager/models/product_model.dart';
 
-class ProductList extends StatelessWidget {
-  final List<Product> products;
-  final Function(Product) onProductTap;
+import 'product_db_manager.dart';
 
-  const ProductList({required this.products, required this.onProductTap});
+class ProductList extends StatefulWidget {
+  final void Function(Product product) onProductTap;
+
+  const ProductList({
+    Key? key,
+    required this.onProductTap,
+  }) : super(key: key);
+
+  @override
+  ProductListState createState() => ProductListState();
+}
+
+class ProductListState extends State<ProductList> {
+  List<Product> products = [];
+
+  void onProductTap(Product product) {
+    widget.onProductTap(product);
+  }
+
+  @override
+  initState() {
+    super.initState();
+    initStateAsync();
+  }
+
+  Future<void> initStateAsync() async {
+    await ProductPostgres.openConnection();
+    final p = await ProductPostgres.getAllProducts();
+    setState(() {
+      products = p;
+    });
+  }
+
+  dispose() {
+    ProductPostgres.closeConnection();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +80,8 @@ class ProductList extends StatelessWidget {
                   ),
                 ],
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: CupertinoColors.systemGrey6,

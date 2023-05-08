@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:crafted_manager/orders/database_functions.dart';
-import 'package:crafted_manager/orders/order_detail_widget.dart';
 import 'package:crafted_manager/orders/create_order.dart'; // Add this line
-
+import 'package:crafted_manager/orders/order_detail_widget.dart';
+import 'package:flutter/cupertino.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({Key? key, required String title}) : super(key: key);
@@ -52,7 +50,7 @@ class _OrdersListState extends State<OrdersList> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => CreateOrder(),
+                builder: (context) => CreateOrderScreen(),
               ),
             );
           },
@@ -62,7 +60,6 @@ class _OrdersListState extends State<OrdersList> {
           ),
         ),
       ),
-
       child: SafeArea(
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: fetchAllOrders(),
@@ -82,7 +79,8 @@ class _OrdersListState extends State<OrdersList> {
                       ),
                     ),
                     child: CupertinoListTile(
-                      title: Text('${people['firstname'] ?? ''} ${people['lastname'] ?? ''}'),
+                      title: Text(
+                          '${people['firstname'] ?? ''} ${people['lastname'] ?? ''}'),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -93,7 +91,8 @@ class _OrdersListState extends State<OrdersList> {
                         Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => OrderDetails(orderId: order['orders']['order_id']),
+                            builder: (context) => OrderDetails(
+                                orderId: order['orders']['order_id']),
                           ),
                         );
                       },
@@ -140,7 +139,8 @@ class _OrderDetailState extends State<OrderDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Name: ${widget.order['firstname']} ${widget.order['lastname']}'),
+              Text(
+                  'Name: ${widget.order['firstname']} ${widget.order['lastname']}'),
               Text('Total Amount: \$${widget.order['total_amount']}'),
               // Add other order details here
             ],
