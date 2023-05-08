@@ -1,29 +1,11 @@
-
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Products/product_db_manager.dart';
+import 'package:crafted_manager/menu/menu_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:crafted_manager/menu/menu_item.dart';
-import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/Products/postgres_product.dart';
 
-class MainMenuWidget extends StatelessWidget {
-  final MenuItem item;
-  final VoidCallback onTap;
+import 'menu_item_widget.dart';
 
-  const MainMenuWidget({
-    Key? key,
-    required this.item,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(item.iconData),
-      title: Text(item.title),
-      onTap: onTap,
-    );
-  }
-}
 class MainMenu extends StatelessWidget {
   final Function(Product) onMenuItemSelected;
 
