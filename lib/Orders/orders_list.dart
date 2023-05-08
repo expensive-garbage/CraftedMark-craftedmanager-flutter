@@ -1,3 +1,4 @@
+import 'package:crafted_manager/postgres.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:crafted_manager/orders/database_functions.dart';
 import 'package:crafted_manager/orders/order_detail_widget.dart';
@@ -22,10 +23,9 @@ class _OrdersListState extends State<OrdersList> {
 
   Future<List<Map<String, dynamic>>> fetchAllOrders() async {
     print('Connecting to PostgreSQL...');
-    final conn = await connectToPostgres();
     try {
       print('Connected! Fetching orders...');
-      final orders = await conn.mappedResultsQuery("""
+      final orders = await postgre.mappedResultsQuery("""
       SELECT o.order_id, p.firstname AS firstname, p.lastname AS lastname, o.total_amount AS total_amount
       FROM orders o
       JOIN people p ON o.people_id = p.id
@@ -36,8 +36,6 @@ class _OrdersListState extends State<OrdersList> {
     } catch (e) {
       print('Error fetching orders: $e');
       return [];
-    } finally {
-      await conn.close();
     }
   }
 

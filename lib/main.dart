@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/menu/main_menu.dart';
 import 'package:crafted_manager/orders/database_functions.dart';
+import 'package:crafted_manager/postgres.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // This line is required for async operations in main.
-
+  await initConnection();
   await fetchAndStoreAllSchemas();
   await _loadAllSchemas();
 

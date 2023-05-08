@@ -4,21 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:crafted_manager/postgres.dart';
 import 'package:postgres/postgres.dart';
 
-// Establishes a connection to the PostgreSQL database
-Future<PostgreSQLConnection> connectToPostgres() async {
-  final connection = PostgreSQLConnection(
-    'localhost', // Database host
-    5432, // Port number
-    'craftedmanager_db', // Database name
-    username: 'craftedmanager_dbuser', // Database username
-    password: '!!Laganga1983', // Database password
-  );
-
-  await connection.open();
-  print('Connected to PostgreSQL');
-  return connection;
-}
-
 class CreateOrderScreen extends StatefulWidget {
   @override
   _CreateOrderScreenState createState() => _CreateOrderScreenState();
@@ -35,11 +20,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   }
 
   Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery, Map<String, dynamic> substitutionValues) async {
-    final connection = await connectToPostgres();
-    final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
-    await connection.close();
-    // ignore: avoid_print
-    print('Closed connection to PostgreSQL');
+    final result = await postgre.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
 
     if (kDebugMode) {
       print('Searched $tableName data with query: $searchQuery and substitution values: $substitutionValues. Result: $result');

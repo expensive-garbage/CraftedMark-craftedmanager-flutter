@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:crafted_manager/models/people_model.dart';
-import 'package:crafted_manager/contact_list.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final String id;
@@ -47,7 +45,7 @@ class ContactDetailWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ContactDetailWidgetState createState() => ContactDetailWidgetState();
+  _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
 }
 
 class _ContactDetailWidgetState extends State<ContactDetailWidget> {
