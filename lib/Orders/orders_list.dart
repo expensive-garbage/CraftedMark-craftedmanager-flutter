@@ -71,7 +71,10 @@ class _OrdersListState extends State<OrdersList> {
                     child: GestureDetector(
                       onTap: () async {
                         // Fetch customer and orderedItems data here
-                        People customer = await fetchCustomer(order.customerId);
+                        final customer = await fetchCustomer(order.customerId);
+                        if (customer == null) {
+                          return;
+                        }
                         List<OrderedItem> orderedItems =
                             await fetchOrderedItems(order.id);
 
