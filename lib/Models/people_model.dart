@@ -41,6 +41,28 @@ class People {
     this.updatedBy,
   });
 
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'firstname': firstName,
+    'lastname': lastName,
+    'phone': phone,
+    'email': email,
+    'brand': brand,
+    'address1': address1,
+    'address2': address2,
+    'city': city,
+    'state': state,
+    'zip': zip,
+    'customerbasedpricing': customerBasedPricing,
+    'accountnumber': accountNumber,
+    'type': type,
+    'notes': notes,
+    'createddate': createdDate,
+    'created_by': createdBy,
+    'updateddate': updatedDate,
+    'updated_by': updatedBy,
+  };
+
   factory People.fromMap(Map<String, dynamic> map) {
     // Renamed from 'fromJson' to 'fromMap'
     return People(

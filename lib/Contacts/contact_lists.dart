@@ -1,3 +1,4 @@
+import 'package:crafted_manager/Contacts/people_postgres.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Models/people_model.dart';
@@ -32,7 +33,7 @@ class ContactsListState extends State<ContactsList> {
       ),
     );
     if (updatedContact is People) {
-      // TODO: upload updated contact to datbase
+      PeoplePostgres.updateCustomer(updatedContact);
       final index = _contacts?.indexWhere((e) => e.id == updatedContact.id);
       if (index != null && index > 0) {
         setState(() {

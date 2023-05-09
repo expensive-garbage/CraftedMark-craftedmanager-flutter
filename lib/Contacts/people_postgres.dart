@@ -14,4 +14,20 @@ class PeoplePostgres {
         ? People.fromMap(result.first.toColumnMap())
         : null;
   }
+  static Future<void> updateCustomer(People customer) async {
+    final connection = await connectToPostgres();
+    final map = customer.toMap();
+    final values = <String>[];
+    map.forEach((key, value) {
+      if (key != "created_by" && key != "updated_by") {
+        values.add("$key = '$value'");
+      }
+    });
+    final allValues = values.join(",\n");
+    await connection.execute(
+      "UPDATE people SET $allValues WHERE id = @customerId",
+      substitutionValues: {'customerId': customer.id}
+    );
+    await connection.close();
+  }
 }
