@@ -4,7 +4,7 @@ import 'package:postgres/postgres.dart';
 
 class OrderPostgres {
   static final _connection = PostgreSQLConnection(
-    'localhost', // Database host
+    'web.craftedsolutions.co', // Database host
     5432, // Port number
     'craftedmanager_db', // Database name
     username: 'craftedmanager_dbuser', // Database username

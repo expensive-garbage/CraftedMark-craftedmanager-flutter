@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Establishes a connection to the PostgreSQL database
 Future<PostgreSQLConnection> connectToPostgres() async {
   final connection = PostgreSQLConnection(
-    'localhost', // Database host
+    'web.craftedsolutions.co', // Database host
     5432, // Port number
     'craftedmanager_db', // Database name
     username: 'craftedmanager_dbuser', // Database username
