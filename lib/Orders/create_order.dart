@@ -77,7 +77,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          person['name'],
+                          person['firstname'] + person['lastname'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
