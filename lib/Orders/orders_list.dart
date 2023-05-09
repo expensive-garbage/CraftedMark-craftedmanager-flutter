@@ -22,7 +22,7 @@ class _OrdersListState extends State<OrdersList> {
     super.initState();
   }
 
-  Future<People?> fetchCustomer(int customerId) async {
+  Future<People?> fetchCustomer(String customerId) async {
     return await PeoplePostgres.fetchCustomer(customerId);
   }
 
