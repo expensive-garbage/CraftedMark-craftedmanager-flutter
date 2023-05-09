@@ -1,5 +1,5 @@
 class People {
-  final int id;
+  final String id;
   final String firstName;
   final String lastName;
   final String phone;
@@ -59,16 +59,14 @@ class People {
       accountNumber: map['accountnumber'],
       type: map['type'],
       notes: map['notes'],
-      createdDate: map['createddate'] == null ? null : DateTime.parse(
-          map['createddate']),
+      createdDate: map['createddate'],
       createdBy: map['created_by'] ?? 'Unknown',
-      updatedDate: map['updateddate'] == null ? null : DateTime.parse(
-          map['updateddate']),
+      updatedDate: map['updateddate'],
       updatedBy: map['updated_by'] ?? 'Unknown',
     );
   }
   People copyWith({
-    int? id,
+    String? id,
     String? firstName,
     String? lastName,
     String? phone,

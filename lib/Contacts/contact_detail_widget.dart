@@ -1,69 +1,39 @@
 import 'package:flutter/cupertino.dart';
-import 'contact_lists.dart';
+import '../Models/people_model.dart';
 
 class ContactDetailWidget extends StatefulWidget {
-  final String id;
-  final String? firstname;
-  final String? lastname;
-  final String phone;
-  final String email;
-  final String brand;
-  final String address1;
-  final String address2;
-  final String city;
-  final String state;
-  final String zip;
-  final bool customerBasedPricing;
-  final String accountNumber;
-  final String type;
-  final String notes;
-  final DateTime? createdDate;
-  final String createdBy;
-  final DateTime? updatedDate;
-  final String updatedBy;
+  final People initialValue;
 
-  const ContactDetailWidget({
-    Key? key,
-    required this.id,
-    this.firstname,
-    this.lastname,
-    required this.phone,
-    required this.email,
-    required this.brand,
-    required this.address1,
-    required this.address2,
-    required this.city,
-    required this.state,
-    required this.zip,
-    required this.customerBasedPricing,
-    required this.accountNumber,
-    required this.type,
-    required this.notes,
-    required this.createdDate,
-    required this.createdBy,
-    required this.updatedDate,
-    required this.updatedBy,
-  }) : super(key: key);
+  const ContactDetailWidget(this.initialValue, {Key? key,}) : super(key: key);
 
   @override
-  _ContactDetailWidgetState createState() => _ContactDetailWidgetState();
+  State<ContactDetailWidget> createState() => _ContactDetailWidgetState();
 }
 
 class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   bool _editing = false;
+  late People value;
+
+  @override
+  void initState() {
+    value = widget.initialValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('${widget.firstname ?? ''} ${widget.lastname ?? ''}'),
+        middle: Text('${value.firstName} ${value.lastName}'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text(_editing ? 'Save' : 'Edit'),
           onPressed: () {
-            setState(() {
-              _editing = !_editing;
-            });
+            if (!_editing) {
+              setState(() => _editing = true);
+            } else {
+              Navigator.of(context).pop(value);
+            }
           },
         ),
       ),
@@ -77,31 +47,31 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                 CupertinoFormSection(
                   header: const Text('Basic Information'),
                   children: [
-                    _buildFormRow('First Name', widget.firstname),
-                    _buildFormRow('Last Name', widget.lastname),
-                    _buildFormRow('Phone', widget.phone),
-                    _buildFormRow('Email', widget.email),
+                    _buildFormRow('First Name', value.firstName, (n) => value = value.copyWith(firstName: n)),
+                    _buildFormRow('Last Name', value.lastName, (n) => value = value.copyWith(lastName: n)),
+                    _buildFormRow('Phone', value.phone, (n) => value = value.copyWith(phone: n)),
+                    _buildFormRow('Email', value.email, (n) => value = value.copyWith(email: n)),
                   ],
                 ),
                 CupertinoFormSection(
                   header: const Text('Address'),
                   children: [
-                    _buildFormRow('Address 1', widget.address1),
-                    _buildFormRow('Address 2', widget.address2),
-                    _buildFormRow('City', widget.city),
-                    _buildFormRow('State', widget.state),
-                    _buildFormRow('ZIP', widget.zip),
+                    _buildFormRow('Address 1', value.address1, (n) => value = value.copyWith(address1: n)),
+                    _buildFormRow('Address 2', value.address2, (n) => value = value.copyWith(address2: n)),
+                    _buildFormRow('City', value.city, (n) => value = value.copyWith(city: n)),
+                    _buildFormRow('State', value.state, (n) => value = value.copyWith(state: n)),
+                    _buildFormRow('ZIP', value.zip, (n) => value = value.copyWith(zip: n)),
                   ],
                 ),
                 CupertinoFormSection(
                   header: const Text('Additional Information'),
                   children: [
-                    _buildFormRow('Brand', widget.brand),
-                    _buildFormRow('Account Number', widget.accountNumber),
-                    _buildFormRow('Type', widget.type),
+                    _buildFormRow('Brand', value.brand, (n) => value = value.copyWith(brand: n)),
+                    _buildFormRow('Account Number', value.accountNumber, (n) => value = value.copyWith(accountNumber: n)),
+                    _buildFormRow('Type', value.type, (n) => value = value.copyWith(type: n)),
                     _buildFormRowWithSwitch(
-                        'Customer-Based Pricing', widget.customerBasedPricing),
-                    _buildFormRow('Notes', widget.notes),
+                        'Customer-Based Pricing', value.customerBasedPricing ?? false, (n) => value = value.copyWith(customerBasedPricing: n)),
+                    _buildFormRow('Notes', value.notes, (n) => value = value.copyWith(notes: n)),
                   ],
                 ),
               ],
@@ -112,7 +82,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
     );
   }
 
-  Widget _buildFormRow(String label, String? value) {
+  Widget _buildFormRow(String label, String? value, void Function(String) setter) {
     return CupertinoFormRow(
       prefix: SizedBox(
         width: 150,
@@ -124,13 +94,13 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       child: _editing
           ? CupertinoTextFormFieldRow(
               initialValue: value ?? '',
-              onChanged: (newValue) {},
+              onChanged: setter,
             )
           : Text(value ?? 'N/A'),
     );
   }
 
-  Widget _buildFormRowWithSwitch(String label, bool value) {
+  Widget _buildFormRowWithSwitch(String label, bool value, void Function(bool) setter) {
     return CupertinoFormRow(
       prefix: SizedBox(
         width: 150,
@@ -142,7 +112,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       child: _editing
           ? CupertinoSwitch(
               value: value,
-              onChanged: (newValue) {},
+              onChanged: setter,
             )
           : Text(value ? 'Yes' : 'No'),
     );

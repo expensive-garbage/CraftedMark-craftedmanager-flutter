@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../Models/people_model.dart';
 import 'contact_detail_widget.dart';
 import 'package:crafted_manager/postgres.dart';
 
@@ -11,16 +12,36 @@ class ContactsList extends StatefulWidget {
 }
 
 class ContactsListState extends State<ContactsList> {
-  List<Map<String, dynamic>>? _contacts;
+  List<People>? _contacts;
 
   @override
   void initState() {
     super.initState();
     fetchData('people').then((contacts) {
       setState(() {
-        _contacts = contacts;
+        _contacts = contacts.map((e) => People.fromMap(e)).toList();
       });
     });
+  }
+
+  Future<void> openContactDetails(People contact) async {
+    final updatedContact = await Navigator.push<People>(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => ContactDetailWidget(contact),
+      ),
+    );
+    if (updatedContact is People) {
+      // TODO: upload updated contact to datbase
+      final index = _contacts?.indexWhere((e) => e.id == updatedContact.id);
+      if (index != null && index > 0) {
+        setState(() {
+          _contacts?[index] = updatedContact;
+        });
+      }
+    } else {
+      print(updatedContact);
+    }
   }
 
   @override
@@ -38,44 +59,17 @@ class ContactsListState extends State<ContactsList> {
             final contact = _contacts![index];
             return GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) =>
-                        ContactDetailWidget(
-                          id: contact['id'],
-                          firstname: contact['firstname'],
-                          lastname: contact['lastname'],
-                          phone: contact['phone'],
-                          email: contact['email'],
-                          brand: contact['brand'],
-                          address1: contact['address1'],
-                          address2: contact['address2'] ?? 'N/A',
-                          city: contact['city'],
-                          state: contact['state'],
-                          zip: contact['zip'],
-                          customerBasedPricing: contact['customerbasedpricing'],
-                          accountNumber: contact['accountnumber'],
-                          type: contact['type'],
-                          notes: contact['notes'],
-                          createdDate: contact['createddate'],
-                          createdBy: contact['createdby'] ?? 'N/A',
-                          updatedDate: contact['updateddate'],
-                          updatedBy: contact['updatedby'] ?? 'N/A',
-                        ),
-                  ),
-                );
+                openContactDetails(contact);
               },
               child: ListTile(
                 title: Text(
-                    '${contact['firstname'] ?? ''} ${contact['lastname'] ??
+                    '${contact.firstName} ${contact.lastName ??
                         ''}'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (contact.containsKey('brand'))
-                      Text(contact['brand'] ?? 'N/A'),
-                    Text(contact['phone'] ?? 'N/A'),
+                    Text(contact.brand),
+                    Text(contact.phone),
                   ],
                 ),
               ),
