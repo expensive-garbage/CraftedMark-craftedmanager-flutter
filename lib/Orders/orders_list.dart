@@ -1,6 +1,13 @@
-import 'package:crafted_manager/orders/create_order.dart'; // Add this line
-import 'package:crafted_manager/orders/order_detail_widget.dart';
+import 'package:crafted_manager/Contacts/people_postgres.dart';
+import 'package:crafted_manager/Models/order_model.dart';
+import 'package:crafted_manager/Models/ordered_item_model.dart';
+import 'package:crafted_manager/Models/people_model.dart';
+import 'package:crafted_manager/Orders/order_detail_widget.dart';
+import 'package:crafted_manager/Orders/order_postgres.dart';
+import 'package:crafted_manager/Orders/ordered_item_postgres.dart';
+import 'package:crafted_manager/orders/create_order.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({Key? key, required String title}) : super(key: key);
@@ -10,33 +17,17 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
-  List<Map<String, dynamic>> _orders = [];
-
   @override
   void initState() {
     super.initState();
-    fetchAllOrders();
   }
 
-  Future<List<Map<String, dynamic>>> fetchAllOrders() async {
-    print('Connecting to PostgreSQL...');
-    final conn = await connectToPostgres();
-    try {
-      print('Connected! Fetching orders...');
-      final orders = await conn.mappedResultsQuery("""
-      SELECT o.order_id, p.firstname AS firstname, p.lastname AS lastname, o.total_amount AS total_amount
-      FROM orders o
-      JOIN people p ON o.people_id = p.id
-      ORDER BY o.order_id DESC
-    """);
-      print('Fetched orders: $orders');
-      return orders;
-    } catch (e) {
-      print('Error fetching orders: $e');
-      return [];
-    } finally {
-      await conn.close();
-    }
+  Future<People?> fetchCustomer(int customerId) async {
+    return await PeoplePostgres.fetchCustomer(customerId);
+  }
+
+  Future<List<OrderedItem>> fetchOrderedItems(int orderId) async {
+    return await OrderedItemPostgres.fetchOrderedItems(orderId);
   }
 
   @override
@@ -62,7 +53,7 @@ class _OrdersListState extends State<OrdersList> {
       ),
       child: SafeArea(
         child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: fetchAllOrders(),
+          future: OrderPostgres.fetchAllOrders(),
           builder: (BuildContext context,
               AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
@@ -70,32 +61,47 @@ class _OrdersListState extends State<OrdersList> {
               return ListView.builder(
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final order = orders[index];
-                  final people = order['people'];
+                  final order = Order.fromMap(orders[index]);
                   return Container(
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: CupertinoColors.systemGrey4),
                       ),
                     ),
-                    child: CupertinoListTile(
-                      title: Text(
-                          '${people['firstname'] ?? ''} ${people['lastname'] ?? ''}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Total: \$${order['orders']['total_amount']}'),
-                        ],
-                      ),
-                      onTap: () {
+                    child: GestureDetector(
+                      onTap: () async {
+                        // Fetch customer and orderedItems data here
+                        People customer = await fetchCustomer(order.customerId);
+                        List<OrderedItem> orderedItems =
+                            await fetchOrderedItems(order.id);
+
                         Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => OrderDetails(
-                                orderId: order['orders']['order_id']),
+                            builder: (context) => OrderDetailScreen(
+                                order: order,
+                                customer: customer,
+                                orderedItems: orderedItems),
                           ),
                         );
                       },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Order ID: ${order.id}',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text('Total: \$${order.totalAmount}'),
+                            Text('Status: ${order.orderStatus}'),
+                            Text(
+                                'Order Date: ${DateFormat('yyyy-MM-dd').format(order.orderDate)}'),
+                            // Format the DateTime object as a String
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -110,41 +116,6 @@ class _OrdersListState extends State<OrdersList> {
               );
             }
           },
-        ),
-      ),
-    );
-  }
-}
-
-class OrderDetail extends StatefulWidget {
-  final Map<String, dynamic> order;
-
-  const OrderDetail({Key? key, required this.order}) : super(key: key);
-
-  @override
-  _OrderDetailState createState() => _OrderDetailState();
-}
-
-class _OrderDetailState extends State<OrderDetail> {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Order Detail'),
-        previousPageTitle: 'Orders',
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  'Name: ${widget.order['firstname']} ${widget.order['lastname']}'),
-              Text('Total Amount: \$${widget.order['total_amount']}'),
-              // Add other order details here
-            ],
-          ),
         ),
       ),
     );
