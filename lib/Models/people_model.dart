@@ -53,7 +53,7 @@ class People {
     'city': city,
     'state': state,
     'zip': zip,
-    'customerbasedpricing': customerBasedPricing,
+    'customerbasedpricing': customerBasedPricing ?? false,
     'accountnumber': accountNumber,
     'type': type,
     'notes': notes,

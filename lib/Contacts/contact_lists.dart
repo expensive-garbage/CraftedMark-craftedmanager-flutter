@@ -26,6 +26,7 @@ class ContactsListState extends State<ContactsList> {
   }
 
   Future<void> openContactDetails(People contact) async {
+    print(contact.id);
     final updatedContact = await Navigator.push<People>(
       context,
       CupertinoPageRoute(
@@ -33,15 +34,13 @@ class ContactsListState extends State<ContactsList> {
       ),
     );
     if (updatedContact is People) {
-      PeoplePostgres.updateCustomer(updatedContact);
       final index = _contacts?.indexWhere((e) => e.id == updatedContact.id);
-      if (index != null && index > 0) {
+      if (index != null && index >= 0) {
         setState(() {
           _contacts?[index] = updatedContact;
         });
       }
-    } else {
-      print(updatedContact);
+      await PeoplePostgres.updateCustomer(updatedContact);
     }
   }
 
