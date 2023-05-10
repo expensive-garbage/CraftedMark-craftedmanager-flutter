@@ -41,7 +41,7 @@ class PeoplePostgres {
       String firstName, String lastName, String phone) async {
     final connection = await connectToPostgres();
     final result = await connection.query(
-        'SELECT * FROM people WHERE firstname = @firstName AND lastname = @lastName AND phone = @phone',
+        'SELECT * FROM people WHERE firstname = @firstName OR lastname = @lastName OR phone = @phone',
         substitutionValues: {
           'firstName': firstName,
           'lastName': lastName,

@@ -1,12 +1,19 @@
 import 'package:crafted_manager/Contacts/people_postgres.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Orders/create_order_screen.dart';
-import 'package:crafted_manager/Orders/orders_list.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
+import 'package:flutter/cupertino.dart';
+
+
+
+class SearchPeopleScreen extends StatefulWidget {
+  @override
+  State<SearchPeopleScreen> createState() => _SearchPeopleScreen();
+}
+
+class _SearchPeopleScreen extends State<SearchPeopleScreen> {
   List<People> _peopleList = [];
+
   List<People> _searchResults = [];
 
   @override
@@ -21,9 +28,7 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
     String phone = query;
 
     // Call the fetchCustomerByDetails function
-    People? customer =
-        await PeoplePostgres.fetchCustomerByDetails(firstName, lastName, phone);
-
+    People? customer = await PeoplePostgres.fetchCustomerByDetails(firstName, lastName, phone);
     if (customer != null) {
       setState(() {
         _peopleList = [customer];
@@ -53,14 +58,14 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Search People'),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Search People'),
       ),
       child: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: CupertinoTextField(
                 onChanged: _search,
                 decoration: BoxDecoration(
@@ -80,7 +85,7 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                  final person = _searchResults[index];
+                  People person = _searchResults[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -93,8 +98,8 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
                     },
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: const BoxDecoration(
                         border: Border(
                           bottom:
                               BorderSide(color: CupertinoColors.systemGrey4),
@@ -112,3 +117,5 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
     );
   }
 }
+
+
