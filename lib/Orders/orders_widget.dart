@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:your_app_name/models/order_model.dart';
-import 'package:your_app_name/models/people_model.dart';
+
+import '../Models/order_model.dart';
+import '../Models/people_model.dart';
+
 
 class OrderList extends StatelessWidget {
   final List<Order> orders;

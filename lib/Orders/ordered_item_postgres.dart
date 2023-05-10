@@ -1,5 +1,5 @@
 import 'package:crafted_manager/Models/ordered_item_model.dart';
-import 'package:crafted_manager/Orders//database_functions.dart';
+import 'package:crafted_manager/Orders/database_functions.dart';
 
 class OrderedItemPostgres {
   // Fetch ordered items by orderId

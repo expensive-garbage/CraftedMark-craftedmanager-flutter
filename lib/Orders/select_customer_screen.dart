@@ -1,6 +1,5 @@
-import 'package:crafted_manager/models/people_model.dart';
-import 'package:crafted_manager/orders/create_order_screen.dart';
-import 'package:crafted_manager/people/people_postgres.dart';
+import 'package:crafted_manager/Models/people_model.dart';
+import 'package:crafted_manager/Orders/create_order_screen.dart';
 import 'package:flutter/material.dart';
 
 class SelectCustomerScreen extends StatelessWidget {

@@ -1,11 +1,12 @@
-import 'package:crafted_manager/models/order_model.dart';
-import 'package:crafted_manager/models/ordered_item_model.dart';
-import 'package:crafted_manager/models/people_model.dart';
-import 'package:crafted_manager/models/product_model.dart';
-import 'package:crafted_manager/orders/orders_db_manager.dart';
+import 'package:crafted_manager/Models/order_model.dart';
+import 'package:crafted_manager/Models/ordered_item_model.dart';
+import 'package:crafted_manager/Models/people_model.dart';
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Orders/orders_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
 
 class CreateOrderScreen extends StatefulWidget {
   final People client;
@@ -45,78 +46,80 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-            'Create Order for ${widget.client.firstName} ${widget.client.lastName}'),
-      ),
-      child: SafeArea(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('Order Date'),
-              trailing: Text(DateTime.now().toString().split(' ')[0]),
-            ),
-            ListTile(
-              title: Text('Order Type'),
-              trailing: Text('Retail'),
-            ),
-            Divider(),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: orderedItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(orderedItems[index].description),
-                  subtitle: Text('Qty: ${orderedItems[index].quantity}'),
-                  trailing: IconButton(
-                    icon: Icon(CupertinoIcons.minus_circle),
-                    onPressed: () => removeOrderedItem(index),
-                  ),
-                );
-              },
-            ),
-            CupertinoButton(
-              child: Text('Add Item'),
-              onPressed: () {
-                // Navigate to product search screen and retrieve selected product and quantity
-                // Example:
-                // final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ProductSearchScreen()));
-                // if (result != null) {
-                //   addOrderedItem(result.product, result.quantity);
-                // }
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Total Amount'),
-              trailing: Text('\$${totalAmount.toStringAsFixed(2)}'),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: CupertinoButton.filled(
-                child: Text('Create Order'),
-                onPressed: () async {
-                  final order = Order(
-                    id: int.parse(Uuid().v1()),
-                    customerId: widget.client.id,
-                    orderDate: DateTime.now(),
-                    shippingAddress: '',
-                    billingAddress: '',
-                    totalAmount: totalAmount,
-                    orderStatus: 'Pending',
+    return Material(
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(
+              'Create Order for ${widget.client.firstName} ${widget.client.lastName}'),
+        ),
+        child: SafeArea(
+          child: ListView(
+            children: [
+              ListTile(
+                title: Text('Order Date'),
+                trailing: Text(DateTime.now().toString().split(' ')[0]),
+              ),
+              ListTile(
+                title: Text('Order Type'),
+                trailing: Text('Retail'),
+              ),
+              Divider(),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: orderedItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(orderedItems[index].description),
+                    subtitle: Text('Qty: ${orderedItems[index].quantity}'),
+                    trailing: IconButton(
+                      icon: Icon(CupertinoIcons.minus_circle),
+                      onPressed: () => removeOrderedItem(index),
+                    ),
                   );
-
-                  // Save the order to the database
-                  await OrderPostgres.createOrder(order, orderedItems);
-
-                  // Navigate back to the previous screen
-                  Navigator.pop(context);
                 },
               ),
-            ),
-          ],
+              CupertinoButton(
+                child: Text('Add Item'),
+                onPressed: () {
+                  // Navigate to product search screen and retrieve selected product and quantity
+                  // Example:
+                  // final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ProductSearchScreen()));
+                  // if (result != null) {
+                  //   addOrderedItem(result.product, result.quantity);
+                  // }
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text('Total Amount'),
+                trailing: Text('\$${totalAmount.toStringAsFixed(2)}'),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: CupertinoButton.filled(
+                  child: Text('Create Order'),
+                  onPressed: () async {
+                    final order = Order(
+                      id: int.parse(Uuid().v1()),
+                      customerId: widget.client.id,
+                      orderDate: DateTime.now(),
+                      shippingAddress: '',
+                      billingAddress: '',
+                      totalAmount: totalAmount,
+                      orderStatus: 'Pending',
+                    );
+
+                    // Save the order to the database
+                    await OrderPostgres.createOrder(order, orderedItems);
+
+                    // Navigate back to the previous screen
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

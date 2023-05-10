@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:crafted_manager/models/product_model.dart';
-import 'package:crafted_manager/models/people_model.dart';
+import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Models/people_model.dart';
 
 class ProductDetail extends StatefulWidget {
   final Product product;
@@ -110,7 +110,7 @@ class _ProductDetailState extends State<ProductDetail> {
     placeholder: 'Enter supplier id',
     onChanged: (value) {
     if (value.isNotEmpty) {
-    _supplier = _supplier.copyWith(id: int.parse(value));
+    _supplier = _supplier.copyWith(id: int.parse(value).toString());
     print('Supplier ID: ${_supplier.id}');
     }
     },
@@ -144,7 +144,7 @@ class _ProductDetailState extends State<ProductDetail> {
           placeholder: 'Enter supplier id',
           onChanged: (value) {
             if (value.isNotEmpty) {
-              _supplier = _supplier.copyWith(id: int.parse(value));
+              _supplier = _supplier.copyWith(id: int.parse(value).toString());
               print('Supplier ID: ${_supplier.id}');
             }
           },
