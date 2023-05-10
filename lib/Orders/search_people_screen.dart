@@ -1,10 +1,7 @@
 import 'package:crafted_manager/Contacts/people_postgres.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Orders/create_order_screen.dart';
-
 import 'package:flutter/cupertino.dart';
-
-
 
 class SearchPeopleScreen extends StatefulWidget {
   @override
@@ -28,7 +25,8 @@ class _SearchPeopleScreen extends State<SearchPeopleScreen> {
     String phone = query;
 
     // Call the fetchCustomerByDetails function
-    People? customer = await PeoplePostgres.fetchCustomerByDetails(firstName, lastName, phone);
+    People? customer =
+        await PeoplePostgres.fetchCustomerByDetails(firstName, lastName, phone);
     if (customer != null) {
       setState(() {
         _peopleList = [customer];
@@ -97,8 +95,8 @@ class _SearchPeopleScreen extends State<SearchPeopleScreen> {
                       );
                     },
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       decoration: const BoxDecoration(
                         border: Border(
                           bottom:
@@ -117,5 +115,3 @@ class _SearchPeopleScreen extends State<SearchPeopleScreen> {
     );
   }
 }
-
-
