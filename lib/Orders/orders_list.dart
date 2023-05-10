@@ -5,7 +5,7 @@ import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Orders/order_detail_widget.dart';
 import 'package:crafted_manager/Orders/order_postgres.dart';
 import 'package:crafted_manager/Orders/ordered_item_postgres.dart';
-import 'package:crafted_manager/orders/create_order.dart';
+import 'package:crafted_manager/orders/create_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 

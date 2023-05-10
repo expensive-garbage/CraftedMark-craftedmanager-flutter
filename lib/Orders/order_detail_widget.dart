@@ -68,30 +68,40 @@ class OrderDetailScreen extends StatelessWidget {
   Widget buildOrderedItemRow(OrderedItem item) {
     return Padding(
       padding: EdgeInsets.only(top: 8, bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Product ID: ${item.productId}',
-            style: TextStyle(fontSize: 18),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Quantity: ${item.quantity}',
+                'Product ID: ${item.productId}',
                 style: TextStyle(fontSize: 18),
               ),
-              Text(
-                'Price: \$${item.price}',
-                style: TextStyle(fontSize: 18),
-              ),
-              Text(
-                'Discount: \$${item.discount}',
-                style: TextStyle(fontSize: 18),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Quantity: ${item.quantity}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    'Price: \$${item.price}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    'Discount: \$${item.discount}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
               ),
             ],
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Description: ${item.description}',
+            style: TextStyle(fontSize: 18),
           ),
         ],
       ),

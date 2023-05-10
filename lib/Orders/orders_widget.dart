@@ -1,49 +1,77 @@
-import 'package:crafted_manager/Orders/orders_db_manager.dart';
-import 'package:crafted_manager/orders/create_order.dart'; // Add this line
-import 'package:crafted_manager/orders/database_functions.dart';
-import 'package:crafted_manager/orders/order_detail_widget.dart';
-import 'package:crafted_manager/orders/orders_list.dart'; // Import the fetchAllOrders function
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:your_app_name/models/order_model.dart';
+import 'package:your_app_name/models/people_model.dart';
 
-class OrdersList extends StatelessWidget {
+class OrderList extends StatelessWidget {
+  final List<Order> orders;
+  final List<People> customers;
+
+  const OrderList({
+    Key? key,
+    required this.orders,
+    required this.customers,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Orders'),
-      ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchData(orders),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-          if (snapshot.hasData) {
-            final orders = snapshot.data!;
-            return ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (BuildContext context, int index) {
-                final order = orders[index];
-                return CupertinoListTile(
-                  title: Text(order['name']),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Total: \$${order['total_amount']}'),
-                      Text('Total Due: \$${order['total_due']}'),
-                    ],
+    return CupertinoScrollbar(
+      child: ListView.builder(
+        itemCount: orders.length,
+        itemBuilder: (BuildContext context, int index) {
+          final order = orders[index];
+          final customer =
+              customers.firstWhere((c) => c.id == order.customerId);
+
+          return InkWell(
+            onTap: () {
+              // Navigate to order details screen
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: CupertinoColors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    color: CupertinoColors.separator,
+                    width: 0.5,
                   ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${customer.firstName} ${customer.lastName}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    DateFormat.yMMMMd().format(order.orderDate),
+                    style: const TextStyle(
+                      color: CupertinoColors.secondaryLabel,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '\$${order.totalAmount.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );
