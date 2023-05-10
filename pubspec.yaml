@@ -15,8 +15,9 @@ dependencies:
   postgres: ^2.6.1
   isolate_bloc: ^2.1.1
   shared_preferences: ^2.1.0
-  path_provider: ^2.0.6
-  intl: ^0.17.0
+  path_provider: ^2.0.14
+  intl: ^0.18.1
+
 
 dev_dependencies:
   flutter_test:

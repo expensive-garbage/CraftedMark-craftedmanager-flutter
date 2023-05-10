@@ -41,27 +41,51 @@ class People {
     this.updatedBy,
   });
 
+  factory People.empty() {
+    return People(
+      id: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      brand: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      customerBasedPricing: false,
+      accountNumber: '',
+      type: '',
+      notes: '',
+      createdBy: '',
+      updatedBy: '',
+    );
+  }
+
+  bool get isEmpty => id.isEmpty;
+
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'firstname': firstName,
-    'lastname': lastName,
-    'phone': phone,
-    'email': email,
-    'brand': brand,
-    'address1': address1,
-    'address2': address2,
-    'city': city,
-    'state': state,
-    'zip': zip,
-    'customerbasedpricing': customerBasedPricing ?? false,
-    'accountnumber': accountNumber,
-    'type': type,
-    'notes': notes,
-    'createddate': createdDate,
-    'created_by': createdBy,
-    'updateddate': updatedDate,
-    'updated_by': updatedBy,
-  };
+        'id': id,
+        'firstname': firstName,
+        'lastname': lastName,
+        'phone': phone,
+        'email': email,
+        'brand': brand,
+        'address1': address1,
+        'address2': address2,
+        'city': city,
+        'state': state,
+        'zip': zip,
+        'customerbasedpricing': customerBasedPricing ?? false,
+        'accountnumber': accountNumber,
+        'type': type,
+        'notes': notes,
+        'createddate': createdDate,
+        'createdby': createdBy,
+        'updateddate': updatedDate,
+        'updatedby': updatedBy,
+      };
 
   factory People.fromMap(Map<String, dynamic> map) {
     // Renamed from 'fromJson' to 'fromMap'
@@ -82,9 +106,9 @@ class People {
       type: map['type'],
       notes: map['notes'],
       createdDate: map['createddate'],
-      createdBy: map['created_by'] ?? 'Unknown',
+      createdBy: map['createdby'] ?? 'Unknown',
       updatedDate: map['updateddate'],
-      updatedBy: map['updated_by'] ?? 'Unknown',
+      updatedBy: map['updatedby'] ?? 'Unknown',
     );
   }
   People copyWith({
