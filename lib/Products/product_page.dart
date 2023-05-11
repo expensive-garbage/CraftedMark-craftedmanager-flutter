@@ -25,8 +25,18 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 
   void createNewProduct() {
-    print('Creating a new product...');
-    // Add your code here to create a new product and navigate to the product detail page.
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => ProductDetailPage(
+          product: Product.empty(),
+          isNewProduct: true,
+        ),
+      ),
+    ).then((_) {
+      // Refresh product list after adding a new product
+      _fetchProducts();
+    });
   }
 
   @override

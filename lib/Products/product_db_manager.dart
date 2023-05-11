@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:postgres/postgres.dart';
@@ -23,29 +25,35 @@ class ProductPostgres {
   static Future<void> addProduct(Product product) async {
     final connection = await _createConnection();
     await connection.execute(
-      'INSERT INTO products (name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier_id, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@name, @category, @subCategory, @subcat2, @flavor, @description, @costOfGood, @manufacturingPrice, @wholesalePrice, @retailPrice, @stockQuantity, @backordered, @supplierId, @manufacturerId, @manufacturerName, @itemSource, @quantitySold, @quantityInStock)',
+      'INSERT INTO products (product_id, product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_id, @product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @item_source, @quantity_sold, @quantity_in_stock)',
       substitutionValues: {
-        'name': product.name,
+        'product_id': product.id,
+        'product_name': product.name,
         'category': product.category,
-        'subCategory': product.subCategory,
+        'sub_category': product.subCategory,
         'subcat2': product.subcat2,
         'flavor': product.flavor,
         'description': product.description,
-        'costOfGood': product.costOfGood,
-        'manufacturingPrice': product.manufacturingPrice,
-        'wholesalePrice': product.wholesalePrice,
-        'retailPrice': product.retailPrice,
-        'stockQuantity': product.stockQuantity,
+        'cost_of_good': product.costOfGood,
+        'manufacturing_price': product.manufacturingPrice,
+        'wholesale_price': product.wholesalePrice,
+        'retail_price': product.retailPrice,
+        'stock_quantity': product.stockQuantity,
         'backordered': product.backordered,
-        'supplierId': product.supplierId,
-        'manufacturerId': product.manufacturerId,
-        'manufacturerName': product.manufacturerName,
-        'itemSource': product.itemSource,
-        'quantitySold': product.quantitySold,
-        'quantityInStock': product.quantityInStock,
+        'manufacturer_name': product.manufacturerName,
+        'item_source': product.itemSource,
+        'quantity_sold': product.quantitySold,
+        'quantity_in_stock': product.quantityInStock,
       },
     );
     await closeConnection(connection);
+  }
+
+  // Generate a random UUID
+  static String _generateUuid() {
+    final random = Random.secure();
+    final values = List<int>.generate(16, (i) => random.nextInt(256));
+    return base64Url.encode(values).replaceAll('+', '-').replaceAll('/', '_');
   }
 
   static Future<List<Product>> getAllProducts() async {
@@ -58,27 +66,25 @@ class ProductPostgres {
   static Future<void> updateProduct(Product product) async {
     final connection = await _createConnection();
     await connection.execute(
-      'UPDATE products SET name = @name, category = @category, sub_category = @subCategory, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @costOfGood, manufacturing_price = @manufacturingPrice, wholesale_price = @wholesalePrice, retail_price = @retailPrice, stock_quantity = @stockQuantity, backordered = @backordered, supplier_id = @supplierId, manufacturer_id = @manufacturerId, manufacturer_name = @manufacturerName, item_source = @itemSource, quantity_sold = @quantitySold, quantity_in_stock = @quantityInStock WHERE id = @id',
+      'UPDATE products SET product_name = @product_name, category = @category, sub_category = @sub_category, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @cost_of_good, manufacturing_price = @manufacturing_price, wholesale_price = @wholesale_price, retail_price = @retail_price, stock_quantity = @stock_quantity, backordered = @backordered, manufacturer_name = @manufacturer_name, item_source = @item_source, quantity_sold = @quantity_sold, quantity_in_stock = @quantity_in_stock WHERE product_id = @product_id',
       substitutionValues: {
-        'id': product.id,
-        'name': product.name,
+        'product_id': product.id,
+        'product_name': product.name,
         'category': product.category,
-        'subCategory': product.subCategory,
+        'sub_category': product.subCategory,
         'subcat2': product.subcat2,
         'flavor': product.flavor,
         'description': product.description,
-        'costOfGood': product.costOfGood,
-        'manufacturingPrice': product.manufacturingPrice,
-        'wholesalePrice': product.wholesalePrice,
-        'retailPrice': product.retailPrice,
-        'stockQuantity': product.stockQuantity,
+        'cost_of_good': product.costOfGood,
+        'manufacturing_price': product.manufacturingPrice,
+        'wholesale_price': product.wholesalePrice,
+        'retail_price': product.retailPrice,
+        'stock_quantity': product.stockQuantity,
         'backordered': product.backordered,
-        'supplierId': product.supplierId,
-        'manufacturerId': product.manufacturerId,
-        'manufacturerName': product.manufacturerName,
-        'itemSource': product.itemSource,
-        'quantitySold': product.quantitySold,
-        'quantityInStock': product.quantityInStock,
+        'manufacturer_name': product.manufacturerName,
+        'item_source': product.itemSource,
+        'quantity_sold': product.quantitySold,
+        'quantity_in_stock': product.quantityInStock,
       },
     );
     await closeConnection(connection);
