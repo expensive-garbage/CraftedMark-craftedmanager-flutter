@@ -70,7 +70,7 @@ class MenuViewState extends State<MenuView> {
           MenuItem(
               title: "Products",
               iconData: CupertinoIcons.clear_fill,
-              destination: ProductList(onProductTap: (_) {})),
+              destination: ProductListPage()), // Remove onProductTap parameter
           // MenuItem(
           //     title: "Packaging Inventory",
           //     iconData: CupertinoIcons.shift_fill),

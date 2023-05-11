@@ -1,122 +1,97 @@
 import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Products/product_db_manager.dart';
+import 'package:crafted_manager/Products/product_detail.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'product_db_manager.dart';
-
-class ProductList extends StatefulWidget {
-  final void Function(Product product) onProductTap;
-
-  const ProductList({
-    Key? key,
-    required this.onProductTap,
-  }) : super(key: key);
-
+class ProductListPage extends StatefulWidget {
   @override
-  ProductListState createState() => ProductListState();
+  _ProductListPageState createState() => _ProductListPageState();
 }
 
-class ProductListState extends State<ProductList> {
-  List<Product> products = [];
-
-  void onProductTap(Product product) {
-    widget.onProductTap(product);
-  }
+class _ProductListPageState extends State<ProductListPage> {
+  late Future<List<Product>> _products;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
-    initStateAsync();
+    _products = Future.value([]);
+    _fetchProducts();
   }
 
-  Future<void> initStateAsync() async {
-    await ProductPostgres.openConnection();
-    final p = await ProductPostgres.getAllProducts();
-    setState(() {
-      products = p;
-    });
+  Future<void> _fetchProducts() async {
+    _products = ProductPostgres.getAllProducts();
+    setState(() {});
+    _products.then((value) => print('Fetched products: $value'));
   }
 
-  dispose() {
-    ProductPostgres.closeConnection();
-    super.dispose();
+  void createNewProduct() {
+    print('Creating a new product...');
+    // Add your code here to create a new product and navigate to the product detail page.
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Products'),
-        trailing: CupertinoButton(
-          child: const Icon(CupertinoIcons.add),
-          onPressed: () {
-            // Implement add product functionality
-          },
+        middle: Text('Products List'),
+        trailing: GestureDetector(
+          onTap: createNewProduct,
+          child: Icon(CupertinoIcons.add),
         ),
       ),
-      child: SafeArea(
-        child: ListView.builder(
-          itemCount: products.length,
-          itemBuilder: (BuildContext context, int index) {
-            final product = products[index];
-            return CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () => onProductTap(product),
-              child: CupertinoContextMenu(
-                actions: <Widget>[
-                  // Add your context menu actions here, for example:
-                  CupertinoContextMenuAction(
-                    child: const Text('Edit'),
-                    onPressed: () {
-                      // Add your edit functionality here
-                      Navigator.pop(context);
-                    },
-                  ),
-                  CupertinoContextMenuAction(
-                    child: const Text('Delete'),
-                    onPressed: () {
-                      // Add your delete functionality here
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: CupertinoColors.systemGrey6,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        product.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
+      child: FutureBuilder<List<Product>>(
+        future: _products,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final product = snapshot.data![index];
+                print('Product at index $index: $product');
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) =>
+                            ProductDetailPage(product: product),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: CupertinoColors.systemGrey6,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.name,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        product.description,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        '\$${product.retailPrice}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ],
+                        SizedBox(height: 4),
+                        Text('Product ID: ${product.id}'),
+                        Text('Retail Price: \$${product.retailPrice}'),
+                        Text('Wholesale Price: \$${product.wholesalePrice}'),
+                        Text('Category: ${product.category}'),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
-          },
-        ),
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        },
       ),
     );
   }
