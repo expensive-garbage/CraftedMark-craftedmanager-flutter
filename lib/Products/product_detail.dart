@@ -1,7 +1,7 @@
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:uuid/uuid.dart';
+
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -92,7 +92,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Future<void> saveProduct() async {
     Product updatedProduct = Product(
-      id: widget.isNewProduct ? Uuid().v4() : widget.product.id,
+      //id: widget.isNewProduct ? Uuid().v4() : widget.product.id,
+      id: widget.product.id,
       name: _nameController.text,
       category: _categoryController.text,
       subCategory: _subCategoryController.text,

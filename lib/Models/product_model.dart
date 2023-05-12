@@ -1,5 +1,5 @@
 class Product {
-  String id;
+  int id;
   String name;
   String category;
   String subCategory;
@@ -18,7 +18,7 @@ class Product {
   int quantityInStock;
 
   Product.empty()
-      : id = '',
+      : id = 0,
         name = '',
         category = '',
         subCategory = '',
@@ -58,7 +58,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['product_id'].toString() ?? '',
+      id: map['product_id'] ?? 0,
       name: map['product_name'] ?? '',
       category: map['category'] ?? '',
       subCategory: map['sub_category'] ?? '',

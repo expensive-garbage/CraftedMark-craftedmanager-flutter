@@ -26,7 +26,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       OrderedItem newItem = OrderedItem(
         id: 0,
         orderId: 0,
-        productId: int.parse(product.id),
+        productId: product.id,
         quantity: quantity,
         price: product.retailPrice,
         discount: 0,

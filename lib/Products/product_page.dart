@@ -83,7 +83,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text('Product ID: ${product.id}'),
+                        Text('Product ID: ${product.id.toString()}'),
                         Text('Retail Price: \$${product.retailPrice}'),
                         Text('Wholesale Price: \$${product.wholesalePrice}'),
                         Text('Category: ${product.category}'),
