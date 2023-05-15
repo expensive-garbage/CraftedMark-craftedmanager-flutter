@@ -31,12 +31,13 @@ class _ProductListPageState extends State<ProductListPage> {
         builder: (context) => ProductDetailPage(
           product: Product.empty(),
           isNewProduct: true,
+          onProductSaved: () {
+            // Refresh product list after adding a new product
+            _fetchProducts();
+          },
         ),
       ),
-    ).then((_) {
-      // Refresh product list after adding a new product
-      _fetchProducts();
-    });
+    );
   }
 
   @override
@@ -63,8 +64,13 @@ class _ProductListPageState extends State<ProductListPage> {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) =>
-                            ProductDetailPage(product: product),
+                        builder: (context) => ProductDetailPage(
+                          product: product,
+                          onProductSaved: () {
+                            // Refresh product list after updating a product
+                            _fetchProducts();
+                          },
+                        ),
                       ),
                     );
                   },
@@ -83,10 +89,9 @@ class _ProductListPageState extends State<ProductListPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text('Product ID: ${product.id.toString()}'),
                         Text('Retail Price: \$${product.retailPrice}'),
                         Text('Wholesale Price: \$${product.wholesalePrice}'),
-                        Text('Category: ${product.category}'),
+                        Text('Supplier: ${product.manufacturerName}'),
                       ],
                     ),
                   ),

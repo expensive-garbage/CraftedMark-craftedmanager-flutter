@@ -2,12 +2,15 @@ import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 
-
 class ProductDetailPage extends StatefulWidget {
   final Product product;
   final bool isNewProduct;
+  final Function onProductSaved;
 
-  ProductDetailPage({required this.product, this.isNewProduct = false});
+  ProductDetailPage(
+      {required this.product,
+      this.isNewProduct = false,
+      required this.onProductSaved});
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();
@@ -27,6 +30,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final _retailPriceController = TextEditingController();
   final _stockQuantityController = TextEditingController();
   final _itemSourceController = TextEditingController();
+  final _manufacturerNameController = TextEditingController();
+  final _supplierController = TextEditingController();
 
   @override
   void initState() {
@@ -44,6 +49,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _retailPriceController.text = widget.product.retailPrice.toString();
     _stockQuantityController.text = widget.product.stockQuantity.toString();
     _itemSourceController.text = widget.product.itemSource;
+    _manufacturerNameController.text = widget.product.manufacturerName;
+    _supplierController.text = widget.product
+        .supplier; // Assuming you have a supplier field in your Product model
   }
 
   @override
@@ -63,22 +71,109 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     controller: _nameController,
-                    placeholder: 'Name',
-                    keyboardType: TextInputType.text,
+                    prefix: Text('Name: '),
                   ),
+                  SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _categoryController,
-                    placeholder: 'Category',
-                    keyboardType: TextInputType.text,
+                    prefix: Text('Category: '),
                   ),
-                  // ...
-                  // Add other CupertinoTextFormFieldRows for each field
-                  // ...
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _subCategoryController,
+                    prefix: Text('Subcategory: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _subcat2Controller,
+                    prefix: Text('Subcategory 2: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _flavorController,
+                    prefix: Text('Flavor: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _descriptionController,
+                    prefix: Text('Description: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _costOfGoodController,
+                    keyboardType: TextInputType.number,
+                    prefix: Text('Cost of Good: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _manufacturingPriceController,
+                    keyboardType: TextInputType.number,
+                    prefix: Text('Manufacturing Price: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _wholesalePriceController,
+                    keyboardType: TextInputType.number,
+                    prefix: Text('Wholesale Price: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _retailPriceController,
+                    keyboardType: TextInputType.number,
+                    prefix: Text('Retail Price: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _stockQuantityController,
+                    keyboardType: TextInputType.number,
+                    prefix: Text('Stock Quantity: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _itemSourceController,
+                    prefix: Text('Item Source: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _manufacturerNameController,
+                    prefix: Text('Manufacturer Name: '),
+                  ),
+                  SizedBox(height: 16.0),
+                  CupertinoTextFormFieldRow(
+                    controller: _supplierController,
+                    prefix: Text('Supplier: '),
+                  ),
+                  SizedBox(height: 16.0),
                   CupertinoButton.filled(
                     child: Text('Save'),
                     onPressed: () async {
-                      await saveProduct();
-                      Navigator.pop(context);
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          await saveProduct();
+                          widget.onProductSaved();
+                          Navigator.pop(context);
+                        } catch (e) {
+                          print('Error: $e');
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Error'),
+                                content: Text(
+                                    'An error occurred while saving the product.'),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      }
                     },
                   ),
                 ],
@@ -92,7 +187,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Future<void> saveProduct() async {
     Product updatedProduct = Product(
-      //id: widget.isNewProduct ? Uuid().v4() : widget.product.id,
       id: widget.product.id,
       name: _nameController.text,
       category: _categoryController.text,
@@ -104,9 +198,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       manufacturingPrice: double.parse(_manufacturingPriceController.text),
       wholesalePrice: double.parse(_wholesalePriceController.text),
       retailPrice: double.parse(_retailPriceController.text),
-      stockQuantity: double.parse(_stockQuantityController.text),
+      stockQuantity: int.parse(_stockQuantityController.text),
       backordered: false,
-      manufacturerName: widget.product.manufacturerName,
+      supplier: _supplierController.text,
+      manufacturerId: widget.product.manufacturerId,
+      manufacturerName: _manufacturerNameController.text,
       itemSource: _itemSourceController.text,
       quantitySold: widget.product.quantitySold,
       quantityInStock: widget.product.quantityInStock,

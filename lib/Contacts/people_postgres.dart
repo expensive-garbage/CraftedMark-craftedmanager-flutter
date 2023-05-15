@@ -16,7 +16,16 @@ class PeoplePostgres {
         : null;
   }
 
-  static Future<void> updateCustomer(People customer) async {
+  // Refresh the customer list
+  static Future<List<People>> refreshCustomerList() async {
+    final connection = await connectToPostgres();
+    final result = await connection.query('SELECT * FROM people');
+
+    await connection.close();
+    return result.map((row) => People.fromMap(row.toColumnMap())).toList();
+  }
+
+  static Future<People?> updateCustomer(People customer) async {
     if (customer.id.isEmpty) {
       throw Exception('Invalid UUID: Customer ID is empty');
     }
@@ -25,15 +34,27 @@ class PeoplePostgres {
     final map = customer.toMap();
     final values = <String>[];
     map.forEach((key, value) {
-      if (key != "createdby" && key != "updatedby") {
-        values.add("$key = '$value'");
+      // Skip updating createdby, updatedby, and null timestamp columns
+      if (key != "createdby" &&
+          key != "updatedby" &&
+          !(value == null && (key == "created" || key == "updated"))) {
+        values.add("$key = ${value != null ? "'$value'" : 'NULL'}");
       }
     });
     final allValues = values.join(",\n");
     await connection.execute(
         "UPDATE people SET $allValues WHERE id = @customerId",
         substitutionValues: {'customerId': customer.id});
+
+    // Fetch the updated customer data
+    final result = await connection.query(
+        'SELECT * FROM people WHERE id = @customerId',
+        substitutionValues: {'customerId': customer.id});
+
     await connection.close();
+    return result.isNotEmpty
+        ? People.fromMap(result.first.toColumnMap())
+        : null;
   }
 
   // Add this method in the PeoplePostgres class

@@ -41,18 +41,18 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
             if (!_editing) {
               setState(() => _editing = true);
             } else {
+              People? updatedContact;
               if (value.id.isEmpty) {
                 await PeoplePostgres.createCustomer(value);
-                final fetchedContact =
-                    await PeoplePostgres.fetchCustomerByDetails(
-                        value.firstName, value.lastName, value.phone);
+                updatedContact = await PeoplePostgres.fetchCustomerByDetails(
+                    value.firstName, value.lastName, value.phone);
+              } else {
+                updatedContact = await PeoplePostgres.updateCustomer(value);
+              }
 
-                if (fetchedContact != null) {
-                  value = fetchedContact;
-                } else {
-                  // Handle the case when the fetched contact is null
-                  // You can show an error message or navigate back to the previous screen
-                }
+              if (updatedContact != null) {
+                setState(() => _editing = false);
+                Navigator.pop(context, updatedContact);
               } else {
                 await PeoplePostgres.updateCustomer(value);
               }
@@ -159,25 +159,3 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
     );
   }
 }
-
-// import 'package:flutter/cupertino.dart';
-// import '../Models/people_model.dart';
-//
-// class ContactDetailWidget extends StatefulWidget {
-//   final People initialValue;
-//
-//   const ContactDetailWidget(this.initialValue, {Key? key,}) : super(key: key);
-//
-//   @override
-//   State<ContactDetailWidget> createState() => _ContactDetailWidgetState();
-// }
-//
-// class _ContactDetailWidgetState extends State<ContactDetailWidget> {
-//   bool _editing = false;
-//   late People value;
-//
-//   @override
-//   void initState() {
-//     value = widget.initialValue;
-//     super.initState();
-//   }

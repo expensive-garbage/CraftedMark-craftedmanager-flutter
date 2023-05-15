@@ -25,7 +25,7 @@ class ProductPostgres {
   static Future<void> addProduct(Product product) async {
     final connection = await _createConnection();
     await connection.execute(
-      'INSERT INTO products (product_id, product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_id, @product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @item_source, @quantity_sold, @quantity_in_stock)',
+      'INSERT INTO products (product_id, product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, supplier_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_id, @product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @supplier_name, @item_source, @quantity_sold, @quantity_in_stock)',
       substitutionValues: {
         'product_id': product.id,
         'product_name': product.name,
@@ -41,6 +41,7 @@ class ProductPostgres {
         'stock_quantity': product.stockQuantity,
         'backordered': product.backordered,
         'manufacturer_name': product.manufacturerName,
+        'supplier_name': product.supplier,
         'item_source': product.itemSource,
         'quantity_sold': product.quantitySold,
         'quantity_in_stock': product.quantityInStock,
@@ -66,7 +67,7 @@ class ProductPostgres {
   static Future<void> updateProduct(Product product) async {
     final connection = await _createConnection();
     await connection.execute(
-      'UPDATE products SET product_name = @product_name, category = @category, sub_category = @sub_category, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @cost_of_good, manufacturing_price = @manufacturing_price, wholesale_price = @wholesale_price, retail_price = @retail_price,  backordered = @backordered, manufacturer_name = @manufacturer_name, item_source = @item_source WHERE product_id = @product_id',
+      'UPDATE products SET product_name = @product_name, category = @category, sub_category = @sub_category, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @cost_of_good, manufacturing_price = @manufacturing_price, wholesale_price = @wholesale_price, retail_price = @retail_price, stock_quantity = @stock_quantity, backordered = @backordered, manufacturer_name = @manufacturer_name, supplier_name = @supplier_name, item_source = @item_source, quantity_sold = @quantity_sold, quantity_in_stock = @quantity_in_stock WHERE product_id = @product_id',
       substitutionValues: {
         'product_id': product.id,
         'product_name': product.name,
@@ -79,12 +80,13 @@ class ProductPostgres {
         'manufacturing_price': product.manufacturingPrice,
         'wholesale_price': product.wholesalePrice,
         'retail_price': product.retailPrice,
-       // 'stock_quantity': product.stockQuantity,
+        'stock_quantity': product.stockQuantity,
         'backordered': product.backordered,
         'manufacturer_name': product.manufacturerName,
+        'supplier_name': product.supplier,
         'item_source': product.itemSource,
-      //  'quantity_sold': product.quantitySold,
-       // 'quantity_in_stock': product.quantityInStock,
+        'quantity_sold': product.quantitySold,
+        'quantity_in_stock': product.quantityInStock,
       },
     );
     await closeConnection(connection);

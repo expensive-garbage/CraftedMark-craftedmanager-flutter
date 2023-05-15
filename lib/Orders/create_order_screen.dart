@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-
 class CreateOrderScreen extends StatefulWidget {
   final People client;
 

@@ -1,24 +1,27 @@
 class Product {
-  int id;
-  String name;
-  String category;
-  String subCategory;
-  String subcat2;
-  String flavor;
-  String description;
-  double costOfGood;
-  double manufacturingPrice;
-  double wholesalePrice;
-  double retailPrice;
-  double stockQuantity;
-  bool backordered;
-  String manufacturerName;
-  String itemSource;
-  int quantitySold;
-  int quantityInStock;
+  final int id;
+  final String name;
+  final String category;
+  final String subCategory;
+  final String subcat2;
+  final String flavor;
+  final String description;
+  final double costOfGood;
+  final double manufacturingPrice;
+  final double wholesalePrice;
+  final double retailPrice;
+  final int stockQuantity;
+  final bool backordered;
+  final String supplier;
+  final String manufacturerId;
+  final String manufacturerName;
+  final String itemSource;
+  final int quantitySold;
+  final int quantityInStock;
 
   Product.empty()
       : id = 0,
+        // Changed from '' to 0
         name = '',
         category = '',
         subCategory = '',
@@ -31,6 +34,9 @@ class Product {
         retailPrice = 0,
         stockQuantity = 0,
         backordered = false,
+        supplier = '',
+        manufacturerId = '',
+        // Added empty initialization
         manufacturerName = '',
         itemSource = '',
         quantitySold = 0,
@@ -50,6 +56,8 @@ class Product {
     required this.retailPrice,
     required this.stockQuantity,
     required this.backordered,
+    required this.supplier, // Changed from "Supplier" to "String"
+    required this.manufacturerId,
     required this.manufacturerName,
     required this.itemSource,
     required this.quantitySold,
@@ -75,9 +83,14 @@ class Product {
           : 0.0,
       retailPrice:
           map['retail_price'] != null ? double.parse(map['retail_price']) : 0.0,
-      stockQuantity: map['stock_quantity']?.toDouble() ?? 0.0,
+      stockQuantity:
+          map['stock_quantity'] != null ? map['stock_quantity'].round() : 0,
+      // Updated this line
       backordered: map['backordered'] ?? false,
       manufacturerName: map['manufacturer_name'] ?? '',
+      supplier: map['supplier_name'] ?? '',
+      manufacturerId: map['manufacturer_id'] ?? '',
+      // Added this line
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
