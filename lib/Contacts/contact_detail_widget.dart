@@ -1,4 +1,4 @@
-import 'package:crafted_manager/Contacts/people_postgres.dart';
+import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../Models/people_model.dart';

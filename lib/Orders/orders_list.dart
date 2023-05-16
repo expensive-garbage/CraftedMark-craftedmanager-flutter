@@ -1,7 +1,6 @@
-import 'package:crafted_manager/Contacts/people_postgres.dart';
+import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
-
 import 'package:crafted_manager/Orders/order_detail_widget.dart';
 import 'package:crafted_manager/Orders/order_postgres.dart';
 import 'package:crafted_manager/Orders/search_people_screen.dart';

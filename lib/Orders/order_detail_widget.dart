@@ -100,7 +100,7 @@ class OrderDetailScreen extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Text(
-            'Description: ${item.description}',
+            'Description: ${item.productDescription}',
             style: TextStyle(fontSize: 18),
           ),
         ],

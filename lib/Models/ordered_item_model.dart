@@ -5,7 +5,8 @@ class OrderedItem {
   final int quantity;
   final double price;
   final double discount;
-  final String description;
+  final String productDescription;
+  final double productRetailPrice;
 
   OrderedItem({
     required this.id,
@@ -14,8 +15,14 @@ class OrderedItem {
     required this.quantity,
     required this.price,
     required this.discount,
-    required this.description,
+    required this.productDescription,
+    required this.productRetailPrice,
   });
+
+  // Add the setter for quantity
+  set quantity(int newQuantity) {
+    this.quantity = newQuantity;
+  }
 
   factory OrderedItem.fromMap(Map<String, dynamic> map) {
     return OrderedItem(
@@ -25,7 +32,9 @@ class OrderedItem {
       quantity: map['quantity'] ?? 0,
       price: double.tryParse(map['price']?.toString() ?? '0') ?? 0.0,
       discount: double.tryParse(map['discount']?.toString() ?? '0') ?? 0.0,
-      description: map['description'] ?? '',
+      productDescription: map['description'] ?? '',
+      productRetailPrice:
+          double.tryParse(map['retail_price']?.toString() ?? '0') ?? 0.0,
     );
   }
 
@@ -37,7 +46,8 @@ class OrderedItem {
       'quantity': quantity,
       'price': price,
       'discount': discount,
-      'description': description,
+      'description': productDescription,
+      'retail_price': productRetailPrice,
     };
   }
 }

@@ -1,8 +1,7 @@
-import 'package:crafted_manager/Contacts/people_postgres.dart';
+import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Orders/create_order_screen.dart';
 import 'package:flutter/cupertino.dart';
-
 
 class SearchPeopleScreen extends StatefulWidget {
   @override
