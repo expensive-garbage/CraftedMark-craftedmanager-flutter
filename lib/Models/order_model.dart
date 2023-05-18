@@ -1,6 +1,6 @@
 class Order {
   int id;
-  String customerId;
+  int customerId;
   DateTime orderDate;
   String shippingAddress;
   String billingAddress;
@@ -31,9 +31,9 @@ class Order {
 
   factory Order.fromMap(Map<String, dynamic> map) {
     return Order(
-      id: map['order_id'],
-      customerId: map['people_id'],
-      orderDate: map['order_date'],
+      id: int.parse(map['order_id'].toString()),
+      customerId: int.parse(map['people_id'].toString()),
+      orderDate: DateTime.parse(map['order_date'] as String),
       shippingAddress: map['shipping_address'] ?? '',
       billingAddress: map['billing_address'] ?? '',
       totalAmount:

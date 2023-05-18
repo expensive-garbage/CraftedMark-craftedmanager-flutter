@@ -88,9 +88,8 @@ class People {
       };
 
   factory People.fromMap(Map<String, dynamic> map) {
-    // Renamed from 'fromJson' to 'fromMap'
     return People(
-      id: map['id'],
+      id: map['id'].toString(),
       firstName: map['firstname'],
       lastName: map['lastname'],
       phone: map['phone'],
