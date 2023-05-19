@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../Models/people_model.dart';
+import '../Models/product_model.dart'; // Add this import
 import 'order_detail_screen.dart';
 import 'ordered_item_postgres.dart';
 
@@ -23,13 +24,17 @@ class _OrdersListState extends State<OrdersList> {
     super.initState();
   }
 
-  Future<People?> _getCustomerById(String customerId) async {
-    int customerIdInt = int.parse(customerId);
-    return await PeoplePostgres.fetchCustomer(customerIdInt);
+  Future<People?> _getCustomerById(int customerId) async {
+    return await PeoplePostgres.fetchCustomer(customerId);
   }
 
   Future<List<OrderedItem>> fetchOrderedItems(int orderId) async {
     return await OrderedItemPostgres.fetchOrderedItems(orderId);
+  }
+
+  Future<List<Product>> fetchProducts(List<OrderedItem> orderedItems) async {
+    // Implement the logic to fetch the list of products from the database based on the orderedItems list
+    return [];
   }
 
   @override
@@ -72,14 +77,16 @@ class _OrdersListState extends State<OrdersList> {
                     ),
                     child: GestureDetector(
                       onTap: () async {
-                        // Fetch customer and orderedItems data here
-                        final customer = await _getCustomerById(
-                            order.customerId); // Change this line
+                        // Fetch customer, orderedItems, and products data here
+                        final customer =
+                            await _getCustomerById(int.parse(order.customerId));
                         if (customer == null) {
                           return;
                         }
                         List<OrderedItem> orderedItems =
                             await fetchOrderedItems(order.id);
+                        List<Product> products =
+                            await fetchProducts(orderedItems);
 
                         Navigator.push(
                           context,
@@ -88,6 +95,7 @@ class _OrdersListState extends State<OrdersList> {
                               order: order,
                               customer: customer,
                               orderedItems: orderedItems,
+                              products: products,
                             ),
                           ),
                         );

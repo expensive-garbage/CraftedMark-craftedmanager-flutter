@@ -19,49 +19,26 @@ class Product {
   final int quantitySold;
   final int quantityInStock;
 
-  Product.empty()
-      : id = 0,
-        // Changed from '' to 0
-        name = '',
-        category = '',
-        subCategory = '',
-        subcat2 = '',
-        flavor = '',
-        description = '',
-        costOfGood = 0,
-        manufacturingPrice = 0,
-        wholesalePrice = 0,
-        retailPrice = 0,
-        stockQuantity = 0,
-        backordered = false,
-        supplier = '',
-        manufacturerId = '',
-        // Added empty initialization
-        manufacturerName = '',
-        itemSource = '',
-        quantitySold = 0,
-        quantityInStock = 0;
-
   Product({
-    required this.id,
+    this.id = 0,
     required this.name,
-    required this.category,
-    required this.subCategory,
-    required this.subcat2,
-    required this.flavor,
-    required this.description,
-    required this.costOfGood,
-    required this.manufacturingPrice,
-    required this.wholesalePrice,
+    this.category = '',
+    this.subCategory = '',
+    this.subcat2 = '',
+    this.flavor = '',
+    this.description = '',
+    this.costOfGood = 0,
+    this.manufacturingPrice = 0,
+    this.wholesalePrice = 0,
     required this.retailPrice,
-    required this.stockQuantity,
-    required this.backordered,
-    required this.supplier, // Changed from "Supplier" to "String"
-    required this.manufacturerId,
-    required this.manufacturerName,
-    required this.itemSource,
-    required this.quantitySold,
-    required this.quantityInStock,
+    this.stockQuantity = 0,
+    this.backordered = false,
+    this.supplier = '',
+    this.manufacturerId = '',
+    this.manufacturerName = '',
+    this.itemSource = '',
+    this.quantitySold = 0,
+    this.quantityInStock = 0,
   });
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -85,12 +62,10 @@ class Product {
           map['retail_price'] != null ? double.parse(map['retail_price']) : 0.0,
       stockQuantity:
           map['stock_quantity'] != null ? map['stock_quantity'].round() : 0,
-      // Updated this line
       backordered: map['backordered'] ?? false,
       manufacturerName: map['manufacturer_name'] ?? '',
       supplier: map['supplier_name'] ?? '',
       manufacturerId: map['manufacturer_id'] ?? '',
-      // Added this line
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
