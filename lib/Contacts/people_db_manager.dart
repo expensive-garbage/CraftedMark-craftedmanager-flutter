@@ -31,8 +31,8 @@ class PeoplePostgres {
   }
 
   static Future<People?> updateCustomer(People customer) async {
-    if (customer.id.isEmpty) {
-      throw Exception('Invalid UUID: Customer ID is empty');
+    if (customer.id <= 0) {
+      throw Exception('Invalid ID: Customer ID must be a positive integer');
     }
 
     final connection = await connectToPostgres();
@@ -62,22 +62,31 @@ class PeoplePostgres {
         : null;
   }
 
-  // Add this method in the PeoplePostgres class
-  static Future<People?> fetchCustomerByDetails(
+  static Future<List<People>> fetchCustomersByDetails(
       String firstName, String lastName, String phone) async {
-    final connection = await connectToPostgres();
-    final result = await connection.query(
-        'SELECT * FROM people WHERE firstname = @firstName OR lastname = @lastName OR phone = @phone',
-        substitutionValues: {
-          'firstName': firstName,
-          'lastName': lastName,
-          'phone': phone
-        });
+    List<People> customers = [];
+    try {
+      final connection = await connectToPostgres();
+      final result = await connection.query('''
+      SELECT * FROM people WHERE
+      LOWER(firstname) LIKE LOWER(@firstName) OR
+      LOWER(lastname) LIKE LOWER(@lastName) OR
+      phone LIKE @phone
+    ''', substitutionValues: {
+        'firstName': '%$firstName%',
+        'lastName': '%$lastName%',
+        'phone': '%$phone%',
+      });
 
-    await connection.close();
-    return result.isNotEmpty
-        ? People.fromMap(result.first.toColumnMap())
-        : null;
+      for (var row in result) {
+        customers.add(People.fromMap(row.toColumnMap()));
+      }
+
+      await connection.close();
+    } catch (e) {
+      print('Error fetching customers by details: ${e.toString()}');
+    }
+    return customers;
   }
 
   static Future<int> createCustomer(People customer) async {

@@ -1,6 +1,8 @@
+import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Orders/orders_db_manager.dart';
 import 'package:crafted_manager/Orders/product_search_screen.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,16 +36,25 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     });
   }
 
-  void saveOrder() {
-    // Add your logic to save the order to the database
-    // Example:
-    // final order = Order(...);
-    // final orderId = await OrderPostgres.saveOrder(order);
-    // for (OrderedItem item in orderedItems) {
-    //   item.orderId = orderId;
-    //   await OrderedItemPostgres.saveOrderedItem(item);
-    // }
+  Future<void> saveOrder() async {
+    // Create a new Order instance with the necessary values from the People model
+    final newOrder = Order(
+      id: DateTime.now().millisecondsSinceEpoch,
+      // Update this line to use an int for id
+      customerId: widget.client.id,
+      // Add this line
+      orderDate: DateTime.now(),
+      shippingAddress:
+          '${widget.client.address1}, ${widget.client.city}, ${widget.client.state}, ${widget.client.zip}',
+      billingAddress:
+          '${widget.client.address1}, ${widget.client.city}, ${widget.client.state}, ${widget.client.zip}',
+      totalAmount: 0,
+      orderStatus: 'Pending',
+    );
+
+    await OrderPostgres.createOrder(newOrder, orderedItems);
     print("Order saved");
+    Navigator.pop(context);
   }
 
   @override
@@ -58,8 +69,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text('Create Order'),
         trailing: GestureDetector(
-          onTap: () {
-            saveOrder();
+          onTap: () async {
+            await saveOrder();
             Navigator.pop(context);
           },
           child: Text(

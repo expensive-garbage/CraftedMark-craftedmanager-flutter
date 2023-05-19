@@ -1,110 +1,167 @@
-import 'package:crafted_manager/Models/order_model.dart';
-import 'package:crafted_manager/Models/ordered_item_model.dart';
-import 'package:crafted_manager/Models/people_model.dart';
+import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 
-class OrderDetailScreen extends StatelessWidget {
-  final Order order;
-  final People customer;
-  final List<OrderedItem> orderedItems;
+import '../Models/people_model.dart';
 
-  OrderDetailScreen({
-    required this.order,
-    required this.customer,
-    required this.orderedItems,
-  });
+class ContactDetailWidget extends StatefulWidget {
+  final People initialValue;
+
+  const ContactDetailWidget(
+    this.initialValue, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ContactDetailWidget> createState() => _ContactDetailWidgetState();
+}
+
+class _ContactDetailWidgetState extends State<ContactDetailWidget> {
+  bool _editing = false;
+  late People value;
+
+  @override
+  void initState() {
+    value = widget.initialValue;
+    if (value.isEmpty) {
+      _editing = true;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Order Details'),
-        transitionBetweenRoutes: false,
+        middle: Text('${value.firstName} ${value.lastName}'),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text(_editing ? 'Save' : 'Edit'),
+          onPressed: () async {
+            if (!_editing) {
+              setState(() => _editing = true);
+            } else {
+              People? updatedContact;
+              if (value.id.isEmpty) {
+                await PeoplePostgres.createCustomer(value);
+                List<People> updatedContacts =
+                    await PeoplePostgres.fetchCustomersByDetails(
+                        value.firstName, value.lastName, value.phone);
+                updatedContact =
+                    updatedContacts.isNotEmpty ? updatedContacts.first : null;
+              } else {
+                await PeoplePostgres.updateCustomer(value);
+                List<People> updatedContacts =
+                    await PeoplePostgres.fetchCustomersByDetails(
+                        value.firstName, value.lastName, value.phone);
+                updatedContact =
+                    updatedContacts.isNotEmpty ? updatedContacts.first : null;
+              }
+
+              if (updatedContact != null) {
+                setState(() => _editing = false);
+                Navigator.pop(context, updatedContact);
+              } else {
+                setState(() => _editing = false);
+              }
+            }
+          },
+        ),
       ),
       child: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            buildDetailRow('Order ID:', order.id.toString()),
-            buildDetailRow('Customer ID:', order.customerId.toString()),
-            buildDetailRow(
-                'Customer Name:', '${customer.firstName} ${customer.lastName}'),
-            buildDetailRow('Order Date:', order.orderDate.toString()),
-            buildDetailRow('Shipping Address:', order.shippingAddress),
-            buildDetailRow('Billing Address:', order.billingAddress),
-            buildDetailRow('Total Amount:', '\$${order.totalAmount}'),
-            buildDetailRow('Order Status:', order.orderStatus),
-            SizedBox(height: 16),
-            Text(
-              'Ordered Items:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CupertinoFormSection(
+                  header: const Text('Basic Information'),
+                  children: [
+                    _buildFormRow('First Name', value.firstName,
+                        (n) => value = value.copyWith(firstName: n)),
+                    _buildFormRow('Last Name', value.lastName,
+                        (n) => value = value.copyWith(lastName: n)),
+                    _buildFormRow('Phone', value.phone,
+                        (n) => value = value.copyWith(phone: n)),
+                    _buildFormRow('Email', value.email,
+                        (n) => value = value.copyWith(email: n)),
+                  ],
+                ),
+                CupertinoFormSection(
+                  header: const Text('Address'),
+                  children: [
+                    _buildFormRow('Address 1', value.address1,
+                        (n) => value = value.copyWith(address1: n)),
+                    _buildFormRow('Address 2', value.address2,
+                        (n) => value = value.copyWith(address2: n)),
+                    _buildFormRow('City', value.city,
+                        (n) => value = value.copyWith(city: n)),
+                    _buildFormRow('State', value.state,
+                        (n) => value = value.copyWith(state: n)),
+                    _buildFormRow('ZIP', value.zip,
+                        (n) => value = value.copyWith(zip: n)),
+                  ],
+                ),
+                CupertinoFormSection(
+                  header: const Text('Additional Information'),
+                  children: [
+                    _buildFormRow('Brand', value.brand,
+                        (n) => value = value.copyWith(brand: n)),
+                    _buildFormRow('Account Number', value.accountNumber,
+                        (n) => value = value.copyWith(accountNumber: n)),
+                    _buildFormRow('Type', value.type,
+                        (n) => value = value.copyWith(type: n)),
+                    _buildFormRowWithSwitch(
+                        'Customer-Based Pricing',
+                        value.customerBasedPricing ?? false,
+                        (n) => value = value.copyWith(customerBasedPricing: n)),
+                    _buildFormRow('Notes', value.notes,
+                        (n) => value = value.copyWith(notes: n)),
+                  ],
+                ),
+              ],
             ),
-            for (var item in orderedItems) buildOrderedItemRow(item),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget buildDetailRow(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
+  Widget _buildFormRow(
+      String label, String? value, void Function(String) setter) {
+    return CupertinoFormRow(
+      prefix: SizedBox(
+        width: 150,
+        child: Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
+      child: _editing
+          ? CupertinoTextFormFieldRow(
+              initialValue: value ?? '',
+              onChanged: setter,
+            )
+          : Text(value ?? 'N/A'),
     );
   }
 
-  Widget buildOrderedItemRow(OrderedItem item) {
-    return Padding(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Product ID: ${item.productId}',
-                style: TextStyle(fontSize: 18),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Quantity: ${item.quantity}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Text(
-                    'Price: \$${item.price}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Text(
-                    'Discount: \$${item.discount}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 4),
-          Text(
-            'Description: ${item.productDescription}',
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
+  Widget _buildFormRowWithSwitch(
+      String label, bool value, void Function(bool) setter) {
+    return CupertinoFormRow(
+      prefix: SizedBox(
+        width: 150,
+        child: Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
+      child: _editing
+          ? CupertinoSwitch(
+              value: value,
+              onChanged: setter,
+            )
+          : Text(value ? 'Yes' : 'No'),
     );
   }
 }

@@ -1,5 +1,5 @@
 class People {
-  final String id;
+  final int id;
   final String firstName;
   final String lastName;
   final String phone;
@@ -43,7 +43,8 @@ class People {
 
   factory People.empty() {
     return People(
-      id: '',
+      id: 0,
+      // Fix the id type here
       firstName: '',
       lastName: '',
       phone: '',
@@ -62,8 +63,6 @@ class People {
       updatedBy: '',
     );
   }
-
-  bool get isEmpty => id.isEmpty;
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -89,7 +88,7 @@ class People {
 
   factory People.fromMap(Map<String, dynamic> map) {
     return People(
-      id: map['id'].toString(),
+      id: map['id'] as int,
       firstName: map['firstname'],
       lastName: map['lastname'],
       phone: map['phone'],
@@ -110,8 +109,9 @@ class People {
       updatedBy: map['updatedby'] ?? 'Unknown',
     );
   }
+
   People copyWith({
-    String? id,
+    int? id,
     String? firstName,
     String? lastName,
     String? phone,
@@ -133,6 +133,7 @@ class People {
   }) {
     return People(
       id: id ?? this.id,
+      // Make sure this line assigns an int value
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phone: phone ?? this.phone,

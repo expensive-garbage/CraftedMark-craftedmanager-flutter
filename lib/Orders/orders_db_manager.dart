@@ -5,26 +5,31 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:postgres/postgres.dart';
 
 class OrderPostgres {
-  static final _connection = PostgreSQLConnection(
-    'web.craftedsolutions.co', // Database host
-    5432, // Port number
-    'craftedmanager_db', // Database name
-    username: 'craftedmanager_dbuser', // Database username
-    password: '!!Laganga1983', // Database password
-  );
-
-  static Future<void> openConnection() async {
-    await _connection.open();
+  static Future<PostgreSQLConnection> openConnection() async {
+    print('Opening connection...');
+    final connection = PostgreSQLConnection(
+      'web.craftedsolutions.co', // Database host
+      5432, // Port number
+      'craftedmanager_db', // Database name
+      username: 'craftedmanager_dbuser', // Database username
+      password: '!!Laganga1983', // Database password
+    );
+    await connection.open();
+    print('Connection opened');
+    return connection;
   }
 
-  static Future<void> closeConnection() async {
-    await _connection.close();
+  static Future<void> closeConnection(PostgreSQLConnection connection) async {
+    print('Closing connection...');
+    await connection.close();
+    print('Connection closed');
   }
 
   static Future<void> updateOrder(
       Order order, List<OrderedItem> orderedItems) async {
     try {
-      await _connection.transaction((ctx) async {
+      final connection = await openConnection();
+      await connection.transaction((ctx) async {
         // Update order in orders table
         await ctx.query('''
         UPDATE orders
@@ -50,38 +55,43 @@ class OrderPostgres {
           });
         }
       });
+      await closeConnection(connection);
     } catch (e) {
       print(e.toString());
     }
   }
 
   static Future<List<Order>> getAllOrders() async {
+    List<Order> orders = [];
     try {
-      List<Order> orders = [];
+      final connection = await openConnection();
       List<Map<String, Map<String, dynamic>>> results =
-          await _connection.mappedResultsQuery('''
-      SELECT * FROM orders
-    ''');
+          await connection.mappedResultsQuery('''
+    SELECT * FROM orders
+  ''');
 
       for (var row in results) {
         orders.add(Order.fromMap(row.values.first));
       }
-
-      return orders;
+      await closeConnection(connection);
     } catch (e) {
       print(e.toString());
-      return [];
     }
+
+    return orders;
   }
 
-  static Future<Order> getOrderById(String id) async {
+  static Future<Order?> getOrderById(String id) async {
     try {
+      final connection = await openConnection();
       List<Map<String, Map<String, dynamic>>> results =
-          await _connection.mappedResultsQuery('''
-      SELECT * FROM orders WHERE order_id = @id
-    ''', substitutionValues: {
+          await connection.mappedResultsQuery('''
+    SELECT * FROM orders WHERE order_id = @id
+  ''', substitutionValues: {
         'id': id,
       });
+
+      await closeConnection(connection);
 
       if (results.isNotEmpty) {
         return Order.fromMap(results.first.values.first);
@@ -96,7 +106,8 @@ class OrderPostgres {
 
   static Future<void> deleteOrder(String id) async {
     try {
-      await _connection.transaction((ctx) async {
+      final connection = await openConnection();
+      await connection.transaction((ctx) async {
         // Delete ordered items for this order
         await ctx.query('''
         DELETE FROM ordered_items WHERE order_id = @orderId
@@ -111,6 +122,7 @@ class OrderPostgres {
           'id': id,
         });
       });
+      await closeConnection(connection);
     } catch (e) {
       print(e.toString());
     }
@@ -118,27 +130,46 @@ class OrderPostgres {
 
   static Future<void> createOrder(
       Order order, List<OrderedItem> orderedItems) async {
+    PostgreSQLConnection? connection;
     try {
-      await _connection.transaction((ctx) async {
+      print('Opening connection...');
+      connection = await openConnection();
+      print('Connection opened');
+
+      await connection.transaction((ctx) async {
         // Insert order into orders table
+        print('Inserting order into orders table...');
+        print('Order data: ${order.toMap()}');
         await ctx.query('''
-        INSERT INTO orders (order_id, people_id, order_date, shipping_address, billing_address, total_amount, order_status)
-        VALUES (@id, @customerId, @orderDate, @shippingAddress, @billingAddress, @totalAmount, @orderStatus)
-      ''', substitutionValues: order.toMap());
+      INSERT INTO orders (order_id, people_id, order_date, shipping_address, billing_address, total_amount, order_status)
+      VALUES (@id, @customerId, @orderDate, @shippingAddress, @billingAddress, @totalAmount, @orderStatus)
+    ''', substitutionValues: order.toMap());
+        print('Order inserted into orders table');
 
         // Insert ordered items into ordered_items table
         for (OrderedItem item in orderedItems) {
+          print(
+              'Inserting ordered item into ordered_items table: ${item.toMap()}');
           await ctx.query('''
-          INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
-          VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
-        ''', substitutionValues: {
+        INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
+        VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
+      ''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,
           });
+          print('Ordered item inserted into ordered_items table');
         }
       });
+
+      print('Order created');
     } catch (e) {
-      print(e.toString());
+      print('Error creating order: ${e.toString()}');
+    } finally {
+      if (connection != null) {
+        print('Closing connection...');
+        await closeConnection(connection);
+        print('Connection closed');
+      }
     }
   }
 }

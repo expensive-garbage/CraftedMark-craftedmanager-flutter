@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 
 class SearchPeopleScreen extends StatefulWidget {
   @override
-  State<SearchPeopleScreen> createState() => _SearchPeopleScreen();
+  State<SearchPeopleScreen> createState() => _SearchPeopleScreenState();
 }
 
-class _SearchPeopleScreen extends State<SearchPeopleScreen> {
+class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
   List<People> _peopleList = [];
 
   List<People> _searchResults = [];
@@ -24,12 +24,12 @@ class _SearchPeopleScreen extends State<SearchPeopleScreen> {
     String lastName = query;
     String phone = query;
 
-    // Call the fetchCustomerByDetails function
-    People? customer =
-        await PeoplePostgres.fetchCustomerByDetails(firstName, lastName, phone);
-    if (customer != null) {
+    // Call the fetchCustomersByDetails function
+    List<People> customers = await PeoplePostgres.fetchCustomersByDetails(
+        firstName, lastName, phone);
+    if (customers.isNotEmpty) {
       setState(() {
-        _peopleList = [customer];
+        _peopleList = customers;
       });
     }
   }
@@ -41,13 +41,8 @@ class _SearchPeopleScreen extends State<SearchPeopleScreen> {
       });
     } else {
       _fetchPeople(query).then((_) {
-        List<People> results = _peopleList
-            .where((person) =>
-                person.firstName.toLowerCase().contains(query.toLowerCase()) ||
-                person.lastName.toLowerCase().contains(query.toLowerCase()))
-            .toList();
         setState(() {
-          _searchResults = results;
+          _searchResults = _peopleList;
         });
       });
     }

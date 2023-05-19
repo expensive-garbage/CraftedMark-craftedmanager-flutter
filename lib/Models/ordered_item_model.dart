@@ -26,15 +26,14 @@ class OrderedItem {
 
   factory OrderedItem.fromMap(Map<String, dynamic> map) {
     return OrderedItem(
-      id: map['ordered_item_id'] ?? 0,
-      orderId: map['order_id'] ?? 0,
-      productId: map['product_id'] ?? 0,
-      quantity: map['quantity'] ?? 0,
-      price: double.tryParse(map['price']?.toString() ?? '0') ?? 0.0,
-      discount: double.tryParse(map['discount']?.toString() ?? '0') ?? 0.0,
-      productDescription: map['description'] ?? '',
-      productRetailPrice:
-          double.tryParse(map['retail_price']?.toString() ?? '0') ?? 0.0,
+      id: map['ordered_item_id'] as int,
+      orderId: map['order_id'] as int,
+      productId: map['product_id'] as int,
+      quantity: map['quantity'] as int,
+      price: (map['price'] as num).toDouble(),
+      discount: (map['discount'] as num).toDouble(),
+      productDescription: map['description'] as String,
+      productRetailPrice: (map['retail_price'] as num).toDouble(),
     );
   }
 

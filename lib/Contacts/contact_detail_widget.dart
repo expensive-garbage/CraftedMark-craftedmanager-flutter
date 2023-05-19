@@ -1,7 +1,7 @@
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
+import 'package:crafted_manager/Extension/iterable_extension.dart';
+import 'package:crafted_manager/Models/people_model.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../Models/people_model.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final People initialValue;
@@ -22,13 +22,12 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   @override
   void initState() {
     value = widget.initialValue;
-    if (value.isEmpty) {
+    if (value.id <= 0) {
       _editing = true;
     }
     super.initState();
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -42,15 +41,19 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
               setState(() => _editing = true);
             } else {
               People? updatedContact;
-              if (value.id.isEmpty) {
+              if (value.id <= 0) {
                 await PeoplePostgres.createCustomer(value);
-                updatedContact = await PeoplePostgres.fetchCustomerByDetails(
-                    value.firstName, value.lastName, value.phone);
+                updatedContact = (await PeoplePostgres.fetchCustomersByDetails(
+                        value.firstName, value.lastName, value.phone))
+                    .firstWhere((element) => element.id > 0, // Change this line
+                        orElse: () => People.empty());
               } else {
-                updatedContact = await PeoplePostgres.updateCustomer(value);
+                updatedContact = (await PeoplePostgres.fetchCustomersByDetails(
+                        value.firstName, value.lastName, value.phone))
+                    .firstOrNull;
               }
 
-              if (updatedContact != null) {
+              if (updatedContact != null && updatedContact.id > 0) {
                 setState(() => _editing = false);
                 Navigator.pop(context, updatedContact);
               } else {

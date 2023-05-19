@@ -1,13 +1,13 @@
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
-import 'package:crafted_manager/Orders/order_detail_widget.dart';
 import 'package:crafted_manager/Orders/order_postgres.dart';
 import 'package:crafted_manager/Orders/search_people_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../Models/people_model.dart';
+import 'order_detail_screen.dart';
 import 'ordered_item_postgres.dart';
 
 class OrdersList extends StatefulWidget {
@@ -83,9 +83,10 @@ class _OrdersListState extends State<OrdersList> {
                           context,
                           CupertinoPageRoute(
                             builder: (context) => OrderDetailScreen(
-                                order: order,
-                                customer: customer,
-                                orderedItems: orderedItems),
+                              order: order,
+                              customer: customer,
+                              orderedItems: orderedItems,
+                            ),
                           ),
                         );
                       },

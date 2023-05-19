@@ -61,7 +61,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                       trailing:
                           Text('\$${filteredProducts[index].retailPrice}'),
                       onTap: () {
-                        showDialog(
+                        showCupertinoDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return CupertinoAlertDialog(
