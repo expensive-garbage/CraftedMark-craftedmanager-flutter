@@ -23,8 +23,9 @@ class _OrdersListState extends State<OrdersList> {
     super.initState();
   }
 
-  Future<People?> fetchCustomer(int customerId) async {
-    return await PeoplePostgres.fetchCustomer(customerId);
+  Future<People?> _getCustomerById(String customerId) async {
+    int customerIdInt = int.parse(customerId);
+    return await PeoplePostgres.fetchCustomer(customerIdInt);
   }
 
   Future<List<OrderedItem>> fetchOrderedItems(int orderId) async {
@@ -72,7 +73,8 @@ class _OrdersListState extends State<OrdersList> {
                     child: GestureDetector(
                       onTap: () async {
                         // Fetch customer and orderedItems data here
-                        final customer = await fetchCustomer(order.customerId);
+                        final customer = await _getCustomerById(
+                            order.customerId); // Change this line
                         if (customer == null) {
                           return;
                         }

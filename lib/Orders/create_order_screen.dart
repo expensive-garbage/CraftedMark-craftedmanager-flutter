@@ -26,6 +26,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       orderedItems.add(OrderedItem(
         id: orderedItems.length + 1,
         orderId: 0,
+        productName: product.name,
+        // Fix the attribute name here
         productId: product.id,
         quantity: quantity,
         price: product.retailPrice,
@@ -40,8 +42,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     // Create a new Order instance with the necessary values from the People model
     final newOrder = Order(
       id: DateTime.now().millisecondsSinceEpoch,
-      // Update this line to use an int for id
-      customerId: widget.client.id,
+      customerId: widget.client.id.toString(),
+      // Convert customerId to String
       // Add this line
       orderDate: DateTime.now(),
       shippingAddress:

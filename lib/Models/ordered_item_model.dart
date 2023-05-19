@@ -1,6 +1,7 @@
 class OrderedItem {
   final int id;
   final int orderId;
+  final String productName;
   final int productId;
   final int quantity;
   final double price;
@@ -11,6 +12,7 @@ class OrderedItem {
   OrderedItem({
     required this.id,
     required this.orderId,
+    required this.productName,
     required this.productId,
     required this.quantity,
     required this.price,
@@ -25,15 +27,29 @@ class OrderedItem {
   }
 
   factory OrderedItem.fromMap(Map<String, dynamic> map) {
+    num parseNum(dynamic value) {
+      if (value is num) {
+        return value;
+      } else {
+        try {
+          return num.parse(value);
+        } catch (_) {
+          return 0;
+        }
+      }
+    }
+
     return OrderedItem(
       id: map['ordered_item_id'] as int,
       orderId: map['order_id'] as int,
+      productName: map['product_name'] as String? ?? 'Unknown',
       productId: map['product_id'] as int,
       quantity: map['quantity'] as int,
-      price: (map['price'] as num).toDouble(),
-      discount: (map['discount'] as num).toDouble(),
-      productDescription: map['description'] as String,
-      productRetailPrice: (map['retail_price'] as num).toDouble(),
+      price: parseNum(map['price']).toDouble(),
+      discount: parseNum(map['discount']).toDouble(),
+      productDescription: map['description'] as String? ?? '',
+      // Add the null check and default value here
+      productRetailPrice: parseNum(map['retail_price']).toDouble(),
     );
   }
 

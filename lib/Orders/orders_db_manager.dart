@@ -151,9 +151,9 @@ class OrderPostgres {
           print(
               'Inserting ordered item into ordered_items table: ${item.toMap()}');
           await ctx.query('''
-        INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
-        VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
-      ''', substitutionValues: {
+    INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
+    VALUES (@orderId, @product_id, @quantity, @price, @discount, @description)
+    ''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,
           });

@@ -1,6 +1,6 @@
 class Order {
   int id;
-  int customerId;
+  String customerId;
   DateTime orderDate;
   String shippingAddress;
   String billingAddress;
@@ -30,10 +30,19 @@ class Order {
   }
 
   factory Order.fromMap(Map<String, dynamic> map) {
+    DateTime parseOrderDate(String date) {
+      try {
+        return DateTime.parse(date);
+      } catch (_) {
+        return DateTime.now(); // Return a default date value when parsing fails
+      }
+    }
+
     return Order(
       id: int.parse(map['order_id'].toString()),
-      customerId: int.parse(map['people_id'].toString()),
-      orderDate: DateTime.parse(map['order_date'] as String),
+      customerId: map['people_id'].toString(),
+      orderDate: parseOrderDate(map['orderDate'].toString()),
+      // Use the parseOrderDate function here
       shippingAddress: map['shipping_address'] ?? '',
       billingAddress: map['billing_address'] ?? '',
       totalAmount:

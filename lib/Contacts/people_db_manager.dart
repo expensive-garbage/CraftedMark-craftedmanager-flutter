@@ -6,6 +6,7 @@ import 'package:crafted_manager/Orders/database_functions.dart';
 class PeoplePostgres {
   // Fetch a customer by customerId
   static Future<People?> fetchCustomer(int customerId) async {
+    // Change the argument type to int
     if (customerId <= 0) {
       throw Exception('Invalid ID: Customer ID must be a positive integer');
     }
