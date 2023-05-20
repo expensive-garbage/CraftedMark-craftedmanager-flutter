@@ -3,6 +3,7 @@ class OrderedItem {
   final int orderId;
   final String productName;
   final int productId;
+  final String name;
   final int quantity;
   final double price;
   final double discount;
@@ -14,6 +15,7 @@ class OrderedItem {
     required this.orderId,
     required this.productName,
     required this.productId,
+    required this.name,
     required this.quantity,
     required this.price,
     required this.discount,
@@ -44,6 +46,7 @@ class OrderedItem {
       orderId: map['order_id'] as int,
       productName: map['product_name'] as String? ?? 'Unknown',
       productId: map['product_id'] as int,
+      name: map['name'] as String? ?? 'Unknown',
       quantity: map['quantity'] as int,
       price: parseNum(map['price']).toDouble(),
       discount: parseNum(map['discount']).toDouble(),
@@ -58,6 +61,7 @@ class OrderedItem {
       'ordered_item_id': id,
       'order_id': orderId,
       'product_id': productId,
+      'name': name,
       'quantity': quantity,
       'price': price,
       'discount': discount,

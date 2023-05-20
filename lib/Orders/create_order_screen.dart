@@ -27,8 +27,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         id: orderedItems.length + 1,
         orderId: 0,
         productName: product.name,
-        // Fix the attribute name here
         productId: product.id,
+        name: product.name,
         quantity: quantity,
         price: product.retailPrice,
         discount: 0,
@@ -39,18 +39,24 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   }
 
   Future<void> saveOrder() async {
+    double subTotal = orderedItems.fold(
+      0.0,
+      (previousValue, element) =>
+          previousValue + (element.price * element.quantity),
+    );
+    double totalAmount = subTotal + shippingCost;
+
     // Create a new Order instance with the necessary values from the People model
     final newOrder = Order(
       id: DateTime.now().millisecondsSinceEpoch,
       customerId: widget.client.id.toString(),
       // Convert customerId to String
-      // Add this line
       orderDate: DateTime.now(),
       shippingAddress:
-          '${widget.client.address1}, ${widget.client.city}, ${widget.client.state}, ${widget.client.zip}',
+          '${widget.client.address1}, ${widget.client.city},${widget.client.state},${widget.client.zip}',
       billingAddress:
-          '${widget.client.address1}, ${widget.client.city}, ${widget.client.state}, ${widget.client.zip}',
-      totalAmount: 0,
+          '${widget.client.address1},${widget.client.city},${widget.client.state},${widget.client.zip}',
+      totalAmount: totalAmount,
       orderStatus: 'Pending',
     );
 

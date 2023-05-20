@@ -2,6 +2,7 @@ import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
+import 'package:crafted_manager/Orders/edit_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -23,9 +24,12 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  void editOrder() {
-    // Implement your logic for editing the order here.
-    print('Edit order button pressed');
+  void updateOrderDetails(Order updatedOrder) {
+    // Update the order details and refresh the widget state.
+    setState(() {
+      widget.order.totalAmount = updatedOrder.totalAmount;
+      widget.order.orderStatus = updatedOrder.orderStatus;
+    });
   }
 
   @override
@@ -83,16 +87,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     Product product = widget.products.firstWhere(
                       (prod) => prod.id == orderedItem.productId,
                       orElse: () => Product(
-                          id: 0, name: 'Unknown Product', retailPrice: 0),
+                        id: 0,
+                        name: 'Unknown Product',
+                        retailPrice: 0,
+                      ),
                     );
 
-                    String productName = product?.name ?? 'Unknown Product';
+                    String productName = product.name;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Product Name: $productName',
-                          // Display product name here
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
@@ -112,8 +118,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 CupertinoButton(
                   color: CupertinoColors.activeBlue,
                   child: Text('Edit Order'),
-                  onPressed: () {
-                    editOrder();
+                  onPressed: () async {
+                    // Navigate to the EditOrderScreen
+                    final updatedOrder = await Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => EditOrderScreen(
+                          order: widget.order,
+                          orderedItems: widget.orderedItems,
+                          products: widget.products,
+                          customer: widget.customer,
+                        ),
+                      ),
+                    );
+                    if (updatedOrder != null) {
+                      updateOrderDetails(updatedOrder);
+                    }
                   },
                 ),
               ],
