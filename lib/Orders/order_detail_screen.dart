@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
@@ -84,8 +86,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   itemCount: widget.orderedItems.length,
                   itemBuilder: (context, index) {
                     OrderedItem orderedItem = widget.orderedItems[index];
+                    log('OrderedItem ID: ${orderedItem.productId}');
                     Product product = widget.products.firstWhere(
-                      (prod) => prod.id == orderedItem.productId,
+                      (prod) {
+                        log('Product ID: ${prod.id}');
+                        return prod.id == orderedItem.productId;
+                      },
                       orElse: () => Product(
                         id: 0,
                         name: 'Unknown Product',

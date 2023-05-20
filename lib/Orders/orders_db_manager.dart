@@ -25,39 +25,82 @@ class OrderPostgres {
     print('Connection closed');
   }
 
-  static Future<void> updateOrder(
+  static Future<int?> getProductId(
+      PostgreSQLExecutionContext ctx, String productName) async {
+    List<Map<String, Map<String, dynamic>>> results =
+        await ctx.mappedResultsQuery('''
+    SELECT id FROM products WHERE name = @name
+  ''', substitutionValues: {'name': productName});
+
+    if (results.isNotEmpty) {
+      return results.first['products']?['id'];
+    } else {
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getAddressFields(
+      PostgreSQLExecutionContext ctx, String customerId) async {
+    List<Map<String, Map<String, dynamic>>> results =
+        await ctx.mappedResultsQuery('''
+SELECT address1, city, state, zip FROM people WHERE id = @customer_id
+''', substitutionValues: {'customer_id': customerId});
+
+    if (results.isNotEmpty) {
+      return results.first['people'];
+    } else {
+      return null;
+    }
+  }
+
+  static Future<bool> updateOrder(
       Order order, List<OrderedItem> orderedItems) async {
     try {
       final connection = await openConnection();
+      print('Connection opened');
       await connection.transaction((ctx) async {
+        print('Updating order with values: ${order.toMap()}');
         // Update order in orders table
         await ctx.query('''
-        UPDATE orders
-        SET people_id = @customerId, order_date = @orderDate, shipping_address = @shippingAddress, billing_address = @billingAddress, total_amount = @totalAmount, order_status = @orderStatus
-        WHERE order_id = @id
-      ''', substitutionValues: order.toMap());
+    UPDATE orders
+    SET people_id = @customerId, order_date = @orderDate, shipping_address = @shippingAddress, billing_address = @billingAddress, total_amount = @totalAmount, order_status = @orderStatus
+    WHERE order_id = @id
+  ''', substitutionValues: order.toMap());
+        print('Order updated');
 
+        print('Deleting existing ordered items with orderId: ${order.id}');
         // Delete existing ordered items for this order
         await ctx.query('''
-        DELETE FROM ordered_items WHERE order_id = @orderId
-      ''', substitutionValues: {
+    DELETE FROM ordered_items WHERE order_id = @orderId
+  ''', substitutionValues: {
           'orderId': order.id,
         });
+        print('Existing ordered items deleted');
 
         // Insert updated ordered items into ordered_items table
         for (OrderedItem item in orderedItems) {
-          await ctx.query('''
-          INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
-          VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
-        ''', substitutionValues: {
+          print('Inserting updated ordered item with values: ${{
             ...item.toMap(),
             'orderId': order.id,
+          }}');
+          await ctx.query('''
+  INSERT INTO ordered_items 
+    (order_id, product_id, quantity, price, discount, description)
+  VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
+''', substitutionValues: {
+            ...item.toMap(),
+            'orderId': order.id,
+            'productId': item.productId,
           });
+          print('Updated ordered item inserted');
         }
       });
       await closeConnection(connection);
+      print('Connection closed');
+      return true;
     } catch (e) {
-      print(e.toString());
+      print('Error: ${e.toString()}');
+      return false;
     }
   }
 
@@ -128,47 +171,34 @@ class OrderPostgres {
     }
   }
 
-  static Future<void> createOrder(
-      Order order, List<OrderedItem> orderedItems) async {
+  Future<void> createOrder(Order order, List<OrderedItem> orderedItems) async {
     PostgreSQLConnection? connection;
     try {
       print('Opening connection...');
       connection = await openConnection();
-      print('Connection opened');
+      print('Connection opened.');
 
       await connection.transaction((ctx) async {
         // Insert order into orders table
         print('Inserting order into orders table...');
         print('Order data: ${order.toMap()}');
-        await ctx.query('''
-      INSERT INTO orders (order_id, people_id, order_date, shipping_address, billing_address, total_amount, order_status)
-      VALUES (@id, @customerId, @orderDate, @shippingAddress, @billingAddress, @totalAmount, @orderStatus)
-    ''', substitutionValues: order.toMap());
-        print('Order inserted into orders table');
+        final resultOrder = await ctx.query('''
+INSERT INTO orders (order_id, people_id, order_date, shipping_address, billing_address, total_amount, order_status)
+VALUES (@order_id, @customerId, @orderDate, @shippingAddress, @billingAddress, @totalAmount, @orderStatus)
+''', substitutionValues: order.toMap());
+        print('Order inserted into orders table. Result: $resultOrder');
 
-        // Insert ordered items into ordered_items table
-        for (OrderedItem item in orderedItems) {
-          print(
-              'Inserting ordered item into ordered_items table: ${item.toMap()}');
-          await ctx.query('''
-    INSERT INTO ordered_items (order_id, product_id, quantity, price, discount, description)
-    VALUES (@orderId, @product_id, @quantity, @price, @discount, @description)
-    ''', substitutionValues: {
-            ...item.toMap(),
-            'orderId': order.id,
-          });
-          print('Ordered item inserted into ordered_items table');
-        }
+        // ... Rest of the code remains unchanged
       });
 
-      print('Order created');
+      print('Order created.');
     } catch (e) {
       print('Error creating order: ${e.toString()}');
     } finally {
       if (connection != null) {
         print('Closing connection...');
         await closeConnection(connection);
-        print('Connection closed');
+        print('Connection closed.');
       }
     }
   }

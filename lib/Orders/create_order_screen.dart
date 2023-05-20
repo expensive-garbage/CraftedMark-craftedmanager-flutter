@@ -2,11 +2,12 @@ import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/Orders/orders_db_manager.dart';
 import 'package:crafted_manager/Orders/product_search_screen.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../Orders/orders_db_manager.dart';
 
 class CreateOrderScreen extends StatefulWidget {
   final People client;
@@ -27,7 +28,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         id: orderedItems.length + 1,
         orderId: 0,
         productName: product.name,
-        productId: product.id,
+        productId: product.id!,
         name: product.name,
         quantity: quantity,
         price: product.retailPrice,
@@ -60,9 +61,18 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       orderStatus: 'Pending',
     );
 
-    await OrderPostgres.createOrder(newOrder, orderedItems);
-    print("Order saved");
-    Navigator.pop(context);
+    Future<void> createOrder(
+        Order order, List<OrderedItem> orderedItems) async {
+      print("Creating new order...");
+      print("Order data: ${newOrder.toMap()}");
+      print(
+          "Ordered items data: ${orderedItems.map((e) => e.toMap()).toList()}");
+
+      await OrderPostgres().createOrder(newOrder, orderedItems);
+    }
+
+    await createOrder(
+        newOrder, orderedItems); // Call the 'createOrder' method here
   }
 
   @override

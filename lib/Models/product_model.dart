@@ -1,5 +1,5 @@
 class Product {
-  final int id;
+  final int? id;
   final String name;
   final String category;
   final String subCategory;
@@ -20,7 +20,7 @@ class Product {
   final int quantityInStock;
 
   Product({
-    this.id = 0,
+    this.id,
     required this.name,
     this.category = '',
     this.subCategory = '',
@@ -43,7 +43,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['product_id'] ?? 0,
+      id: map['product_id'] as int?,
       name: map['product_name'] ?? '',
       category: map['category'] ?? '',
       subCategory: map['sub_category'] ?? '',
@@ -63,9 +63,9 @@ class Product {
       stockQuantity:
           map['stock_quantity'] != null ? map['stock_quantity'].round() : 0,
       backordered: map['backordered'] ?? false,
-      manufacturerName: map['manufacturer_name'] ?? '',
-      supplier: map['supplier_name'] ?? '',
+      supplier: map['supplier'] ?? '',
       manufacturerId: map['manufacturer_id'] ?? '',
+      manufacturerName: map['manufacturer_name'] ?? '',
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,

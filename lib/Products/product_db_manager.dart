@@ -23,31 +23,38 @@ class ProductPostgres {
   }
 
   static Future<void> addProduct(Product product) async {
+    print('Adding product: ${product.name}');
     final connection = await _createConnection();
-    await connection.execute(
-      'INSERT INTO products (product_id, product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, supplier_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_id, @product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @supplier_name, @item_source, @quantity_sold, @quantity_in_stock)',
-      substitutionValues: {
-        'product_id': product.id,
-        'product_name': product.name,
-        'category': product.category,
-        'sub_category': product.subCategory,
-        'subcat2': product.subcat2,
-        'flavor': product.flavor,
-        'description': product.description,
-        'cost_of_good': product.costOfGood,
-        'manufacturing_price': product.manufacturingPrice,
-        'wholesale_price': product.wholesalePrice,
-        'retail_price': product.retailPrice,
-        'stock_quantity': product.stockQuantity,
-        'backordered': product.backordered,
-        'manufacturer_name': product.manufacturerName,
-        'supplier_name': product.supplier,
-        'item_source': product.itemSource,
-        'quantity_sold': product.quantitySold,
-        'quantity_in_stock': product.quantityInStock,
-      },
-    );
-    await closeConnection(connection);
+    try {
+      await connection.execute(
+        'INSERT INTO products (product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, supplier_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @supplier_name, @item_source, @quantity_sold, @quantity_in_stock)',
+        substitutionValues: {
+          //'product_id': product.id,
+          'product_name': product.name,
+          'category': product.category,
+          'sub_category': product.subCategory,
+          'subcat2': product.subcat2,
+          'flavor': product.flavor,
+          'description': product.description,
+          'cost_of_good': product.costOfGood,
+          'manufacturing_price': product.manufacturingPrice,
+          'wholesale_price': product.wholesalePrice,
+          'retail_price': product.retailPrice,
+          'stock_quantity': product.stockQuantity,
+          'backordered': product.backordered,
+          'manufacturer_name': product.manufacturerName,
+          'supplier_name': product.supplier,
+          'item_source': product.itemSource,
+          'quantity_sold': product.quantitySold,
+          'quantity_in_stock': product.quantityInStock,
+        },
+      );
+      print('Product added successfully');
+    } catch (e) {
+      print('Error adding product: $e');
+    } finally {
+      await closeConnection(connection);
+    }
   }
 
   // Generate a random UUID

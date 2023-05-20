@@ -39,7 +39,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         id: _orderedItems.length + 1,
         orderId: widget.order.id,
         productName: product.name,
-        productId: product.id,
+        productId: product.id!,
         name: product.name,
         quantity: quantity,
         price: product.retailPrice,
@@ -50,7 +50,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     });
   }
 
-  Future<void> updateOrder() async {
+  Future<bool> updateOrder() async {
     Order updatedOrder = Order(
       id: widget.order.id,
       customerId: widget.customer.id.toString(),
@@ -65,8 +65,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
       orderStatus: widget.order.orderStatus,
     );
 
-    await OrderPostgres.updateOrder(updatedOrder, _orderedItems);
-    Navigator.pop(context, updatedOrder);
+    return await OrderPostgres.updateOrder(updatedOrder, _orderedItems);
   }
 
   @override
@@ -82,7 +81,26 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         middle: Text('Edit Order'),
         trailing: GestureDetector(
           onTap: () async {
-            await updateOrder();
+            if (await updateOrder()) {
+              Navigator.pop(context, true);
+            } else {
+              showCupertinoDialog(
+                context: context,
+                builder: (_) => CupertinoAlertDialog(
+                  title: Text("Error"),
+                  content: Text("Failed to update order."),
+                  actions: [
+                    CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
           },
           child: Text(
             "Save",
