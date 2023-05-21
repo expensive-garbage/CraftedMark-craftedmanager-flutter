@@ -2,10 +2,10 @@ import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/Orders/orders_db_manager.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../Orders/orders_db_manager.dart';
 import 'product_search_screen.dart';
 
 class EditOrderScreen extends StatefulWidget {
@@ -45,21 +45,36 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   }
 
   void addOrderedItem(Product product, int quantity) {
-    setState(() {
-      _orderedItems.add(OrderedItem(
-        id: _orderedItems.length + 1,
-        orderId: widget.order.id,
-        productName: product.name,
-        productId: product.id!,
-        name: product.name,
-        quantity: quantity,
-        price: product.retailPrice,
-        discount: 0,
-        productDescription: product.description,
-        productRetailPrice: product.retailPrice,
-      ));
-      _subTotal = calculateSubtotal();
-    });
+    // Check if the product is already in the orderedItems list
+    int existingIndex = _orderedItems
+        .indexWhere((orderedItem) => orderedItem.productId == product.id);
+
+    if (existingIndex != -1) {
+      // If the product exists, update the existing line
+      setState(() {
+        _orderedItems[existingIndex] = _orderedItems[existingIndex].copyWith(
+          quantity: _orderedItems[existingIndex].quantity + quantity,
+        );
+        _subTotal = calculateSubtotal();
+      });
+    } else {
+      // If the product doesn't exist, add a new line
+      setState(() {
+        _orderedItems.add(OrderedItem(
+          id: _orderedItems.length + 1,
+          orderId: widget.order.id,
+          productName: product.name,
+          productId: product.id!,
+          name: product.name,
+          quantity: quantity,
+          price: product.retailPrice,
+          discount: 0,
+          productDescription: product.description,
+          productRetailPrice: product.retailPrice,
+        ));
+        _subTotal = calculateSubtotal();
+      });
+    }
   }
 
   Future<Order?> updateOrder() async {
@@ -74,22 +89,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     } else {
       return null;
     }
-  }
-
-  void updateOrderedItem(int index, Product product, int quantity) {
-    setState(() {
-      _orderedItems[index] = _orderedItems[index].copyWith(
-        productName: product.name,
-        productId: product.id!,
-        name: product.name,
-        quantity: quantity,
-        price: product.retailPrice,
-        discount: 0,
-        productDescription: product.description,
-        productRetailPrice: product.retailPrice,
-      );
-      _subTotal = calculateSubtotal();
-    });
+    ;
   }
 
   @override
