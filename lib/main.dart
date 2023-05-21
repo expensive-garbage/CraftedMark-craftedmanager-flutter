@@ -62,6 +62,7 @@ class CraftedManager extends StatelessWidget {
       theme: CupertinoThemeData(
         brightness: Brightness.dark,
         primaryColor: CupertinoColors.activeBlue,
+        scaffoldBackgroundColor: CupertinoColors.darkBackgroundGray,
       ),
       home: MenuView(
           //onMenuItemSelected: (Product product) {
