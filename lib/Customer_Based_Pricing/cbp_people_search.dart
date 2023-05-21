@@ -61,8 +61,12 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                   ),
                   child: CupertinoListTile(
                     title: Text(
-                      _searchResults[index]['name'] ?? '',
+                      '${_searchResults[index]['firstname'] ?? ''} ${_searchResults[index]['lastname'] ?? ''} ',
                       style: TextStyle(color: CupertinoColors.white),
+                    ),
+                    subtitle: Text(
+                      _searchResults[index]['email'] ?? '',
+                      style: TextStyle(color: CupertinoColors.systemGrey),
                     ),
                     trailing: const Icon(
                       CupertinoIcons.right_chevron,
