@@ -78,7 +78,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Edit Order'),
+        middle: const Text('Edit Order'),
         trailing: GestureDetector(
           onTap: () async {
             if (await updateOrder()) {
@@ -87,12 +87,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               showCupertinoDialog(
                 context: context,
                 builder: (_) => CupertinoAlertDialog(
-                  title: Text("Error"),
-                  content: Text("Failed to update order."),
+                  title: const Text("Error"),
+                  content: const Text("Failed to update order."),
                   actions: [
                     CupertinoDialogAction(
                       isDefaultAction: true,
-                      child: Text("OK"),
+                      child: const Text("OK"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -102,7 +102,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               );
             }
           },
-          child: Text(
+          child: const Text(
             "Save",
             style: TextStyle(color: CupertinoColors.activeBlue),
           ),
@@ -112,9 +112,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: CupertinoButton.filled(
-                child: Text('Add Item'),
+                child: const Text('Add Item'),
                 onPressed: () async {
                   List<Product> products =
                       await ProductPostgres.getAllProducts();
@@ -133,7 +133,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
             ),
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: _orderedItems.length,
               itemBuilder: (context, index) {
                 return Dismissible(
@@ -152,13 +152,13 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               },
             ),
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Subtotal:'),
+                      const Text('Subtotal:'),
                       Text('\$${subTotal.toStringAsFixed(2)}'),
                     ],
                   ),

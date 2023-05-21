@@ -85,13 +85,13 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Create Order'),
+        middle: const Text('Create Order'),
         trailing: GestureDetector(
           onTap: () async {
             await saveOrder();
             Navigator.pop(context);
           },
-          child: Text(
+          child: const Text(
             "Save Order",
             style: TextStyle(color: CupertinoColors.activeBlue),
           ),
@@ -101,9 +101,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: CupertinoButton.filled(
-                child: Text('Add Item'),
+                child: const Text('Add Item'),
                 onPressed: () async {
                   List<Product> products =
                       await ProductPostgres.getAllProducts();
@@ -135,7 +135,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         Text('Qty: ${orderedItems[index].quantity}'),
                         CupertinoButton(
                           padding: EdgeInsets.zero,
-                          child: Text(
+                          child: const Text(
                             "Edit Qty",
                             style: TextStyle(color: CupertinoColors.activeBlue),
                           ),
@@ -146,7 +146,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 int updatedQuantity =
                                     orderedItems[index].quantity;
                                 return CupertinoAlertDialog(
-                                  title: Text('Edit Quantity'),
+                                  title: const Text('Edit Quantity'),
                                   content: CupertinoPicker(
                                     itemExtent: 32,
                                     onSelectedItemChanged: (value) {
@@ -168,7 +168,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text("Cancel"),
+                                      child: const Text("Cancel"),
                                     ),
                                     CupertinoDialogAction(
                                       onPressed: () {
@@ -178,7 +178,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         });
                                         Navigator.pop(context);
                                       },
-                                      child: Text("Update"),
+                                      child: const Text("Update"),
                                     ),
                                   ],
                                 );
@@ -193,29 +193,29 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Subtotal:'),
+                      const Text('Subtotal:'),
                       Text('\$${subTotal.toStringAsFixed(2)}'),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Shipping:'),
+                      const Text('Shipping:'),
                       Text('\$${shippingCost.toStringAsFixed(2)}'),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total:'),
+                      const Text('Total:'),
                       Text('\$${(subTotal + shippingCost).toStringAsFixed(2)}'),
                     ],
                   ),

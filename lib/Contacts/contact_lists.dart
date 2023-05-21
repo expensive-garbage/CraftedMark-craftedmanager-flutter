@@ -60,46 +60,80 @@ class ContactsListState extends State<ContactsList> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Contacts'),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.add),
-          onPressed: () {
-            addNewContact();
-          },
+    return CupertinoTheme(
+      data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
+      child: CupertinoPageScaffold(
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        navigationBar: CupertinoNavigationBar(
+          middle: const Text('Contacts'),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.add),
+            onPressed: () {
+              addNewContact();
+            },
+          ),
         ),
-      ),
-      child: Material(
-        child: _contacts == null
-            ? const Center(child: CupertinoActivityIndicator())
-            : ListView.separated(
-                itemCount: _contacts!.length,
-                itemBuilder: (context, index) {
-                  final contact = _contacts![index];
-                  return GestureDetector(
-                    onTap: () {
-                      openContactDetails(contact);
-                    },
-                    child: ListTile(
-                      title: Text(
-                          '${contact.firstName} ${contact.lastName ?? ''}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(contact.brand),
-                          Text(contact.phone),
-                        ],
+        child: Material(
+          color: const Color.fromARGB(255, 0, 0, 0),
+          child: _contacts == null
+              ? const Center(child: CupertinoActivityIndicator())
+              : ListView.separated(
+                  itemCount: _contacts!.length,
+                  itemBuilder: (context, index) {
+                    final contact = _contacts![index];
+                    return GestureDetector(
+                      onTap: () {
+                        openContactDetails(contact);
+                      },
+                      child: Container(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        child: ListTile(
+                          title: Text(
+                            '${contact.firstName} ${contact.lastName ?? ''}',
+                            style: TextStyle(
+                              color: CupertinoTheme.of(context)
+                                  .textTheme
+                                  .textStyle
+                                  .color,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                contact.brand,
+                                style: TextStyle(
+                                  color: CupertinoTheme.of(context)
+                                      .textTheme
+                                      .textStyle
+                                      .color
+                                      ?.withAlpha(150),
+                                ),
+                              ),
+                              Text(
+                                contact.phone,
+                                style: TextStyle(
+                                  color: CupertinoTheme.of(context)
+                                      .textTheme
+                                      .textStyle
+                                      .color
+                                      ?.withAlpha(150),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 0.5,
-                  height: 1,
+                    );
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                    thickness: 0.5,
+                    height: 1,
+                    color: CupertinoColors.systemGrey,
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }

@@ -35,14 +35,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text('Search Product'),
       ),
       child: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: CupertinoTextField(
                 controller: _searchController,
                 onChanged: _filterProducts,
@@ -65,12 +65,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return CupertinoAlertDialog(
-                              title: Text('Add to Order'),
+                              title: const Text('Add to Order'),
                               content: Column(
                                 children: [
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Text(filteredProducts[index].description),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   CupertinoPicker(
                                     itemExtent: 32,
                                     onSelectedItemChanged: (value) {
@@ -89,7 +89,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text("Cancel"),
+                                  child: const Text("Cancel"),
                                 ),
                                 CupertinoDialogAction(
                                   onPressed: () {
@@ -102,7 +102,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                                       },
                                     );
                                   },
-                                  child: Text("Add to Order"),
+                                  child: const Text("Add to Order"),
                                 ),
                               ],
                             );

@@ -188,7 +188,23 @@ VALUES (@order_id, @customerId, @orderDate, @shippingAddress, @billingAddress, @
 ''', substitutionValues: order.toMap());
         print('Order inserted into orders table. Result: $resultOrder');
 
-        // ... Rest of the code remains unchanged
+        // Insert ordered items into ordered_items table
+        for (OrderedItem item in orderedItems) {
+          print('Inserting ordered item with values: ${{
+            ...item.toMap(),
+            'orderId': order.id,
+          }}');
+          await ctx.query('''
+INSERT INTO ordered_items 
+  (order_id, product_id, quantity, price, discount, description)
+VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
+''', substitutionValues: {
+            ...item.toMap(),
+            'orderId': order.id,
+            'productId': item.productId,
+          });
+          print('Ordered item inserted');
+        }
       });
 
       print('Order created.');

@@ -17,6 +17,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       Product newProduct = Product(
         id: 0,
         description: _descriptionController.text,
+        name: '',
         retailPrice: double.parse(_retailPriceController.text),
       );
       await ProductPostgres.saveProduct(newProduct);
@@ -28,23 +29,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Add Product'),
+        middle: const Text('Add Product'),
         trailing: GestureDetector(
           onTap: _saveProduct,
-          child: Text(
+          child: const Text(
             "Save",
             style: TextStyle(color: CupertinoColors.activeBlue),
           ),
         ),
       ),
       child: ListView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         children: [
           CupertinoTextField(
             controller: _descriptionController,
             placeholder: 'Description',
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           CupertinoTextField(
             controller: _retailPriceController,
             placeholder: 'Retail Price',

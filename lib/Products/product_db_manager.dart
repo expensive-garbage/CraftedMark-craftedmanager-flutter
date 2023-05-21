@@ -119,4 +119,6 @@ class ProductPostgres {
     await closeConnection(connection);
     return results.map((row) => Product.fromMap(row.toColumnMap())).toList();
   }
+
+  static saveProduct(Product newProduct) {}
 }

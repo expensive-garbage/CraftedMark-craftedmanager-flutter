@@ -60,6 +60,7 @@ class CraftedManager extends StatelessWidget {
     return const CupertinoApp(
       title: 'Crafted Manager',
       theme: CupertinoThemeData(
+        brightness: Brightness.dark,
         primaryColor: CupertinoColors.activeBlue,
       ),
       home: MenuView(

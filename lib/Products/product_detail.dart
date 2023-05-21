@@ -71,81 +71,81 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     controller: _nameController,
-                    prefix: Text('Name: '),
+                    prefix: const Text('Name: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _categoryController,
-                    prefix: Text('Category: '),
+                    prefix: const Text('Category: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _subCategoryController,
-                    prefix: Text('Subcategory: '),
+                    prefix: const Text('Subcategory: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _subcat2Controller,
-                    prefix: Text('Subcategory 2: '),
+                    prefix: const Text('Subcategory 2: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _flavorController,
-                    prefix: Text('Flavor: '),
+                    prefix: const Text('Flavor: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _descriptionController,
-                    prefix: Text('Description: '),
+                    prefix: const Text('Description: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _costOfGoodController,
                     keyboardType: TextInputType.number,
-                    prefix: Text('Cost of Good: '),
+                    prefix: const Text('Cost of Good: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _manufacturingPriceController,
                     keyboardType: TextInputType.number,
-                    prefix: Text('Manufacturing Price: '),
+                    prefix: const Text('Manufacturing Price: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _wholesalePriceController,
                     keyboardType: TextInputType.number,
-                    prefix: Text('Wholesale Price: '),
+                    prefix: const Text('Wholesale Price: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _retailPriceController,
                     keyboardType: TextInputType.number,
-                    prefix: Text('Retail Price: '),
+                    prefix: const Text('Retail Price: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _stockQuantityController,
                     keyboardType: TextInputType.number,
-                    prefix: Text('Stock Quantity: '),
+                    prefix: const Text('Stock Quantity: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _itemSourceController,
-                    prefix: Text('Item Source: '),
+                    prefix: const Text('Item Source: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _manufacturerNameController,
-                    prefix: Text('Manufacturer Name: '),
+                    prefix: const Text('Manufacturer Name: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _supplierController,
-                    prefix: Text('Supplier: '),
+                    prefix: const Text('Supplier: '),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   CupertinoButton.filled(
-                    child: Text('Save'),
+                    child: const Text('Save'),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
@@ -158,12 +158,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return CupertinoAlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'An error occurred while saving the product.'),
                                 actions: <Widget>[
                                   CupertinoDialogAction(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },

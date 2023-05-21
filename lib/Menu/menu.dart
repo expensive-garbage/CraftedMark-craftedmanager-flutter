@@ -29,28 +29,15 @@ class MenuViewState extends State<MenuView> {
   }
 
   final List<MenuItem> menuItems = [
-    // MenuItem(title: "Dashboard", iconData: CupertinoIcons.speedometer),
-    // MenuItem(
-    //     title: "Production",
-    //     iconData: CupertinoIcons.gear_alt_fill,
-    //     subItems: [
-    //       MenuItem(
-    //           title: "Production Schedule", iconData: CupertinoIcons.calendar),
-    //       MenuItem(
-    //           title: "Production Reports",
-    //           iconData: CupertinoIcons.doc_text_fill),
-    //     ]),
     MenuItem(
         title: "Orders/Invoicing",
         iconData: CupertinoIcons.cart_fill,
         subItems: [
-          // MenuItem(title: "Invoices", iconData: CupertinoIcons.calendar),
           MenuItem(
               title: "Open Orders",
               iconData: CupertinoIcons.doc_text_fill,
               destination: OrdersList(title: "Orders")),
         ]),
-    // MenuItem(title: "Payments", iconData: CupertinoIcons.creditcard_fill),
     MenuItem(
         title: "Contacts",
         iconData: CupertinoIcons.person_2_fill,
@@ -60,8 +47,6 @@ class MenuViewState extends State<MenuView> {
             iconData: CupertinoIcons.person_crop_circle_fill,
             destination: const ContactsList(),
           ),
-          // MenuItem(title: "Suppliers", iconData: CupertinoIcons.car_fill),
-          // MenuItem(title: "Vendors", iconData: CupertinoIcons.building_2_fill),
         ]),
     MenuItem(
         title: "Inventory",
@@ -70,23 +55,20 @@ class MenuViewState extends State<MenuView> {
           MenuItem(
               title: "Products",
               iconData: CupertinoIcons.clear_fill,
-              destination: ProductListPage()), // Remove onProductTap parameter
-          // MenuItem(
-          //     title: "Packaging Inventory",
-          //     iconData: CupertinoIcons.shift_fill),
+              destination: ProductListPage()),
         ]),
-    // MenuItem(title: "Accounting", iconData: CupertinoIcons.chart_pie_fill),
-    // MenuItem(title: "Employee", iconData: CupertinoIcons.person_crop_circle),
   ];
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemBackground,
+      backgroundColor: Color.fromARGB(255, 0, 0, 0),
       child: CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
-            largeTitle: Text('Crafted Manager'),
+          CupertinoSliverNavigationBar(
+            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+            largeTitle:
+                Text('Crafted Manager', style: TextStyle(color: Colors.white)),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -94,21 +76,26 @@ class MenuViewState extends State<MenuView> {
                 MenuItem menuItem = menuItems[index];
                 return menuItem.subItems == null
                     ? CupertinoListTile(
-                        leading: Icon(menuItem.iconData),
-                        title: Text(menuItem.title),
+                        leading: Icon(menuItem.iconData, color: Colors.white),
+                        title: Text(menuItem.title,
+                            style: TextStyle(color: Colors.white)),
                         onTap: () => _onMenuItemSelected(menuItem))
                     : Material(
+                        color: Color.fromARGB(255, 0, 0, 0),
                         child: ExpansionTile(
-                        leading: Icon(menuItem.iconData),
-                        title: Text(menuItem.title),
-                        children: menuItem.subItems!
-                            .map((subItem) => CupertinoListTile(
-                                  leading: Icon(subItem.iconData),
-                                  title: Text(subItem.title),
-                                  onTap: () => _onMenuItemSelected(subItem),
-                                ))
-                            .toList(),
-                      ));
+                          leading: Icon(menuItem.iconData, color: Colors.white),
+                          title: Text(menuItem.title,
+                              style: TextStyle(color: Colors.white)),
+                          children: menuItem.subItems!
+                              .map((subItem) => CupertinoListTile(
+                                    leading: Icon(subItem.iconData,
+                                        color: Colors.white),
+                                    title: Text(subItem.title,
+                                        style: TextStyle(color: Colors.white)),
+                                    onTap: () => _onMenuItemSelected(subItem),
+                                  ))
+                              .toList(),
+                        ));
               },
               childCount: menuItems.length,
             ),

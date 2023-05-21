@@ -44,10 +44,10 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Products List'),
+        middle: const Text('Products List'),
         trailing: GestureDetector(
           onTap: createNewProduct,
-          child: Icon(CupertinoIcons.add),
+          child: const Icon(CupertinoIcons.add),
         ),
       ),
       child: FutureBuilder<List<Product>>(
@@ -75,10 +75,11 @@ class _ProductListPageState extends State<ProductListPage> {
                     );
                   },
                   child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: CupertinoColors.systemGrey6,
+                      color: Color.fromARGB(255, 0, 0, 0),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -86,9 +87,9 @@ class _ProductListPageState extends State<ProductListPage> {
                       children: [
                         Text(
                           product.name,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text('Retail Price: \$${product.retailPrice}'),
                         Text('Wholesale Price: \$${product.wholesalePrice}'),
                         Text('Supplier: ${product.manufacturerName}'),
@@ -103,7 +104,7 @@ class _ProductListPageState extends State<ProductListPage> {
               child: Text('Error: ${snapshot.error}'),
             );
           }
-          return Center(
+          return const Center(
             child: CupertinoActivityIndicator(),
           );
         },

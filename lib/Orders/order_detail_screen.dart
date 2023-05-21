@@ -8,11 +8,6 @@ import 'package:crafted_manager/Orders/edit_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  final Order order;
-  final People customer;
-  final List<OrderedItem> orderedItems;
-  final List<Product> products;
-
   const OrderDetailScreen({
     Key? key,
     required this.order,
@@ -20,6 +15,11 @@ class OrderDetailScreen extends StatefulWidget {
     required this.orderedItems,
     required this.products,
   }) : super(key: key);
+
+  final People customer;
+  final Order order;
+  final List<OrderedItem> orderedItems;
+  final List<Product> products;
 
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
@@ -39,12 +39,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return CupertinoApp(
       home: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text('Order Details'),
+          middle: const Text('Order Details'),
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(
+            child: const Icon(
               CupertinoIcons.back,
               color: CupertinoColors.activeBlue,
             ),
@@ -53,36 +53,37 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         child: SafeArea(
           child: CupertinoScrollbar(
             child: ListView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               children: [
                 Text(
                   'Order ID: ${widget.order.id}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Total Amount: \$${widget.order.totalAmount}',
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Order Status: ${widget.order.orderStatus}',
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
-                SizedBox(height: 16),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Ordered Items:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.orderedItems.length,
                   itemBuilder: (context, index) {
                     OrderedItem orderedItem = widget.orderedItems[index];
@@ -105,25 +106,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       children: [
                         Text(
                           'Product Name: $productName',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         Text(
                           'Quantity: ${orderedItem.quantity}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         Text(
                           'Price: \$${orderedItem.price}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                       ],
                     );
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 CupertinoButton(
                   color: CupertinoColors.activeBlue,
-                  child: Text('Edit Order'),
+                  child: const Text('Edit Order'),
                   onPressed: () async {
                     // Navigate to the EditOrderScreen
                     final updatedOrder = await Navigator.push(
