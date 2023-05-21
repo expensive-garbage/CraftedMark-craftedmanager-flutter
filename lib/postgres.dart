@@ -126,26 +126,3 @@ Future<void> update(
 Future<void> delete(String tableName, int id) async {
   await deleteData(tableName, id);
 }
-// // Searches for data in the specified table using the provided search query and substitution values
-// Future<List<Map<String, dynamic>>> searchData(String tableName, String searchQuery, Map<String, dynamic> substitutionValues) async {
-//   final connection = await connectToPostgres();
-//   final result = await connection.query('SELECT * FROM $tableName WHERE $searchQuery', substitutionValues: substitutionValues);
-//   await connection.close();
-//
-//   if (kDebugMode) {
-//     print('Searched $tableName data with query: $searchQuery and substitution values: $substitutionValues. Result: $result');
-//   }
-//
-//   return result.map((row) => row.toColumnMap()).toList();
-// }
-
-// void main() async {
-//   // Example usage
-//   final searchQuery = 'name = @name';
-//   final substitutionValues = {'name': 'John Doe'};
-//   final searchDataResult = await searchData('people', searchQuery, substitutionValues);
-//
-//   if (kDebugMode) {
-//     print('Searched people data: $searchDataResult');
-//   }
-// }

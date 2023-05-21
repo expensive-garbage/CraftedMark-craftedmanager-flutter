@@ -1,3 +1,4 @@
+import 'package:crafted_manager/Customer_Based_Pricing/customer_based_pricing_screen.dart';
 import 'package:crafted_manager/Orders/orders_list.dart';
 import 'package:crafted_manager/Products/product_page.dart';
 import 'package:crafted_manager/contacts/contact_lists.dart';
@@ -49,14 +50,19 @@ class MenuViewState extends State<MenuView> {
           ),
         ]),
     MenuItem(
-        title: "Inventory",
+        title: "Product Management",
         iconData: CupertinoIcons.cube_box_fill,
         subItems: [
           MenuItem(
               title: "Products",
-              iconData: CupertinoIcons.clear_fill,
+              iconData: CupertinoIcons.cube_box,
               destination: ProductListPage()),
+          MenuItem(
+              title: "Customer Based Pricing",
+              iconData: CupertinoIcons.money_dollar_circle_fill,
+              destination: CustomerBasedPricingScreen()) // New menu item added.
         ]),
+    // Add more menu items/categories here if needed.
   ];
 
   @override
