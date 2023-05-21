@@ -13,7 +13,7 @@ class Product {
   final int stockQuantity;
   final bool backordered;
   final String supplier;
-  final String manufacturerId;
+  final int? manufacturerId; // Updated datatype to int
   final String manufacturerName;
   final String itemSource;
   final int quantitySold;
@@ -34,7 +34,7 @@ class Product {
     this.stockQuantity = 0,
     this.backordered = false,
     this.supplier = '',
-    this.manufacturerId = '',
+    this.manufacturerId, // Removed the default value
     this.manufacturerName = '',
     this.itemSource = '',
     this.quantitySold = 0,
@@ -64,7 +64,8 @@ class Product {
           map['stock_quantity'] != null ? map['stock_quantity'].round() : 0,
       backordered: map['backordered'] ?? false,
       supplier: map['supplier'] ?? '',
-      manufacturerId: map['manufacturer_id'] ?? '',
+      manufacturerId:
+          map['manufacturer_id'] != null ? map['manufacturer_id'] as int : null,
       manufacturerName: map['manufacturer_name'] ?? '',
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,

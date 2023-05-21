@@ -34,87 +34,93 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Search Product'),
+    return CupertinoApp(
+      theme: const CupertinoThemeData(
+        brightness: Brightness.dark,
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: CupertinoTextField(
-                controller: _searchController,
-                onChanged: _filterProducts,
-                placeholder: 'Search product',
+      home: CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Search Product'),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: CupertinoTextField(
+                  controller: _searchController,
+                  onChanged: _filterProducts,
+                  placeholder: 'Search product',
+                ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredProducts.length,
-                itemBuilder: (context, index) {
-                  return Material(
-                    child: CupertinoListTile(
-                      title: Text(filteredProducts[index]
-                          .name), // Added product name here
-                      subtitle: Text(filteredProducts[index].description),
-                      trailing:
-                          Text('\$${filteredProducts[index].retailPrice}'),
-                      onTap: () {
-                        showCupertinoDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: const Text('Add to Order'),
-                              content: Column(
-                                children: [
-                                  const SizedBox(height: 8),
-                                  Text(filteredProducts[index].description),
-                                  const SizedBox(height: 8),
-                                  CupertinoPicker(
-                                    itemExtent: 32,
-                                    onSelectedItemChanged: (value) {
-                                      selectedQuantity = value + 1;
-                                    },
-                                    children: List.generate(
-                                      100,
-                                      (index) => Text('${index + 1}'),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredProducts.length,
+                  itemBuilder: (context, index) {
+                    return Material(
+                      color: Colors.transparent,
+                      child: CupertinoListTile(
+                        title: Text(filteredProducts[index]
+                            .name), // Added product name here
+                        subtitle: Text(filteredProducts[index].description),
+                        trailing:
+                            Text('\$${filteredProducts[index].retailPrice}'),
+                        onTap: () {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: const Text('Add to Order'),
+                                content: Column(
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    Text(filteredProducts[index].description),
+                                    const SizedBox(height: 8),
+                                    CupertinoPicker(
+                                      itemExtent: 32,
+                                      onSelectedItemChanged: (value) {
+                                        selectedQuantity = value + 1;
+                                      },
+                                      children: List.generate(
+                                        100,
+                                        (index) => Text('${index + 1}'),
+                                      ),
                                     ),
+                                  ],
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(
+                                        context,
+                                        {
+                                          'product': filteredProducts[index],
+                                          'quantity': selectedQuantity,
+                                        },
+                                      );
+                                    },
+                                    child: const Text("Add to Order"),
                                   ),
                                 ],
-                              ),
-                              actions: [
-                                CupertinoDialogAction(
-                                  isDefaultAction: true,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Cancel"),
-                                ),
-                                CupertinoDialogAction(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(
-                                      context,
-                                      {
-                                        'product': filteredProducts[index],
-                                        'quantity': selectedQuantity,
-                                      },
-                                    );
-                                  },
-                                  child: const Text("Add to Order"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  );
-                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
