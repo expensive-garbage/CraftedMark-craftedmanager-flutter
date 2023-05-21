@@ -63,16 +63,20 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
         // Update order in orders table
         await ctx.query('''
     UPDATE orders
-    SET people_id = @customerId, order_date = @orderDate, shipping_address = @shippingAddress, billing_address = @billingAddress, total_amount = @totalAmount, order_status = @orderStatus
-    WHERE order_id = @id
-  ''', substitutionValues: order.toMap());
+    SET people_id = @people_id, order_date = @orderDate, shipping_address = @shippingAddress, billing_address = @billingAddress, total_amount = @totalAmount, order_status = @orderStatus
+    WHERE order_id = @order_id
+  ''', substitutionValues: {
+          ...order.toMap(),
+          // Make sure that order.toMap() returns a map with the key 'people_id'
+          'people_id': order.customerId,
+        });
         print('Order updated');
 
         print('Deleting existing ordered items with orderId: ${order.id}');
         // Delete existing ordered items for this order
         await ctx.query('''
-    DELETE FROM ordered_items WHERE order_id = @orderId
-  ''', substitutionValues: {
+      DELETE FROM ordered_items WHERE order_id = @orderId
+    ''', substitutionValues: {
           'orderId': order.id,
         });
         print('Existing ordered items deleted');
@@ -84,10 +88,10 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
             'orderId': order.id,
           }}');
           await ctx.query('''
-  INSERT INTO ordered_items 
-    (order_id, product_id, quantity, price, discount, description)
-  VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
-''', substitutionValues: {
+    INSERT INTO ordered_items 
+      (order_id, product_id, quantity, price, discount, description)
+    VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
+  ''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,
             'productId': item.productId,

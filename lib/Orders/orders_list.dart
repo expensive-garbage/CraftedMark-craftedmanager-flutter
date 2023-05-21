@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../Models/people_model.dart';
-import '../Models/product_model.dart'; // Add this import
+import '../Models/product_model.dart';
 import 'order_detail_screen.dart';
 import 'ordered_item_postgres.dart';
 
@@ -113,7 +113,6 @@ class _OrdersListState extends State<OrdersList> {
                             Text('Status: ${order.orderStatus}'),
                             Text(
                                 'Order Date: ${DateFormat('yyyy-MM-dd').format(order.orderDate)}'),
-                            // Format the DateTime object as a String
                           ],
                         ),
                       ),

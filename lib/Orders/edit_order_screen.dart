@@ -3,9 +3,10 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Orders/orders_db_manager.dart';
-import 'package:crafted_manager/Orders/product_search_screen.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'product_search_screen.dart';
 
 class EditOrderScreen extends StatefulWidget {
   final Order order;
@@ -26,11 +27,21 @@ class EditOrderScreen extends StatefulWidget {
 
 class _EditOrderScreenState extends State<EditOrderScreen> {
   late List<OrderedItem> _orderedItems;
+  double _subTotal = 0.0;
 
   @override
   void initState() {
     super.initState();
     _orderedItems = List.from(widget.orderedItems);
+    _subTotal = calculateSubtotal();
+  }
+
+  double calculateSubtotal() {
+    return _orderedItems.fold(
+      0.0,
+      (previousValue, element) =>
+          previousValue + (element.price * element.quantity),
+    );
   }
 
   void addOrderedItem(Product product, int quantity) {
@@ -47,42 +58,50 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         productDescription: product.description,
         productRetailPrice: product.retailPrice,
       ));
+      _subTotal = calculateSubtotal();
     });
   }
 
-  Future<bool> updateOrder() async {
-    Order updatedOrder = Order(
-      id: widget.order.id,
-      customerId: widget.customer.id.toString(),
-      orderDate: widget.order.orderDate,
-      shippingAddress: widget.order.shippingAddress,
-      billingAddress: widget.order.billingAddress,
-      totalAmount: _orderedItems.fold(
-        0.0,
-        (previousValue, element) =>
-            previousValue + (element.price * element.quantity),
-      ),
-      orderStatus: widget.order.orderStatus,
+  Future<Order?> updateOrder() async {
+    Order updatedOrder = widget.order.copyWith(
+      totalAmount: _subTotal,
     );
 
-    return await OrderPostgres.updateOrder(updatedOrder, _orderedItems);
+    final result = await OrderPostgres.updateOrder(updatedOrder, _orderedItems);
+
+    if (result) {
+      return updatedOrder;
+    } else {
+      return null;
+    }
+  }
+
+  void updateOrderedItem(int index, Product product, int quantity) {
+    setState(() {
+      _orderedItems[index] = _orderedItems[index].copyWith(
+        productName: product.name,
+        productId: product.id!,
+        name: product.name,
+        quantity: quantity,
+        price: product.retailPrice,
+        discount: 0,
+        productDescription: product.description,
+        productRetailPrice: product.retailPrice,
+      );
+      _subTotal = calculateSubtotal();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    double subTotal = _orderedItems.fold(
-      0.0,
-      (previousValue, element) =>
-          previousValue + (element.productRetailPrice * element.quantity),
-    );
-
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Edit Order'),
         trailing: GestureDetector(
           onTap: () async {
-            if (await updateOrder()) {
-              Navigator.pop(context, true);
+            final updatedOrder = await updateOrder();
+            if (updatedOrder != null) {
+              Navigator.pop(context, updatedOrder);
             } else {
               showCupertinoDialog(
                 context: context,
@@ -141,6 +160,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   onDismissed: (direction) {
                     setState(() {
                       _orderedItems.removeAt(index);
+                      _subTotal = calculateSubtotal();
                     });
                   },
                   background: Container(color: CupertinoColors.destructiveRed),
@@ -159,7 +179,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Subtotal:'),
-                      Text('\$${subTotal.toStringAsFixed(2)}'),
+                      Text('\$${_subTotal.toStringAsFixed(2)}'),
                     ],
                   ),
                 ],

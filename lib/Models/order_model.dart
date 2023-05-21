@@ -7,6 +7,26 @@ class Order {
   double totalAmount;
   String orderStatus;
 
+  Order copyWith({
+    int? id,
+    String? customerId,
+    DateTime? orderDate,
+    String? shippingAddress,
+    String? billingAddress,
+    double? totalAmount,
+    String? orderStatus,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      customerId: customerId ?? this.customerId,
+      orderDate: orderDate ?? this.orderDate,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      billingAddress: billingAddress ?? this.billingAddress,
+      totalAmount: totalAmount ?? this.totalAmount,
+      orderStatus: orderStatus ?? this.orderStatus,
+    );
+  }
+
   Order({
     required this.id,
     required this.customerId,

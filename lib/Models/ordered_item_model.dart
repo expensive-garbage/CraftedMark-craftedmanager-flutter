@@ -10,6 +10,32 @@ class OrderedItem {
   final String productDescription;
   final double productRetailPrice;
 
+  OrderedItem copyWith({
+    int? id,
+    int? orderId,
+    String? productName,
+    int? productId,
+    String? name,
+    int? quantity,
+    double? price,
+    double? discount,
+    String? productDescription,
+    double? productRetailPrice,
+  }) {
+    return OrderedItem(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      productName: productName ?? this.productName,
+      productId: productId ?? this.productId,
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      price: price ?? this.price,
+      discount: discount ?? this.discount,
+      productDescription: productDescription ?? this.productDescription,
+      productRetailPrice: productRetailPrice ?? this.productRetailPrice,
+    );
+  }
+
   OrderedItem({
     required this.id,
     required this.orderId,
