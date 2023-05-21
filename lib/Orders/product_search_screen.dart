@@ -60,8 +60,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                     return Material(
                       color: Colors.transparent,
                       child: CupertinoListTile(
-                        title: Text(filteredProducts[index]
-                            .name), // Added product name here
+                        title: Text(filteredProducts[index].name),
                         subtitle: Text(filteredProducts[index].description),
                         trailing:
                             Text('\$${filteredProducts[index].retailPrice}'),
@@ -74,7 +73,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                                 content: Column(
                                   children: [
                                     const SizedBox(height: 8),
-                                    Text(filteredProducts[index].description),
+                                    Text(filteredProducts[index]
+                                        .name), // Changed this line
                                     const SizedBox(height: 8),
                                     CupertinoPicker(
                                       itemExtent: 32,

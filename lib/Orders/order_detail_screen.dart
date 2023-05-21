@@ -53,9 +53,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return CupertinoApp(
+      theme: const CupertinoThemeData(
+        brightness: Brightness.dark,
+      ),
       home: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: const Text('Order Details'),
+          backgroundColor: CupertinoColors.systemGrey6,
+          middle: const Text(
+            'Order Details',
+            style: TextStyle(color: CupertinoColors.white),
+          ),
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -66,107 +73,117 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
         ),
-        child: CupertinoTheme(
-          data: const CupertinoThemeData(brightness: Brightness.dark),
-          child: SafeArea(
-            child: CupertinoScrollbar(
-              child: ValueListenableBuilder<Order>(
-                valueListenable: _orderNotifier,
-                builder: (context, order, child) {
-                  return ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      Text(
-                        'Order ID: ${order.id}',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Total Amount: \$${order.totalAmount}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Order Status: ${order.orderStatus}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Ordered Items:',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.orderedItems.length,
-                        itemBuilder: (context, index) {
-                          OrderedItem orderedItem = widget.orderedItems[index];
+        backgroundColor: CupertinoColors.systemGrey6,
+        child: SafeArea(
+          child: CupertinoScrollbar(
+            child: ValueListenableBuilder<Order>(
+              valueListenable: _orderNotifier,
+              builder: (context, order, child) {
+                return ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    Text(
+                      'Order ID: ${order.id}',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: CupertinoColors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
+                      style: const TextStyle(
+                          fontSize: 18, color: CupertinoColors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Total Amount: \$${order.totalAmount}',
+                      style: const TextStyle(
+                          fontSize: 16, color: CupertinoColors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Order Status: ${order.orderStatus}',
+                      style: const TextStyle(
+                          fontSize: 16, color: CupertinoColors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Ordered Items:',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: CupertinoColors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.orderedItems.length,
+                      itemBuilder: (context, index) {
+                        OrderedItem orderedItem = widget.orderedItems[index];
 
-                          Product product = widget.products.firstWhere(
-                            (prod) => prod.id == orderedItem.productId,
-                            orElse: () => Product(
-                              id: 0,
-                              name: 'Unknown Product',
-                              retailPrice: 0,
+                        Product product = widget.products.firstWhere(
+                          (prod) => prod.id == orderedItem.productId,
+                          orElse: () => Product(
+                            id: 0,
+                            name: '',
+                            retailPrice: 0,
+                          ),
+                        );
+
+                        String productName = product.name.isNotEmpty
+                            ? product.name
+                            : 'Unknown Product';
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Product Name: $productName',
+                              style: const TextStyle(
+                                  fontSize: 16, color: CupertinoColors.white),
                             ),
-                          );
-
-                          String productName = product.name;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Product Name: $productName',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                'Quantity: ${orderedItem.quantity}',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                'Price: \$${orderedItem.price}',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(height: 8),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      CupertinoButton(
-                        color: CupertinoColors.activeBlue,
-                        child: const Text('Edit Order'),
-                        onPressed: () async {
-                          // Navigate to the EditOrderScreen
-                          final updatedOrder = await Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => EditOrderScreen(
-                                order: order,
-                                orderedItems: widget.orderedItems,
-                                products: widget.products,
-                                customer: widget.customer,
-                              ),
+                            Text(
+                              'Quantity: ${orderedItem.quantity}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: CupertinoColors.white),
                             ),
-                          );
+                            Text(
+                              'Price: \$${orderedItem.price}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: CupertinoColors.white),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    CupertinoButton.filled(
+                      child: const Text('Edit Order'),
+                      onPressed: () async {
+                        // Navigate to the EditOrderScreen
+                        final updatedOrder = await Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => EditOrderScreen(
+                              order: order,
+                              orderedItems: widget.orderedItems,
+                              products: widget.products,
+                              customer: widget.customer,
+                            ),
+                          ),
+                        );
 
-                          if (updatedOrder != null) {
-                            updateOrderDetails(updatedOrder);
-                          }
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
+                        if (updatedOrder != null) {
+                          updateOrderDetails(updatedOrder);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
