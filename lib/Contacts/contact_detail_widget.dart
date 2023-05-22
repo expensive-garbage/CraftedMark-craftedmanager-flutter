@@ -1,5 +1,4 @@
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
-import 'package:crafted_manager/Extension/iterable_extension.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -43,25 +42,36 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
               setState(() => _editing = true);
             } else {
               People? updatedContact;
+
               if (value.id <= 0) {
-                await PeoplePostgres.createCustomer(value);
-                updatedContact = (await PeoplePostgres.fetchCustomersByDetails(
-                        value.firstName, value.lastName, value.phone))
-                    .firstWhere((element) => element.id > 0, // Change this line
-                        orElse: () => People.empty());
+                int newId = await PeoplePostgres.createCustomer(value);
+                updatedContact = await PeoplePostgres.fetchCustomer(newId);
               } else {
-                updatedContact = (await PeoplePostgres.fetchCustomersByDetails(
-                        value.firstName, value.lastName, value.phone))
-                    .firstOrNull;
+                updatedContact = await PeoplePostgres.updateCustomer(value);
               }
 
               if (updatedContact != null && updatedContact.id > 0) {
-                setState(() => _editing = false);
+                setState(() {
+                  _editing = false;
+                  value = updatedContact ?? value;
+                });
                 Navigator.pop(context, updatedContact);
               } else {
-                await PeoplePostgres.updateCustomer(value);
+                await showCupertinoDialog(
+                  context: context,
+                  builder: (BuildContext context) => CupertinoAlertDialog(
+                    title: Text('Error'),
+                    content: Text('Failed to save contact.'),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: Text('OK'),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                );
+                setState(() => _editing = false);
               }
-              setState(() => _editing = false);
             }
           },
         ),
