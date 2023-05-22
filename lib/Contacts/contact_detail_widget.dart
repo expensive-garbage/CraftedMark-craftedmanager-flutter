@@ -31,7 +31,9 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.black,
         middle: Text('${value.firstName} ${value.lastName}'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,

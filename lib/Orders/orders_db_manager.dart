@@ -8,7 +8,7 @@ class OrderPostgres {
   static Future<PostgreSQLConnection> openConnection() async {
     print('Opening connection...');
     final connection = PostgreSQLConnection(
-      'web.craftedsolutions.co', // Database host
+      'https://104.13.227.204', // Database host
       5432, // Port number
       'craftedmanager_db', // Database name
       username: 'craftedmanager_dbuser', // Database username

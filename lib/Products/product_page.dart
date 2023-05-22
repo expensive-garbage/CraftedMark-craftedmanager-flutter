@@ -43,6 +43,7 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Products List'),
         trailing: GestureDetector(
@@ -50,64 +51,150 @@ class _ProductListPageState extends State<ProductListPage> {
           child: const Icon(CupertinoIcons.add),
         ),
       ),
-      child: FutureBuilder<List<Product>>(
-        future: _products,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final product = snapshot.data![index];
-                print('Product at index $index: $product');
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ProductDetailPage(
-                          product: product,
-                          onProductSaved: () {
-                            // Refresh product list after updating a product
-                            _fetchProducts();
-                          },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FutureBuilder<List<Product>>(
+          future: _products,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.separated(
+                itemCount: snapshot.data!.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  final product = snapshot.data![index];
+                  print('Product at index $index: $product');
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => ProductDetailPage(
+                            product: product,
+                            onProductSaved: () {
+                              // Refresh product list after updating a product
+                              _fetchProducts();
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    child: CupertinoContextMenu(
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            colors: [
+                              CupertinoColors.darkBackgroundGray,
+                              CupertinoColors.black
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  product.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: CupertinoColors.systemGrey6),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Icon(CupertinoIcons.tag_fill,
+                                        size: 20,
+                                        color: CupertinoColors.systemGrey3),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                        'Retail Price: \$${product.retailPrice}',
+                                        style: TextStyle(
+                                            color:
+                                                CupertinoColors.systemGrey3)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(CupertinoIcons.tag,
+                                        size: 20,
+                                        color: CupertinoColors.systemGrey3),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                        'Wholesale Price: \$${product.wholesalePrice}',
+                                        style: TextStyle(
+                                            color:
+                                                CupertinoColors.systemGrey3)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(CupertinoIcons.person_2_fill,
+                                        size: 20,
+                                        color: CupertinoColors.systemGrey3),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                        'Supplier: ${product.manufacturerName}',
+                                        style: TextStyle(
+                                            color:
+                                                CupertinoColors.systemGrey3)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Icon(CupertinoIcons.chevron_right,
+                                color: CupertinoColors.systemGrey2),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                      actions: <Widget>[
+                        CupertinoContextMenuAction(
+                          child: const Text('Edit'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ProductDetailPage(
+                                  product: product,
+                                  onProductSaved: () {
+                                    // Refresh product list after updating a product
+                                    _fetchProducts();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 4),
-                        Text('Retail Price: \$${product.retailPrice}'),
-                        Text('Wholesale Price: \$${product.wholesalePrice}'),
-                        Text('Supplier: ${product.manufacturerName}'),
+                        CupertinoContextMenuAction(
+                          isDestructiveAction: true,
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            // Implement the delete function
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}',
+                    style: TextStyle(color: CupertinoColors.systemGrey3)),
+              );
+            }
+            return const Center(
+              child: CupertinoActivityIndicator(),
             );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }
-          return const Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

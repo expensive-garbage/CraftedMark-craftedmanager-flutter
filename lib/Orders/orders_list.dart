@@ -24,10 +24,6 @@ class _OrdersListState extends State<OrdersList> {
     super.initState();
   }
 
-  Future<People?> _getCustomerById(int customerId) async {
-    return await PeoplePostgres.fetchCustomer(customerId);
-  }
-
   Future<List<OrderedItem>> fetchOrderedItems(int orderId) async {
     return await OrderedItemPostgres.fetchOrderedItems(orderId);
   }
@@ -37,10 +33,16 @@ class _OrdersListState extends State<OrdersList> {
     return [];
   }
 
+  Future<People?> _getCustomerById(int customerId) async {
+    return await PeoplePostgres.fetchCustomer(customerId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.black,
         middle: const Text('Orders'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,

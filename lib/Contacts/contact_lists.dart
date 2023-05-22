@@ -63,8 +63,9 @@ class ContactsListState extends State<ContactsList> {
     return CupertinoTheme(
       data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
       child: CupertinoPageScaffold(
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: CupertinoColors.black,
         navigationBar: CupertinoNavigationBar(
+          backgroundColor: CupertinoColors.black,
           middle: const Text('Contacts'),
           trailing: CupertinoButton(
             padding: EdgeInsets.zero,

@@ -5,7 +5,8 @@ import 'package:crafted_manager/Models/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-import 'edit_order_screen.dart';
+import '../../Orders/edit_order_screen.dart';
+import '../../Orders/orders_db_manager.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({
@@ -58,7 +59,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
       home: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          backgroundColor: CupertinoColors.systemGrey6,
+          backgroundColor: CupertinoColors.black,
           middle: const Text(
             'Order Details',
             style: TextStyle(color: CupertinoColors.white),
@@ -73,7 +74,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
         ),
-        backgroundColor: CupertinoColors.systemGrey6,
+        backgroundColor: CupertinoColors.black,
         child: SafeArea(
           child: CupertinoScrollbar(
             child: ValueListenableBuilder<Order>(

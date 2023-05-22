@@ -57,8 +57,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
-        middle: Text(widget.isNewProduct ? 'New Product' : 'Edit Product'),
+        backgroundColor: CupertinoColors.darkBackgroundGray,
+        middle: Text(widget.isNewProduct ? 'New Product' : 'Edit Product',
+            style: TextStyle(color: CupertinoColors.white)),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
@@ -71,17 +74,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     controller: _nameController,
-                    prefix: const Text('Name: '),
+                    style: TextStyle(color: CupertinoColors.white),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: CupertinoColors.white),
+                    ),
+                    prefix: const Text('Name: ',
+                        style: TextStyle(color: CupertinoColors.white)),
                   ),
                   const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _categoryController,
-                    prefix: const Text('Category: '),
+                    style: TextStyle(color: CupertinoColors.white),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: CupertinoColors.white),
+                    ),
+                    prefix: const Text('Category: ',
+                        style: TextStyle(color: CupertinoColors.white)),
                   ),
                   const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _subCategoryController,
-                    prefix: const Text('Subcategory: '),
+                    style: TextStyle(color: CupertinoColors.white),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: CupertinoColors.white),
+                    ),
+                    prefix: const Text('Subcategory: ',
+                        style: TextStyle(color: CupertinoColors.white)),
                   ),
                   const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
