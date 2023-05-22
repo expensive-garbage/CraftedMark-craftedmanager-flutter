@@ -141,7 +141,7 @@ class _OrdersListState extends State<OrdersList> {
                               Text('Total: \$${order.totalAmount}'),
                               Text('Status: ${order.orderStatus}'),
                               Text(
-                                  'Order Date: ${DateFormat('MM-dd-YYY').format(order.orderDate)}'),
+                                  'Order Date: ${DateFormat('MM-dd-YYYY').format(order.orderDate)}'),
                             ],
                           ),
                         ),

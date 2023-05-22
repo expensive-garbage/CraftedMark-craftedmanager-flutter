@@ -2,6 +2,7 @@ import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/postgres.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../Models/people_model.dart';
 import 'contact_detail_widget.dart';
@@ -15,6 +16,7 @@ class ContactsList extends StatefulWidget {
 
 class ContactsListState extends State<ContactsList> {
   List<People>? _contacts;
+  final RefreshController _refreshController = RefreshController();
 
   @override
   void initState() {
@@ -56,6 +58,7 @@ class ContactsListState extends State<ContactsList> {
     setState(() {
       _contacts = updatedList;
     });
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -79,59 +82,63 @@ class ContactsListState extends State<ContactsList> {
           color: const Color.fromARGB(255, 0, 0, 0),
           child: _contacts == null
               ? const Center(child: CupertinoActivityIndicator())
-              : ListView.separated(
-                  itemCount: _contacts!.length,
-                  itemBuilder: (context, index) {
-                    final contact = _contacts![index];
-                    return GestureDetector(
-                      onTap: () {
-                        openContactDetails(contact);
-                      },
-                      child: Container(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        child: ListTile(
-                          title: Text(
-                            '${contact.firstName} ${contact.lastName ?? ''}',
-                            style: TextStyle(
-                              color: CupertinoTheme.of(context)
-                                  .textTheme
-                                  .textStyle
-                                  .color,
+              : SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: refreshContacts,
+                  child: ListView.separated(
+                    itemCount: _contacts!.length,
+                    itemBuilder: (context, index) {
+                      final contact = _contacts![index];
+                      return GestureDetector(
+                        onTap: () {
+                          openContactDetails(contact);
+                        },
+                        child: Container(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          child: ListTile(
+                            title: Text(
+                              '${contact.firstName} ${contact.lastName ?? ''}',
+                              style: TextStyle(
+                                color: CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle
+                                    .color,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  contact.brand,
+                                  style: TextStyle(
+                                    color: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle
+                                        .color
+                                        ?.withAlpha(150),
+                                  ),
+                                ),
+                                Text(
+                                  contact.phone,
+                                  style: TextStyle(
+                                    color: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle
+                                        .color
+                                        ?.withAlpha(150),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                contact.brand,
-                                style: TextStyle(
-                                  color: CupertinoTheme.of(context)
-                                      .textTheme
-                                      .textStyle
-                                      .color
-                                      ?.withAlpha(150),
-                                ),
-                              ),
-                              Text(
-                                contact.phone,
-                                style: TextStyle(
-                                  color: CupertinoTheme.of(context)
-                                      .textTheme
-                                      .textStyle
-                                      .color
-                                      ?.withAlpha(150),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => const Divider(
-                    thickness: 0.5,
-                    height: 1,
-                    color: CupertinoColors.systemGrey,
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: CupertinoColors.systemGrey,
+                    ),
                   ),
                 ),
         ),
