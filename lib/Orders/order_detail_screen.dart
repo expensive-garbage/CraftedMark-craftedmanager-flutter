@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../../Orders/edit_order_screen.dart';
 import '../../Orders/orders_db_manager.dart';
+import 'edit_order_screen.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({
@@ -38,6 +39,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       orderStatus: '',
     ),
   );
+
+  List<String> orderStatuses = [
+    'Processing',
+    'Shipped',
+    'Delivered',
+    'Cancelled',
+  ];
+
+  void onStatusChanged(String? newStatus) {
+    if (newStatus != null) {
+      _orderNotifier.value = _orderNotifier.value.copyWith(
+        orderStatus: newStatus,
+      );
+    }
+  }
 
   void updateOrderDetails(Order updatedOrder) {
     _orderNotifier.value = updatedOrder;
@@ -81,85 +97,107 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               valueListenable: _orderNotifier,
               builder: (context, order, child) {
                 return ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   children: [
                     Text(
                       'Order ID: ${order.id}',
-                      style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.white),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
-                      style: const TextStyle(
-                          fontSize: 18, color: CupertinoColors.white),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Total Amount: \$${order.totalAmount}',
-                      style: const TextStyle(
-                          fontSize: 16, color: CupertinoColors.white),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Order Status: ${order.orderStatus}',
-                      style: const TextStyle(
-                          fontSize: 16, color: CupertinoColors.white),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: CupertinoColors.white,
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
+                      'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: CupertinoColors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Total Amount: \$${order.totalAmount}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: CupertinoColors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Order Status: ${order.orderStatus}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: CupertinoColors.activeBlue,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      height: 150,
+                      child: CupertinoPicker(
+                        itemExtent: 40,
+                        onSelectedItemChanged: (int index) {
+                          onStatusChanged(orderStatuses[index]);
+                        },
+                        children: orderStatuses.map<Text>((value) {
+                          return Text(
+                            value,
+                            style: const TextStyle(fontSize: 18),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
                       'Ordered Items:',
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.white),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: CupertinoColors.white,
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.orderedItems.length,
-                      itemBuilder: (context, index) {
-                        OrderedItem orderedItem = widget.orderedItems[index];
-
-                        Product product = widget.products.firstWhere(
-                          (prod) => prod.id == orderedItem.productId,
-                          orElse: () => Product(
-                            id: 0,
-                            name: '',
-                            retailPrice: 0,
+                    const SizedBox(height: 16),
+                    for (OrderedItem orderedItem in widget.orderedItems)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.black,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-
-                        String productName = product.name.isNotEmpty
-                            ? product.name
-                            : 'Unknown Product';
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Product Name: $productName',
-                              style: const TextStyle(
-                                  fontSize: 16, color: CupertinoColors.white),
-                            ),
-                            Text(
-                              'Quantity: ${orderedItem.quantity}',
-                              style: const TextStyle(
-                                  fontSize: 16, color: CupertinoColors.white),
-                            ),
-                            Text(
-                              'Price: \$${orderedItem.price}',
-                              style: const TextStyle(
-                                  fontSize: 16, color: CupertinoColors.white),
-                            ),
-                            const SizedBox(height: 8),
-                          ],
-                        );
-                      },
-                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Product Name: ${orderedItem.productName}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Quantity: ${orderedItem.quantity}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Price: \$${orderedItem.price}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 16),
                     CupertinoButton.filled(
                       child: const Text('Edit Order'),
