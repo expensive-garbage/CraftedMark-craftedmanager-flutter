@@ -13,7 +13,7 @@ class Product {
   final int stockQuantity;
   final bool backordered;
   final String supplier;
-  final int? manufacturerId; // Updated datatype to int
+  final int? manufacturerId;
   final String manufacturerName;
   final String itemSource;
   final int quantitySold;
@@ -34,12 +34,21 @@ class Product {
     this.stockQuantity = 0,
     this.backordered = false,
     this.supplier = '',
-    this.manufacturerId, // Removed the default value
+    this.manufacturerId,
     this.manufacturerName = '',
     this.itemSource = '',
     this.quantitySold = 0,
     this.quantityInStock = 0,
   });
+
+  // Add the empty instance to the Product class
+  static Product empty = Product(
+    id: -1,
+    name: 'Product not found',
+    retailPrice: 0,
+  );
+
+  bool get isEmpty => id == -1;
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(

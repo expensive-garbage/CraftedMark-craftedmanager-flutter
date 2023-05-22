@@ -4,7 +4,7 @@ import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 
 import '../../Orders/orders_db_manager.dart';
 import 'product_search_screen.dart';
@@ -37,6 +37,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     _orderedItems = List.from(widget.orderedItems);
     _subTotal = calculateSubtotal();
     _status = widget.order.orderStatus;
+    if (!['Pending', 'In-Progress', 'Completed'].contains(_status)) {
+      _status = 'Pending';
+    }
   }
 
   double calculateSubtotal() {
@@ -111,17 +114,21 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      theme: const CupertinoThemeData(brightness: Brightness.dark),
+      theme: CupertinoThemeData(
+        brightness: Brightness.dark,
+        primaryColor: CupertinoColors.activeBlue,
+      ),
       home: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle: const Text('Edit Order'),
           trailing: GestureDetector(
             onTap: () async {
               final updatedOrder = await updateOrder();
+
               if (updatedOrder != null) {
                 Navigator.pop(context, updatedOrder);
               } else {
-                showCupertinoDialog(
+                showDialog(
                   context: context,
                   builder: (_) => CupertinoAlertDialog(
                     title: const Text("Error"),
@@ -148,8 +155,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         child: SafeArea(
           child: ListView(
             children: [
+              SizedBox(height: 12.0),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: CupertinoFormSection.insetGrouped(
                   header: const Text('Order information'),
                   children: [
@@ -160,6 +168,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                           ' ' +
                           widget.customer.lastName,
                     ),
+                    SizedBox(height: 12),
                     CupertinoFormRow(
                       prefix: const Text('Status:'),
                       child: CupertinoSlidingSegmentedControl<String>(
@@ -172,7 +181,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                         groupValue: _status,
                         onValueChanged: (String? value) {
                           setState(() {
-                            _status = value ?? '';
+                            _status = value ?? '-';
                           });
                         },
                       ),
@@ -180,6 +189,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   ],
                 ),
               ),
+              SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: CupertinoButton.filled(
@@ -187,6 +197,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   onPressed: () async {
                     List<Product> products =
                         await ProductPostgres.getAllProducts();
+
                     final result =
                         await showCupertinoModalPopup<Map<String, dynamic>>(
                       context: context,
@@ -200,6 +211,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   },
                 ),
               ),
+              SizedBox(height: 10.0),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -215,28 +227,33 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                     },
                     background:
                         Container(color: CupertinoColors.destructiveRed),
-                    child: Container(
-                      color: CupertinoColors.black,
-                      child: CupertinoFormRow(
-                        prefix: Row(
-                          children: [
-                            Text(_orderedItems[index].productName),
-                            const SizedBox(width: 8),
-                            Text('Qty: ${_orderedItems[index].quantity}'),
-                          ],
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            editOrderedItem(index);
-                          },
-                          child: const Icon(CupertinoIcons.minus_circled,
-                              color: CupertinoColors.destructiveRed),
-                        ),
+                    child: CupertinoFormRow(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(_orderedItems[index].productName),
+                              const SizedBox(width: 10.0),
+                              Text('Qty: ${_orderedItems[index].quantity}'),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              editOrderedItem(index);
+                            },
+                            child: const Icon(
+                              CupertinoIcons.minus_circled,
+                              color: CupertinoColors.destructiveRed,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
+              SizedBox(height: 12.0),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
@@ -244,8 +261,14 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Subtotal:'),
-                        Text('\$${_subTotal.toStringAsFixed(2)}'),
+                        const Text(
+                          'Subtotal:',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          '\$${_subTotal.toStringAsFixed(2)}',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                   ],
