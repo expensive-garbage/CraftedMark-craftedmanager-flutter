@@ -5,6 +5,7 @@ import 'package:crafted_manager/Models/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+import 'edit_order_screen.dart';
 import 'orders_db_manager.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -87,7 +88,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           trailing: GestureDetector(
             onTap: () {
-              // Implement your edit order functionality here
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => EditOrderScreen(
+                    order: widget.order,
+                    customer: widget.customer,
+                    orderedItems: widget.orderedItems,
+                    products: widget.products,
+                  ),
+                ),
+              );
             },
             child: const Icon(
               CupertinoIcons.pencil,
