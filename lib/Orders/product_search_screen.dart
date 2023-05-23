@@ -25,9 +25,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   void _filterProducts(String query) {
     setState(() {
       filteredProducts = widget.products
-          .where((product) => product.description
-              .toLowerCase()
-              .contains(query.trim().toLowerCase()))
+          .where((product) =>
+              product.name.toLowerCase().contains(query.trim().toLowerCase()))
           .toList();
     });
   }

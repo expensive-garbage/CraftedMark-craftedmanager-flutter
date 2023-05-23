@@ -138,13 +138,14 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
     }
   }
 
-  static Future<List<Order>> getAllOrders() async {
-    List<Order> orders = [];
+  Future<List<Order>> getAllOrders() async {
+    final orders = <Order>[];
     try {
       final connection = await openConnection();
       List<Map<String, Map<String, dynamic>>> results =
           await connection.mappedResultsQuery('''
     SELECT * FROM orders
+    ORDER BY order_date DESC
   ''');
 
       for (var row in results) {
@@ -154,6 +155,8 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
     } catch (e) {
       print(e.toString());
     }
+
+    orders.sort((a, b) => a.orderDate.compareTo(b.orderDate));
 
     return orders;
   }

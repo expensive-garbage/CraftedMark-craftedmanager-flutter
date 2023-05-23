@@ -35,7 +35,7 @@ class OrderList extends StatelessWidget {
                 horizontal: 16,
                 vertical: 12,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: CupertinoColors.white,
                 border: Border(
                   bottom: BorderSide(

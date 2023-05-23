@@ -37,7 +37,7 @@ class MenuViewState extends State<MenuView> {
           MenuItem(
               title: "Open Orders",
               iconData: CupertinoIcons.doc_text_fill,
-              destination: OrdersList(title: "Orders")),
+              destination: const OrdersList(title: "Orders")),
         ]),
     MenuItem(
         title: "Contacts",
@@ -68,10 +68,10 @@ class MenuViewState extends State<MenuView> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       child: CustomScrollView(
         slivers: [
-          CupertinoSliverNavigationBar(
+          const CupertinoSliverNavigationBar(
             backgroundColor: Color.fromARGB(255, 0, 0, 0),
             largeTitle:
                 Text('Crafted Manager', style: TextStyle(color: Colors.white)),
@@ -84,20 +84,21 @@ class MenuViewState extends State<MenuView> {
                     ? CupertinoListTile(
                         leading: Icon(menuItem.iconData, color: Colors.white),
                         title: Text(menuItem.title,
-                            style: TextStyle(color: Colors.white)),
+                            style: const TextStyle(color: Colors.white)),
                         onTap: () => _onMenuItemSelected(menuItem))
                     : Material(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         child: ExpansionTile(
                           leading: Icon(menuItem.iconData, color: Colors.white),
                           title: Text(menuItem.title,
-                              style: TextStyle(color: Colors.white)),
+                              style: const TextStyle(color: Colors.white)),
                           children: menuItem.subItems!
                               .map((subItem) => CupertinoListTile(
                                     leading: Icon(subItem.iconData,
                                         color: Colors.white),
                                     title: Text(subItem.title,
-                                        style: TextStyle(color: Colors.white)),
+                                        style: const TextStyle(
+                                            color: Colors.white)),
                                     onTap: () => _onMenuItemSelected(subItem),
                                   ))
                               .toList(),

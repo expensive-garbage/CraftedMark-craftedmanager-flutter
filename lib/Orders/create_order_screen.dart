@@ -57,6 +57,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           '${widget.client.address1}, ${widget.client.city},${widget.client.state},${widget.client.zip}',
       billingAddress:
           '${widget.client.address1},${widget.client.city},${widget.client.state},${widget.client.zip}',
+      productName: orderedItems.map((e) => e.productName).toList().join(','),
+      // Convert the list of product names to a comma-separated string
       totalAmount: totalAmount,
       orderStatus: 'Pending',
     );

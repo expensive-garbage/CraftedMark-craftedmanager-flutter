@@ -3,7 +3,6 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 import 'edit_order_screen.dart';
 import 'orders_db_manager.dart';
@@ -34,6 +33,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       orderDate: DateTime.now(),
       shippingAddress: '',
       billingAddress: '',
+      productName: '',
       totalAmount: 0,
       orderStatus: '',
     ),
@@ -65,7 +65,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return CupertinoApp(
       theme: const CupertinoThemeData(
         brightness: Brightness.dark,

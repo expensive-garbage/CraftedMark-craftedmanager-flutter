@@ -6,6 +6,10 @@ class Order {
   String billingAddress;
   double totalAmount;
   String orderStatus;
+  String productName;
+
+  //String firstName; // added new field
+  //String lastName; // added new field
 
   Order copyWith({
     int? id,
@@ -15,6 +19,9 @@ class Order {
     String? billingAddress,
     double? totalAmount,
     String? orderStatus,
+    String? productName,
+    //String? firstName, // added new parameter
+    //String? lastName, // added new parameter
   }) {
     return Order(
       id: id ?? this.id,
@@ -24,6 +31,9 @@ class Order {
       billingAddress: billingAddress ?? this.billingAddress,
       totalAmount: totalAmount ?? this.totalAmount,
       orderStatus: orderStatus ?? this.orderStatus,
+      productName: productName ?? this.productName,
+      //firstName: firstName ?? this.firstName, // added new field
+      //lastName: lastName ?? this.lastName, // added new field
     );
   }
 
@@ -35,6 +45,9 @@ class Order {
     required this.billingAddress,
     required this.totalAmount,
     required this.orderStatus,
+    required this.productName,
+    //required this.firstName, // added new parameter
+    //required this.lastName, // added new parameter
   });
 
   Map<String, dynamic> toMap() {
@@ -46,6 +59,9 @@ class Order {
       'billingAddress': billingAddress,
       'totalAmount': totalAmount,
       'orderStatus': orderStatus,
+      'productName': productName,
+      //'firstName': firstName, // added new field
+      //'lastName': lastName, // added new field
     };
   }
 
@@ -62,12 +78,14 @@ class Order {
       id: int.parse(map['order_id'].toString()),
       customerId: map['people_id'].toString(),
       orderDate: parseOrderDate(map['orderDate'].toString()),
-      // Use the parseOrderDate function here
       shippingAddress: map['shipping_address'] ?? '',
       billingAddress: map['billing_address'] ?? '',
       totalAmount:
           double.tryParse(map['total_amount']?.toString() ?? '0') ?? 0.0,
       orderStatus: map['order_status'] ?? '',
+      productName: map['product_name'] ?? '',
+      //firstName: map['first_name'] ?? '', // added new field
+      //lastName: map['last_name'] ?? '', // added new field
     );
   }
 }

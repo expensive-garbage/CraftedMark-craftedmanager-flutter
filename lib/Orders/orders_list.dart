@@ -5,7 +5,6 @@ import 'package:crafted_manager/Orders/order_postgres.dart';
 import 'package:crafted_manager/Orders/search_people_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../Models/people_model.dart';
 import '../Models/product_model.dart';
@@ -20,26 +19,9 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
-  Future<List<Map<String, dynamic>>>? _futureOrders;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
-
   @override
   void initState() {
     super.initState();
-    _futureOrders = OrderPostgres.fetchAllOrders();
-  }
-
-  void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    _refreshList();
-    _refreshController.refreshCompleted();
-  }
-
-  Future<void> _refreshList() async {
-    setState(() {
-      _futureOrders = OrderPostgres.fetchAllOrders();
-    });
   }
 
   Future<List<OrderedItem>> fetchOrderedItems(int orderId) async {
@@ -58,7 +40,6 @@ class _OrdersListState extends State<OrdersList> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: CupertinoColors.black,
         middle: const Text('Orders'),
@@ -70,9 +51,9 @@ class _OrdersListState extends State<OrdersList> {
               CupertinoPageRoute(
                 builder: (context) => SearchPeopleScreen(),
               ),
-            ).then((value) => _onRefresh());
+            );
           },
-          child: Icon(
+          child: const Icon(
             CupertinoIcons.add,
             size: 28,
           ),
@@ -80,87 +61,68 @@ class _OrdersListState extends State<OrdersList> {
       ),
       child: SafeArea(
         child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: _futureOrders,
+          future: OrderPostgres.fetchAllOrders(),
           builder: (BuildContext context,
               AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
               final orders = snapshot.data!;
-              return SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: false,
-                controller: _refreshController,
-                onRefresh: _onRefresh,
-                header: ClassicHeader(),
-                child: ListView.builder(
-                  itemCount: orders.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final order = Order.fromMap(orders[index]);
-                    return FutureBuilder<People?>(
-                      future: _getCustomerById(int.parse(order.customerId)),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<People?> customerSnapshot) {
-                        if (customerSnapshot.hasData) {
-                          final customer = customerSnapshot.data!;
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color: CupertinoColors.systemGrey4),
-                              ),
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                List<OrderedItem> orderedItems =
-                                    await fetchOrderedItems(order.id);
-                                List<Product> products =
-                                    await fetchProducts(orderedItems);
-
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => OrderDetailScreen(
-                                      order: order,
-                                      customer: customer,
-                                      orderedItems: orderedItems,
-                                      products: products,
-                                    ),
-                                  ),
-                                ).then((value) => _onRefresh());
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Order ID: ${order.id}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    SizedBox(height: 4),
-                                    Text(
-                                        'Customer: ${customer.firstName} ${customer.lastName}'),
-                                    Text('Total: \$${order.totalAmount}'),
-                                    Text('Status: ${order.orderStatus}'),
-                                    Text(
-                                        'Order Date: ${DateFormat('MM-dd-yyyy').format(order.orderDate)}'),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        } else if (customerSnapshot.hasError) {
-                          return Center(
-                            child: Text('Error: ${customerSnapshot.error}'),
-                          );
-                        } else {
-                          return const Center(
-                            child: CupertinoActivityIndicator(),
-                          );
+              return ListView.builder(
+                itemCount: orders.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final order = Order.fromMap(orders[index]);
+                  return Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: CupertinoColors.black),
+                      ),
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        // Fetch customer, orderedItems, and products data here
+                        final customer =
+                            await _getCustomerById(int.parse(order.customerId));
+                        if (customer == null) {
+                          return;
                         }
+                        List<OrderedItem> orderedItems =
+                            await fetchOrderedItems(order.id);
+                        List<Product> products =
+                            await fetchProducts(orderedItems);
+
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => OrderDetailScreen(
+                              order: order,
+                              customer: customer,
+                              orderedItems: orderedItems,
+                              products: products,
+                            ),
+                          ),
+                        );
                       },
-                    );
-                  },
-                ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Order ID: ${order.id}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 4),
+                            Text('Total: \$${order.totalAmount}'),
+                            Text('Status: ${order.orderStatus}'),
+                            Text(
+                                'Order Date: ${DateFormat('MM-dd-yyyy').format(order.orderDate)}'),
+                            //Text('First Name: ${order.firstName}'),
+                            //Text('Last Name: ${order.lastName}'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               );
             } else if (snapshot.hasError) {
               return Center(
