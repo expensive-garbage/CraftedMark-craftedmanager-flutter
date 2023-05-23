@@ -61,7 +61,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: CupertinoColors.darkBackgroundGray,
         middle: Text(widget.isNewProduct ? 'New Product' : 'Edit Product',
-            style: TextStyle(color: CupertinoColors.white)),
+            style: const TextStyle(color: CupertinoColors.white)),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
@@ -74,7 +74,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     controller: _nameController,
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: const TextStyle(color: CupertinoColors.white),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: CupertinoColors.white),
@@ -85,7 +85,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _categoryController,
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: const TextStyle(color: CupertinoColors.white),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: CupertinoColors.white),
@@ -96,7 +96,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const SizedBox(height: 16.0),
                   CupertinoTextFormFieldRow(
                     controller: _subCategoryController,
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: const TextStyle(color: CupertinoColors.white),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: CupertinoColors.white),

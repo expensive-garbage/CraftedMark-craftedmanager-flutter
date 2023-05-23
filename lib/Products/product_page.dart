@@ -84,7 +84,7 @@ class _ProductListPageState extends State<ProductListPage> {
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             colors: [
                               CupertinoColors.darkBackgroundGray,
                               CupertinoColors.black
@@ -101,7 +101,7 @@ class _ProductListPageState extends State<ProductListPage> {
                               children: [
                                 Text(
                                   product.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                       color: CupertinoColors.systemGrey6),
@@ -109,46 +109,46 @@ class _ProductListPageState extends State<ProductListPage> {
                                 const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    Icon(CupertinoIcons.tag_fill,
+                                    const Icon(CupertinoIcons.tag_fill,
                                         size: 20,
                                         color: CupertinoColors.systemGrey3),
                                     const SizedBox(width: 4),
                                     Text(
                                         'Retail Price: \$${product.retailPrice}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color:
                                                 CupertinoColors.systemGrey3)),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    Icon(CupertinoIcons.tag,
+                                    const Icon(CupertinoIcons.tag,
                                         size: 20,
                                         color: CupertinoColors.systemGrey3),
                                     const SizedBox(width: 4),
                                     Text(
                                         'Wholesale Price: \$${product.wholesalePrice}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color:
                                                 CupertinoColors.systemGrey3)),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    Icon(CupertinoIcons.person_2_fill,
+                                    const Icon(CupertinoIcons.person_2_fill,
                                         size: 20,
                                         color: CupertinoColors.systemGrey3),
                                     const SizedBox(width: 4),
                                     Text(
                                         'Supplier: ${product.manufacturerName}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color:
                                                 CupertinoColors.systemGrey3)),
                                   ],
                                 ),
                               ],
                             ),
-                            Icon(CupertinoIcons.chevron_right,
+                            const Icon(CupertinoIcons.chevron_right,
                                 color: CupertinoColors.systemGrey2),
                           ],
                         ),
@@ -187,7 +187,7 @@ class _ProductListPageState extends State<ProductListPage> {
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}',
-                    style: TextStyle(color: CupertinoColors.systemGrey3)),
+                    style: const TextStyle(color: CupertinoColors.systemGrey3)),
               );
             }
             return const Center(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ProductSearchScreen extends StatefulWidget {
   final List<Product> products;
 
-  ProductSearchScreen({required this.products});
+  const ProductSearchScreen({required this.products});
 
   @override
   _ProductSearchScreenState createState() => _ProductSearchScreenState();

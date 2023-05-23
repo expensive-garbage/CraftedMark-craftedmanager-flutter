@@ -6,34 +6,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditProductPage extends StatefulWidget {
-  final Product product;
-
   const EditProductPage({Key? key, required this.product}) : super(key: key);
+
+  final Product product;
 
   @override
   _EditProductPageState createState() => _EditProductPageState();
 }
 
 class _EditProductPageState extends State<EditProductPage> {
-  final _formKey = GlobalKey<FormState>();
-  late String _name;
-  late String _category;
-  late String _subCategory;
-  late String _subcat2;
-  late String _flavor;
-  late String _description;
-  late double _costOfGood;
-  late double _manufacturingPrice;
-  late double _wholesalePrice;
-  late String _retailPrice;
-  late int _stockQuantity;
   late bool _backordered;
-  late Supplier _supplier;
+  late String _category;
+  late double _costOfGood;
+  late String _description;
+  late String _flavor;
+  final _formKey = GlobalKey<FormState>();
+  late String _itemSource;
   late String _manufacturerId;
   late String _manufacturerName;
-  late String _itemSource;
-  late int _quantitySold;
+  late double _manufacturingPrice;
+  late String _name;
   late int _quantityInStock;
+  late int _quantitySold;
+  late String _retailPrice;
+  late int _stockQuantity;
+  late String _subCategory;
+  late String _subcat2;
+  late String _supplier;
+  late double _wholesalePrice;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _EditProductPageState extends State<EditProductPage> {
     _stockQuantity = widget.product.stockQuantity;
     _backordered = widget.product.backordered;
     _supplier = widget.product.supplier;
-    _manufacturerId = widget.product.manufacturerId;
+    _manufacturerId = widget.product.manufacturerId as String;
     _manufacturerName = widget.product.manufacturerName;
     _itemSource = widget.product.itemSource;
     _quantitySold = widget.product.quantitySold;
@@ -111,8 +111,8 @@ class _EditProductPageState extends State<EditProductPage> {
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Edit Product'),
         trailing: CupertinoButton(
-          child: const Text('Save'),
           onPressed: _updateProduct,
+          child: const Text('Save'),
         ),
       ),
       child: SafeArea(
