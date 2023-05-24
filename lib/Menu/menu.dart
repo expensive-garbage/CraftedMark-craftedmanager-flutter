@@ -87,7 +87,7 @@ class MenuViewState extends State<MenuView> {
                             style: const TextStyle(color: Colors.white)),
                         onTap: () => _onMenuItemSelected(menuItem))
                     : Material(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                        color: Color.fromARGB(255, 0, 0, 0),
                         child: ExpansionTile(
                           leading: Icon(menuItem.iconData, color: Colors.white),
                           title: Text(menuItem.title,
@@ -97,8 +97,8 @@ class MenuViewState extends State<MenuView> {
                                     leading: Icon(subItem.iconData,
                                         color: Colors.white),
                                     title: Text(subItem.title,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                        style:
+                                            const TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
                                     onTap: () => _onMenuItemSelected(subItem),
                                   ))
                               .toList(),

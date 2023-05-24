@@ -89,6 +89,7 @@ class _OrdersListState extends State<OrdersList> {
                         List<Product> products =
                             await fetchProducts(orderedItems);
 
+                        // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
                           CupertinoPageRoute(

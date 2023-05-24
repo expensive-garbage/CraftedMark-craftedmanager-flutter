@@ -80,6 +80,33 @@ class _ProductListPageState extends State<ProductListPage> {
                       );
                     },
                     child: CupertinoContextMenu(
+                      actions: <Widget>[
+                        CupertinoContextMenuAction(
+                          child: const Text('Edit'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ProductDetailPage(
+                                  product: product,
+                                  onProductSaved: () {
+                                    // Refresh product list after updating a product
+                                    _fetchProducts();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        CupertinoContextMenuAction(
+                          isDestructiveAction: true,
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            // Implement the delete function
+                          },
+                        ),
+                      ],
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -153,33 +180,6 @@ class _ProductListPageState extends State<ProductListPage> {
                           ],
                         ),
                       ),
-                      actions: <Widget>[
-                        CupertinoContextMenuAction(
-                          child: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => ProductDetailPage(
-                                  product: product,
-                                  onProductSaved: () {
-                                    // Refresh product list after updating a product
-                                    _fetchProducts();
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        CupertinoContextMenuAction(
-                          isDestructiveAction: true,
-                          child: const Text('Delete'),
-                          onPressed: () {
-                            // Implement the delete function
-                          },
-                        ),
-                      ],
                     ),
                   );
                 },

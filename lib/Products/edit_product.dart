@@ -1,7 +1,5 @@
-import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
-import 'package:crafted_manager/postgres.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -84,7 +82,8 @@ class _EditProductPageState extends State<EditProductPage> {
       );
 
       try {
-        await ProductsPostgres.updateProduct(widget.product.id, updatedProduct);
+        await ProductPostgres.updateProduct(widget.product.id, updatedProduct);
+        // ignore: use_build_context_synchronously
         Navigator.pop(context, true);
       } catch (e) {
         showDialog(
@@ -103,7 +102,6 @@ class _EditProductPageState extends State<EditProductPage> {
         );
       }
     }
-  }
 
   @override
   Widget build(BuildContext context) {
