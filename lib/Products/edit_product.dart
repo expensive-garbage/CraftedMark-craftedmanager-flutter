@@ -20,7 +20,7 @@ class _EditProductPageState extends State<EditProductPage> {
   late String _flavor;
   final _formKey = GlobalKey<FormState>();
   late String _itemSource;
-  late String _manufacturerId;
+  late int _manufacturerId;
   late String _manufacturerName;
   late double _manufacturingPrice;
   late String _name;
@@ -49,7 +49,7 @@ class _EditProductPageState extends State<EditProductPage> {
     _stockQuantity = widget.product.stockQuantity;
     _backordered = widget.product.backordered;
     _supplier = widget.product.supplier;
-    _manufacturerId = widget.product.manufacturerId as String;
+    _manufacturerId = widget.product.manufacturerId.toString() as int;
     _manufacturerName = widget.product.manufacturerName;
     _itemSource = widget.product.itemSource;
     _quantitySold = widget.product.quantitySold;
@@ -82,7 +82,7 @@ class _EditProductPageState extends State<EditProductPage> {
       );
 
       try {
-        await ProductPostgres.updateProduct(widget.product.id, updatedProduct);
+        await ProductPostgres.updateProduct(updatedProduct);
         // ignore: use_build_context_synchronously
         Navigator.pop(context, true);
       } catch (e) {
@@ -101,6 +101,7 @@ class _EditProductPageState extends State<EditProductPage> {
           ),
         );
       }
+    }
     }
 
   @override
@@ -165,7 +166,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _manufacturingPrice.toString(),
                 decoration:
-                    const InputDecoration(labelText: 'Manufacturing Price'),
+                const InputDecoration(labelText: 'Manufacturing Price'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _manufacturingPrice = double.parse(value!),
               ),
@@ -196,13 +197,13 @@ class _EditProductPageState extends State<EditProductPage> {
                 decoration: const InputDecoration(labelText: 'Backordered'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) =>
-                    _backordered = value == 'true' ? true : false,
+                _backordered = value == 'true' ? true : false,
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                initialValue: _supplier.name,
+                initialValue: _supplier,
                 decoration: const InputDecoration(labelText: 'Supplier'),
-                onSaved: (value) => _supplier = Supplier(name: value ?? ''),
+                onSaved: (value) => _supplier =  value ?? '',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a supplier';
@@ -212,9 +213,9 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                initialValue: _manufacturerId,
+                initialValue: _manufacturerId.toString(),
                 decoration: const InputDecoration(labelText: 'Manufacturer ID'),
-                onSaved: (value) => _manufacturerId = value ?? '',
+                onSaved: (value) => _manufacturerId = int.parse(value ?? "0"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a manufacturer ID';
@@ -226,7 +227,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _manufacturerName,
                 decoration:
-                    const InputDecoration(labelText: 'Manufacturer Name'),
+                const InputDecoration(labelText: 'Manufacturer Name'),
                 onSaved: (value) => _manufacturerName = value ?? '',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -258,7 +259,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _quantityInStock.toString(),
                 decoration:
-                    const InputDecoration(labelText: 'Quantity In Stock'),
+                const InputDecoration(labelText: 'Quantity In Stock'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _quantityInStock = int.parse(value!),
               ),
@@ -267,6 +268,5 @@ class _EditProductPageState extends State<EditProductPage> {
           ),
         ),
       ),
-    );
-  }
+    );  }
 }
