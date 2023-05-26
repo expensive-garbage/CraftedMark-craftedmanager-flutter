@@ -15,12 +15,14 @@ class OrderDetailScreen extends StatefulWidget {
     required this.customer,
     required this.orderedItems,
     required this.products,
+    required this.onStateChanged,
   }) : super(key: key);
 
   final People customer;
   final Order order;
   final List<OrderedItem> orderedItems;
   final List<Product> products;
+  final VoidCallback onStateChanged;
   // final int customerId;
 
   @override
@@ -195,6 +197,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   child: Text(status),
                   onPressed: () {
                     onStatusChanged(status);
+                    widget.onStateChanged();
                     Navigator.pop(context);
                   },
                 );

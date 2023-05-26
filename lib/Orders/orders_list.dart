@@ -31,6 +31,7 @@ class _OrdersListState extends State<OrdersList> {
 
   @override
   Widget build(BuildContext context) {
+    print('build');
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: CupertinoColors.black,
@@ -93,11 +94,7 @@ class _OrdersListState extends State<OrdersList> {
       brand: 'brand',
       notes: 'notes',
     );
-    var customer =  await PeoplePostgres.fetchCustomer(customerId) ?? fakeCustomer;
-    setState(() {
-
-    });
-    return customer;
+    return  await PeoplePostgres.fetchCustomer(customerId) ?? fakeCustomer;
   }
   
 Widget _orderWidget (Order order){
@@ -132,6 +129,9 @@ Widget _orderWidget (Order order){
                     customer: customer,
                     orderedItems: orderedItems,
                     products: products,
+                    onStateChanged: (){
+                      setState(() {});
+                    },
                   ),
                 ),
               );
