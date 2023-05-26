@@ -28,16 +28,17 @@ class AssemblyItemsPostgres {
 
     try {
       // Add the assembly product to the products table
-      print('Adding assembly product: ${assemblyProduct.toMap()}');
-      await ProductPostgres.addProduct(assemblyProduct);
+      print('Adding assembly product: ${assemblyProduct}');
+      assemblyProduct = await ProductPostgres.addAssemblyProduct(
+          assemblyProduct); // Store the returned object
 
-      // Insert the ingredients into the assembled_items table
+      // Insert the ingredients into the assembly_ingredients table
       for (var ingredient in ingredients) {
         print('Adding ingredient: $ingredient');
         await connection.execute(
-          'INSERT INTO assembled_items (product_id, ingredient_id, quantity, unit) VALUES (@product_id, @ingredient_id, @quantity, @unit)',
+          'INSERT INTO assembly_ingredients (assembled_product_id, ingredient_id, quantity, unit) VALUES (@assembled_product_id, @ingredient_id, @quantity, @unit)',
           substitutionValues: {
-            'product_id': assemblyProduct.id,
+            'assembled_product_id': assemblyProduct.id,
             'ingredient_id': ingredient['ingredient'],
             'quantity': ingredient['quantity'],
             'unit': ingredient['unit'],

@@ -8,11 +8,11 @@ import 'package:postgres/postgres.dart';
 class ProductPostgres {
   static Future<PostgreSQLConnection> _createConnection() async {
     final connection = PostgreSQLConnection(
-      'web.craftedsolutions.co', // Database host
-      5432, // Port number
-      'craftedmanager_db', // Database name
-      username: 'craftedmanager_dbuser', // Database username
-      password: '!!Laganga1983', // Database password
+      'web.craftedsolutions.co',
+      5432,
+      'craftedmanager_db',
+      username: 'craftedmanager_dbuser',
+      password: '!!Laganga1983',
     );
     await connection.open();
     return connection;
@@ -22,14 +22,39 @@ class ProductPostgres {
     await connection.close();
   }
 
+  static Future<Product> addAssemblyProduct(Product assemblyProduct) async {
+    print('Adding assembly product: ${assemblyProduct.name}');
+    final connection = await _createConnection();
+    Product createdAssemblyProduct = Product.empty;
+
+    try {
+      final result = await connection.query(
+        'INSERT INTO products (product_name, category, description) VALUES (@product_name, @category, @description) RETURNING *',
+        substitutionValues: {
+          'product_name': assemblyProduct.name,
+          'category': assemblyProduct.category,
+          'description': assemblyProduct.description,
+        },
+      );
+
+      createdAssemblyProduct = Product.fromMap(result.first.toColumnMap());
+      print('Assembly product added successfully');
+    } catch (e) {
+      print('Error adding assembly product: $e');
+    } finally {
+      await closeConnection(connection);
+    }
+
+    return createdAssemblyProduct;
+  }
+
   static Future<void> addProduct(Product product) async {
     print('Adding product: ${product.name}');
     final connection = await _createConnection();
     try {
       await connection.execute(
-        'INSERT INTO products (product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, manufacturer_name, supplier_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @manufacturer_name, @supplier_name, @item_source, @quantity_sold, @quantity_in_stock)',
+        'INSERT INTO products (product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @supplier, @manufacturer_id, @manufacturer_name, @item_source, @quantity_sold, @quantity_in_stock)',
         substitutionValues: {
-          //'product_id': product.id,
           'product_name': product.name,
           'category': product.category,
           'sub_category': product.subCategory,
@@ -42,8 +67,9 @@ class ProductPostgres {
           'retail_price': product.retailPrice,
           'stock_quantity': product.stockQuantity,
           'backordered': product.backordered,
+          'supplier': product.supplier,
+          'manufacturer_id': product.manufacturerId,
           'manufacturer_name': product.manufacturerName,
-          'supplier_name': product.supplier,
           'item_source': product.itemSource,
           'quantity_sold': product.quantitySold,
           'quantity_in_stock': product.quantityInStock,
