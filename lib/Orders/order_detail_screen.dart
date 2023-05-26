@@ -14,12 +14,16 @@ class OrderDetailScreen extends StatefulWidget {
     required this.customer,
     required this.orderedItems,
     required this.products,
+    required this.onStateChanged,
   }) : super(key: key);
 
   final People customer;
   final Order order;
   final List<OrderedItem> orderedItems;
   final List<Product> products;
+  final VoidCallback onStateChanged;
+
+  // final int customerId;
 
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
@@ -72,38 +76,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       home: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           backgroundColor: CupertinoColors.black,
-          middle: const Text(
-            'Order Details',
-            style: TextStyle(color: CupertinoColors.white),
-          ),
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              CupertinoIcons.back,
-              color: CupertinoColors.activeBlue,
-            ),
-          ),
-          trailing: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => EditOrderScreen(
-                    order: widget.order,
-                    customer: widget.customer,
-                    orderedItems: widget.orderedItems,
-                    products: widget.products,
-                  ),
-                ),
-              );
-            },
-            child: const Icon(
-              CupertinoIcons.pencil,
-              color: CupertinoColors.activeBlue,
-            ),
-          ),
+          leading: _topBarGoBack(),
+          middle: _topBarTittle(),
+          trailing: _topBarEditButton(),
         ),
         backgroundColor: CupertinoColors.black,
         child: SafeArea(
@@ -149,131 +124,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    CupertinoButton(
-                      child: const Text('Change Order Status'),
-                      onPressed: () {
-                        showCupertinoModalPopup<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoActionSheet(
-                              title: const Text('Select Order Status'),
-                              actions: orderStatuses.map((status) {
-                                return CupertinoActionSheetAction(
-                                  child: Text(status),
-                                  onPressed: () {
-                                    onStatusChanged(status);
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              }).toList(),
-                              cancelButton: CupertinoActionSheetAction(
-                                child: const Text('Cancel'),
-                                isDestructiveAction: true,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    _changeStateButton(),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Ordered Items:',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: CupertinoColors.white,
-                      ),
-                    ),
+                    _orderedItemsList(),
                     const SizedBox(height: 16),
-                    for (OrderedItem orderedItem in widget.orderedItems)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: CupertinoColors.black,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Product Name: ${orderedItem.productName}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: CupertinoColors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Quantity: ${orderedItem.quantity}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: CupertinoColors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Price: \$${orderedItem.price}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: CupertinoColors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    const SizedBox(height: 16),
-                    CupertinoButton.filled(
-                      child: const Text('Update Order Status'),
-                      onPressed: () async {
-                        final orderPostgres = OrderPostgres();
-                        bool success = await orderPostgres
-                            .updateOrderStatus(_orderNotifier.value);
-                        if (success) {
-                          showCupertinoDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoAlertDialog(
-                              title: const Text('Success'),
-                              content:
-                                  const Text('Order status has been updated.'),
-                              actions: <CupertinoDialogAction>[
-                                CupertinoDialogAction(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Close Dialog
-                                    Navigator.pop(context); // Close screen
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          showCupertinoDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoAlertDialog(
-                              title: const Text('Error'),
-                              content:
-                                  const Text('Failed to update order status.'),
-                              actions: <CupertinoDialogAction>[
-                                CupertinoDialogAction(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Close Dialog
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    _updateOrderStatusButton(),
                   ],
                 );
               },
@@ -281,6 +136,181 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _topBarGoBack() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: const Icon(
+        CupertinoIcons.back,
+        color: CupertinoColors.activeBlue,
+      ),
+    );
+  }
+
+  Widget _topBarTittle() {
+    return const Text(
+      'Order Details',
+      style: TextStyle(color: CupertinoColors.white),
+    );
+  }
+
+  Widget _topBarEditButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => EditOrderScreen(
+              order: widget.order,
+              customer: widget.customer,
+              orderedItems: widget.orderedItems,
+              products: widget.products,
+            ),
+          ),
+        );
+      },
+      child: const Icon(
+        CupertinoIcons.pencil,
+        color: CupertinoColors.activeBlue,
+      ),
+    );
+  }
+
+  Widget _changeStateButton() {
+    return CupertinoButton(
+      child: const Text('Change Order Status'),
+      onPressed: () {
+        showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: const Text('Select Order Status'),
+              actions: orderStatuses.map((status) {
+                return CupertinoActionSheetAction(
+                  child: Text(status),
+                  onPressed: () {
+                    onStatusChanged(status);
+                    widget.onStateChanged();
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+              cancelButton: CupertinoActionSheetAction(
+                child: const Text('Cancel'),
+                isDestructiveAction: true,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _orderedItemsList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Ordered Items:',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: CupertinoColors.white,
+          ),
+        ),
+        const SizedBox(height: 16),
+        for (OrderedItem orderedItem in widget.orderedItems)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: CupertinoColors.black,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Product Name: ${orderedItem.productName}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Quantity: ${orderedItem.quantity}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Price: \$${orderedItem.price}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _updateOrderStatusButton() {
+    return CupertinoButton.filled(
+      child: const Text('Update Order Status'),
+      onPressed: () async {
+        final orderPostgres = OrderPostgres();
+        bool success =
+            await orderPostgres.updateOrderStatus(_orderNotifier.value);
+        if (success) {
+          showCupertinoDialog<void>(
+            context: context,
+            builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text('Success'),
+              content: const Text('Order status has been updated.'),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close Dialog
+                    Navigator.pop(context); // Close screen
+                  },
+                ),
+              ],
+            ),
+          );
+        } else {
+          showCupertinoDialog<void>(
+            context: context,
+            builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text('Error'),
+              content: const Text('Failed to update order status.'),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close Dialog
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }
