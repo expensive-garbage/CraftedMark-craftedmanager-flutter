@@ -18,6 +18,7 @@
 
 #artem
 windows/
+.fvm/
 # Visual Studio Code related
 .classpath
 .project
