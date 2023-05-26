@@ -117,7 +117,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Text(
                       'Order ID: ${order.id}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: CupertinoColors.white,
@@ -126,7 +126,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     const SizedBox(height: 16),
                     Text(
                       'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         color: CupertinoColors.white,
                       ),
@@ -134,7 +134,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     const SizedBox(height: 24),
                     Text(
                       'Total Amount: \$${order.totalAmount}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         color: CupertinoColors.white,
                       ),
@@ -142,7 +142,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     const SizedBox(height: 24),
                     Text(
                       'Order Status: ${order.orderStatus}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: CupertinoColors.activeBlue,
@@ -179,7 +179,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    Text(
+                    const Text(
                       'Ordered Items:',
                       style: TextStyle(
                         fontSize: 22,
@@ -202,7 +202,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Text(
                                 'Product Name: ${orderedItem.productName}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: CupertinoColors.white,
                                 ),
@@ -210,7 +210,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 'Quantity: ${orderedItem.quantity}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: CupertinoColors.white,
                                 ),
@@ -218,7 +218,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 'Price: \$${orderedItem.price}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: CupertinoColors.white,
                                 ),

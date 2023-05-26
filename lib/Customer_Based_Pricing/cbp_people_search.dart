@@ -51,8 +51,8 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                       ? CupertinoColors.white
                       : CupertinoColors.black),
               placeholderStyle: darkModeOn
-                  ? TextStyle(color: CupertinoColors.systemGrey)
-                  : TextStyle(color: CupertinoColors.systemGrey3),
+                  ? const TextStyle(color: CupertinoColors.systemGrey)
+                  : const TextStyle(color: CupertinoColors.systemGrey3),
               prefix: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(
@@ -75,10 +75,10 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                 return Container(
                   decoration: BoxDecoration(
                     border: darkModeOn
-                        ? Border(
+                        ? const Border(
                             bottom:
                                 BorderSide(color: CupertinoColors.systemGrey2))
-                        : Border(
+                        : const Border(
                             bottom:
                                 BorderSide(color: CupertinoColors.systemGrey4)),
                   ),

@@ -49,7 +49,7 @@ class _CustomerBasedPricingScreenState
               ),
             );
           },
-          child: Icon(
+          child: const Icon(
             CupertinoIcons.add,
             color: CupertinoColors.white,
             size: 28.0,
@@ -64,7 +64,7 @@ class _CustomerBasedPricingScreenState
               itemCount: _pricingLists.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: CupertinoColors.systemGrey4),
                     ),
@@ -72,11 +72,11 @@ class _CustomerBasedPricingScreenState
                   child: CupertinoListTile(
                     title: Text(
                       _pricingLists[index]['name'],
-                      style: TextStyle(color: CupertinoColors.white),
+                      style: const TextStyle(color: CupertinoColors.white),
                     ),
                     subtitle: Text(
                       _pricingLists[index]['description'],
-                      style: TextStyle(color: CupertinoColors.systemGrey),
+                      style: const TextStyle(color: CupertinoColors.systemGrey),
                     ),
                     onTap: () {
                       // Implement navigation and actions to manage pricing list

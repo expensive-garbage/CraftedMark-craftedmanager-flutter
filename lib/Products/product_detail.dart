@@ -227,6 +227,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       itemSource: _itemSourceController.text,
       quantitySold: widget.product.quantitySold,
       quantityInStock: widget.product.quantityInStock,
+      assemblyItems: [],
     );
 
     if (widget.isNewProduct) {

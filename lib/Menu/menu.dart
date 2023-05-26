@@ -1,3 +1,4 @@
+import 'package:crafted_manager/Assembly_Items/assembly_Item_list.dart';
 import 'package:crafted_manager/Customer_Based_Pricing/customer_based_pricing_screen.dart';
 import 'package:crafted_manager/Orders/orders_list.dart';
 import 'package:crafted_manager/Products/product_page.dart';
@@ -38,6 +39,10 @@ class MenuViewState extends State<MenuView> {
               title: "Open Orders",
               iconData: CupertinoIcons.doc_text_fill,
               destination: const OrdersList(title: "Orders")),
+          MenuItem(
+              title: "Invoices",
+              iconData: CupertinoIcons.money_dollar,
+              destination: const OrdersList(title: "Invoices"))
         ]),
     MenuItem(
         title: "Contacts",
@@ -60,7 +65,11 @@ class MenuViewState extends State<MenuView> {
           MenuItem(
               title: "Customer Based Pricing",
               iconData: CupertinoIcons.money_dollar_circle_fill,
-              destination: CustomerBasedPricingScreen()) // New menu item added.
+              destination: CustomerBasedPricingScreen()),
+          MenuItem(
+              title: "Assembly Items",
+              iconData: CupertinoIcons.money_dollar_circle_fill,
+              destination: AssemblyItemManagement()) // New menu item added.
         ]),
     // Add more menu items/categories here if needed.
   ];
@@ -78,7 +87,7 @@ class MenuViewState extends State<MenuView> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                 MenuItem menuItem = menuItems[index];
                 return menuItem.subItems == null
                     ? CupertinoListTile(
@@ -97,8 +106,9 @@ class MenuViewState extends State<MenuView> {
                                     leading: Icon(subItem.iconData,
                                         color: Colors.white),
                                     title: Text(subItem.title,
-                                        style:
-                                            const TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255))),
                                     onTap: () => _onMenuItemSelected(subItem),
                                   ))
                               .toList(),

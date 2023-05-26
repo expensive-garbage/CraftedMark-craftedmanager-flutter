@@ -1,3 +1,5 @@
+import 'package:crafted_manager/Models/assembly_item_model.dart';
+
 class Product {
   final int? id;
   final String name;
@@ -18,6 +20,7 @@ class Product {
   final String itemSource;
   final int quantitySold;
   final int quantityInStock;
+  final List<AssemblyItem> assemblyItems;
 
   Product({
     this.id,
@@ -39,13 +42,14 @@ class Product {
     this.itemSource = '',
     this.quantitySold = 0,
     this.quantityInStock = 0,
+    required this.assemblyItems,
   });
 
-  // Add the empty instance to the Product class
   static Product empty = Product(
     id: -1,
     name: 'Product not found',
     retailPrice: 0,
+    assemblyItems: [],
   );
 
   bool get isEmpty => id == -1;
@@ -60,7 +64,7 @@ class Product {
       flavor: map['flavor'] ?? '',
       description: map['description'] ?? '',
       costOfGood:
-          map['cost_of_good'] != null ? double.parse(map['cost_of_good']) : 0.0,
+      map['cost_of_good'] != null ? double.parse(map['cost_of_good']) : 0.0,
       manufacturingPrice: map['manufacturing_price'] != null
           ? double.parse(map['manufacturing_price'])
           : 0.0,
@@ -68,7 +72,7 @@ class Product {
           ? double.parse(map['wholesale_price'])
           : 0.0,
       retailPrice:
-          map['retail_price'] != null ? double.parse(map['retail_price']) : 0.0,
+      map['retail_price'] != null ? double.parse(map['retail_price']) : 0.0,
       stockQuantity:
           map['stock_quantity'] != null ? map['stock_quantity'].round() : 0,
       backordered: map['backordered'] ?? false,
@@ -79,6 +83,10 @@ class Product {
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
+      assemblyItems: map['assembly_items'] != null
+          ? List<AssemblyItem>.from(
+              map['assembly_items'].map((x) => AssemblyItem.fromMap(x)))
+          : [],
     );
   }
 }

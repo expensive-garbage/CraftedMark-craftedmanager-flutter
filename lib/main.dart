@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:crafted_manager/menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,15 +18,15 @@ Future<void> main() async {
 Future<void> _initializeNotifications() async {
   // Initialize the plugin with the app icon for Android
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+  AndroidInitializationSettings('@mipmap/ic_launcher');
 
   // Initialize the plugin with the settings for iOS
-  final DarwinInitializationSettings initializationSettingsDarwin =
+  const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
           onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
   // Initialize the plugin with the settings for Linux
-  final LinuxInitializationSettings initializationSettingsLinux =
+  const LinuxInitializationSettings initializationSettingsLinux =
       LinuxInitializationSettings(defaultActionName: 'Open notification');
 
   // Combine the initialization settings for all platforms

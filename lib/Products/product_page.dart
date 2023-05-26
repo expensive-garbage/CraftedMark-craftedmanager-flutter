@@ -29,7 +29,11 @@ class _ProductListPageState extends State<ProductListPage> {
       context,
       CupertinoPageRoute(
         builder: (context) => ProductDetailPage(
-          product: Product(id: 0, name: 'Unknown Product', retailPrice: 0),
+          product: Product(
+              id: 0,
+              name: 'Unknown Product',
+              retailPrice: 0,
+              assemblyItems: []),
           isNewProduct: true,
           onProductSaved: () {
             // Refresh product list after adding a new product

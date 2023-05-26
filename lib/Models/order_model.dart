@@ -8,8 +8,16 @@ class Order {
   String orderStatus;
   String productName;
 
-  //String firstName; // added new field
-  //String lastName; // added new field
+  Order({
+    required this.id,
+    required this.customerId,
+    required this.orderDate,
+    required this.shippingAddress,
+    required this.billingAddress,
+    required this.totalAmount,
+    required this.orderStatus,
+    required this.productName,
+  });
 
   Order copyWith({
     int? id,
@@ -20,8 +28,6 @@ class Order {
     double? totalAmount,
     String? orderStatus,
     String? productName,
-    //String? firstName, // added new parameter
-    //String? lastName, // added new parameter
   }) {
     return Order(
       id: id ?? this.id,
@@ -32,23 +38,8 @@ class Order {
       totalAmount: totalAmount ?? this.totalAmount,
       orderStatus: orderStatus ?? this.orderStatus,
       productName: productName ?? this.productName,
-      //firstName: firstName ?? this.firstName, // added new field
-      //lastName: lastName ?? this.lastName, // added new field
     );
   }
-
-  Order({
-    required this.id,
-    required this.customerId,
-    required this.orderDate,
-    required this.shippingAddress,
-    required this.billingAddress,
-    required this.totalAmount,
-    required this.orderStatus,
-    required this.productName,
-    //required this.firstName, // added new parameter
-    //required this.lastName, // added new parameter
-  });
 
   Map<String, dynamic> toMap() {
     return {
