@@ -12,25 +12,22 @@ class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({
     Key? key,
     required this.order,
-    // required this.customer,
-    required this.customerId,
+    required this.customer,
     required this.orderedItems,
     required this.products,
   }) : super(key: key);
 
-  // final People customer;
+  final People customer;
   final Order order;
   final List<OrderedItem> orderedItems;
   final List<Product> products;
-  final int customerId;
+  // final int customerId;
 
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-
-  late People customer;
 
   final ValueNotifier<Order> _orderNotifier = ValueNotifier<Order>(
     Order(
@@ -67,27 +64,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     super.initState();
     // Initialize the orderNotifier with the initial order
     _orderNotifier.value = widget.order;
-    _getCustomerById(widget.customerId);
   }
 
-
-  Future<People> _getCustomerById(int customerId) async {
-    //TODO: find out why the customer can be null
-    People fakeCustomer = People(
-        id: 1,
-        firstName: 'Fake',
-        lastName: "Customer",
-        phone: '123',
-        email: 'email',
-        brand: 'brand',
-        notes: 'notes',
-    );
-    customer =  await PeoplePostgres.fetchCustomer(customerId) ?? fakeCustomer;
-    setState(() {
-
-    });
-    return customer;
-  }
 
 
   @override
@@ -106,9 +84,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         backgroundColor: CupertinoColors.black,
         child: SafeArea(
           child: CupertinoScrollbar(
-            child: customer == null?
-            CupertinoActivityIndicator():
-            ValueListenableBuilder<Order>(
+            child: ValueListenableBuilder<Order>(
               valueListenable: _orderNotifier,
               builder: (context, order, child) {
                 return ListView(
@@ -125,7 +101,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Customer: ${customer.firstName} ${customer.lastName}',
+                      'Customer: ${widget.customer.firstName} ${widget.customer.lastName}',
                       style: const TextStyle(
                         fontSize: 18,
                         color: CupertinoColors.white,
@@ -191,7 +167,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           CupertinoPageRoute(
             builder: (context) => EditOrderScreen(
               order: widget.order,
-              customer: customer,
+              customer: widget.customer,
               orderedItems: widget.orderedItems,
               products: widget.products,
             ),

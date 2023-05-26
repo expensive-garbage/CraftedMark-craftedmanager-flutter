@@ -129,8 +129,7 @@ Widget _orderWidget (Order order){
                 CupertinoPageRoute(
                   builder: (context) => OrderDetailScreen(
                     order: order,
-                    // customer: customer,
-                    customerId: int.parse(order.customerId),
+                    customer: customer,
                     orderedItems: orderedItems,
                     products: products,
                   ),
