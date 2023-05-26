@@ -79,6 +79,7 @@ class _EditProductPageState extends State<EditProductPage> {
         itemSource: _itemSource,
         quantitySold: _quantitySold,
         quantityInStock: _quantityInStock,
+        assemblyItems: [],
       );
 
       try {

@@ -19,6 +19,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         description: _descriptionController.text,
         name: '',
         retailPrice: double.parse(_retailPriceController.text),
+        assemblyItems: [],
       );
       await ProductPostgres.saveProduct(newProduct);
       Navigator.pop(context);
@@ -29,6 +30,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        padding: const EdgeInsets.all(20),
         middle: const Text('Add Product'),
         trailing: GestureDetector(
           onTap: _saveProduct,
@@ -38,20 +40,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
         ),
       ),
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          CupertinoTextField(
-            controller: _descriptionController,
-            placeholder: 'Description',
-          ),
-          const SizedBox(height: 16),
-          CupertinoTextField(
-            controller: _retailPriceController,
-            placeholder: 'Retail Price',
-            keyboardType: TextInputType.number,
-          ),
-        ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Description',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            CupertinoTextField(
+              controller: _descriptionController,
+              placeholder: 'Enter product description',
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemGrey6,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Retail Price',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            CupertinoTextField(
+              controller: _retailPriceController,
+              placeholder: 'Enter retail price',
+              keyboardType: TextInputType.number,
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemGrey6,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
