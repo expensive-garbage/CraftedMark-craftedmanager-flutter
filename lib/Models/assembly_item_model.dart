@@ -4,13 +4,16 @@ class AssemblyItem {
   final int ingredientId;
   final double quantity;
   final String unit;
+  final String imageUrl;
 
-  AssemblyItem(
-      {required this.id,
-      required this.productId,
-      required this.ingredientId,
-      required this.quantity,
-      required this.unit});
+  AssemblyItem({
+    required this.id,
+    required this.productId,
+    required this.ingredientId,
+    required this.quantity,
+    required this.unit,
+    String? imageUrl,
+  }) : imageUrl = imageUrl ?? '';
 
   factory AssemblyItem.fromMap(Map<String, dynamic> map) {
     return AssemblyItem(
@@ -19,6 +22,7 @@ class AssemblyItem {
       ingredientId: map['ingredient_id'],
       quantity: map['quantity'],
       unit: map['unit'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
     );
   }
 
@@ -29,6 +33,7 @@ class AssemblyItem {
       'ingredient_id': ingredientId,
       'quantity': quantity,
       'unit': unit,
+      'imageUrl': imageUrl,
     };
   }
 }

@@ -22,83 +22,88 @@ class AssemblyItemsPostgres {
     await connection.close();
   }
 
-  Future<void> addAssemblyItem(
-      AssemblyItem assemblyItem, Product product) async {
+  Future<void> addAssemblyItem(AssemblyItem assemblyItem,
+      List<Map<String, dynamic>> ingredients, Product assemblyProduct) async {
     final connection = await _createConnection();
 
     try {
-      await ProductPostgres.addProduct(product);
+      // Add the assembly product to the products table
+      print('Adding assembly product: ${assemblyProduct.toMap()}');
+      await ProductPostgres.addProduct(assemblyProduct);
 
-      await connection.execute(
-        'INSERT INTO assembled_items (product_id, ingredient_id, quantity, unit) VALUES (@product_id, @ingredient_id, @quantity, @unit)',
-        substitutionValues: {
-          'product_id': product.id,
-          'ingredient_id': assemblyItem.productId,
-          'quantity': assemblyItem.quantity,
-          'unit': assemblyItem.unit,
-        },
-      );
+      // Insert the ingredients into the assembled_items table
+      for (var ingredient in ingredients) {
+        print('Adding ingredient: $ingredient');
+        await connection.execute(
+          'INSERT INTO assembled_items (product_id, ingredient_id, quantity, unit) VALUES (@product_id, @ingredient_id, @quantity, @unit)',
+          substitutionValues: {
+            'product_id': assemblyProduct.id,
+            'ingredient_id': ingredient['ingredient'],
+            'quantity': ingredient['quantity'],
+            'unit': ingredient['unit'],
+          },
+        );
+      }
     } catch (e) {
       print('Error adding assembly item: $e');
     } finally {
       await closeConnection(connection);
     }
+  }
 
 // Add your update, delete, and query methods for assembly items here
-    // Update assembly item
-    Future<void> updateAssemblyItem(AssemblyItem assemblyItem) async {
-      final connection = await _createConnection();
+  // Update assembly item
+  Future<void> updateAssemblyItem(AssemblyItem assemblyItem) async {
+    final connection = await _createConnection();
 
-      try {
-        await connection.execute(
-          'UPDATE assembled_items SET product_id = @product_id, ingredient_id = @ingredient_id, quantity = @quantity, unit = @unit WHERE id = @id',
-          substitutionValues: {
-            'id': assemblyItem.id,
-            'product_id': assemblyItem.productId,
-            'ingredient_id': assemblyItem.ingredientId,
-            'quantity': assemblyItem.quantity,
-            'unit': assemblyItem.unit,
-          },
-        );
-      } catch (e) {
-        print('Error updating assembly item: $e');
-      } finally {
-        await closeConnection(connection);
-      }
-    }
-
-    // Delete assembly item
-    Future<void> deleteAssemblyItem(int id) async {
-      final connection = await _createConnection();
-
-      try {
-        await connection.execute(
-          'DELETE FROM assembled_items WHERE id = @id',
-          substitutionValues: {
-            'id': id,
-          },
-        );
-      } catch (e) {
-        print('Error deleting assembly item: $e');
-      } finally {
-        await closeConnection(connection);
-      }
-    }
-
-    // Get assembly items by product id
-    Future<List<AssemblyItem>> getAssemblyItemsByProductId(
-        int productId) async {
-      final connection = await _createConnection();
-      final results = await connection.query(
-        'SELECT * FROM assembled_items WHERE product_id = @product_id',
+    try {
+      await connection.execute(
+        'UPDATE assembled_items SET product_id = @product_id, ingredient_id = @ingredient_id, quantity = @quantity, unit = @unit WHERE id = @id',
         substitutionValues: {
-          'product_id': productId,
+          'id': assemblyItem.id,
+          'product_id': assemblyItem.productId,
+          'ingredient_id': assemblyItem.ingredientId,
+          'quantity': assemblyItem.quantity,
+          'unit': assemblyItem.unit,
         },
       );
+    } catch (e) {
+      print('Error updating assembly item: $e');
+    } finally {
       await closeConnection(connection);
-      return results
-          .map((row) => AssemblyItem.fromMap(row.toColumnMap()))
-          .toList();
     }
+  }
+
+  // Delete assembly item
+  Future<void> deleteAssemblyItem(int id) async {
+    final connection = await _createConnection();
+
+    try {
+      await connection.execute(
+        'DELETE FROM assembled_items WHERE id = @id',
+        substitutionValues: {
+          'id': id,
+        },
+      );
+    } catch (e) {
+      print('Error deleting assembly item: $e');
+    } finally {
+      await closeConnection(connection);
+    }
+  }
+
+  // Get assembly items by product id
+  Future<List<AssemblyItem>> getAssemblyItemsByProductId(int productId) async {
+    final connection = await _createConnection();
+    final results = await connection.query(
+      'SELECT * FROM assembled_items WHERE product_id = @product_id',
+      substitutionValues: {
+        'product_id': productId,
+      },
+    );
+    await closeConnection(connection);
+    return results
+        .map((row) => AssemblyItem.fromMap(row.toColumnMap()))
+        .toList();
   }
 }
