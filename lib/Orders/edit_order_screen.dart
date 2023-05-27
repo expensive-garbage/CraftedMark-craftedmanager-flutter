@@ -196,7 +196,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   child: const Text('Add Item'),
                   onPressed: () async {
                     List<Product> products =
-                        await ProductPostgres.getAllProducts();
+                        await ProductPostgres.getAllProductsExceptIngredients();
 
                     final result =
                         await showCupertinoModalPopup<Map<String, dynamic>>(

@@ -108,7 +108,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 child: const Text('Add Item'),
                 onPressed: () async {
                   List<Product> products =
-                      await ProductPostgres.getAllProducts();
+                      await ProductPostgres.getAllProductsExceptIngredients();
 
                   final result =
                       await showCupertinoModalPopup<Map<String, dynamic>>(

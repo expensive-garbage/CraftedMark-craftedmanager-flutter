@@ -90,9 +90,21 @@ class ProductPostgres {
     return base64Url.encode(values).replaceAll('+', '-').replaceAll('/', '_');
   }
 
-  static Future<List<Product>> getAllProducts() async {
+  static Future<List<Product>> getAllProductsExceptIngredients() async {
     final connection = await _createConnection();
-    final results = await connection.query('SELECT * FROM products');
+    final results = await connection.query(
+      "SELECT * FROM products WHERE type != 'Ingredient'",
+    );
+    await closeConnection(connection);
+    return results.map((row) => Product.fromMap(row.toColumnMap())).toList();
+  }
+
+  static Future<List<Product>> getAllProducts(String type) async {
+    final connection = await _createConnection();
+    final results = await connection.query(
+      'SELECT * FROM products WHERE type = @type',
+      substitutionValues: {'type': type},
+    );
     await closeConnection(connection);
     return results.map((row) => Product.fromMap(row.toColumnMap())).toList();
   }

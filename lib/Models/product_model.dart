@@ -20,6 +20,7 @@ class Product {
   final String itemSource;
   final int quantitySold;
   final int quantityInStock;
+  final String type;
   final List<AssemblyItem> assemblyItems;
   final String imageUrl;
 
@@ -43,6 +44,7 @@ class Product {
     this.itemSource = '',
     this.quantitySold = 0,
     this.quantityInStock = 0,
+    this.type = '',
     required this.assemblyItems,
     this.imageUrl = '',
   });
@@ -86,6 +88,7 @@ class Product {
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
+      type: map['type'] ?? '',
       imageUrl: map['imgurl'] ?? '',
       assemblyItems: map['assembly_items'] != null
           ? List<AssemblyItem>.from(
