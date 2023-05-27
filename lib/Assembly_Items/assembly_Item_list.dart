@@ -18,9 +18,9 @@ class _AssemblyItemManagementState extends State<AssemblyItemManagement> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Assembly Item Management"),
+        middle: const Text("Assembly Item Management"),
         trailing: GestureDetector(
-          child: Icon(CupertinoIcons.add),
+          child: const Icon(CupertinoIcons.add),
           onTap: () {
             Navigator.push(
               context,
@@ -33,7 +33,7 @@ class _AssemblyItemManagementState extends State<AssemblyItemManagement> {
         color: CupertinoColors.darkBackgroundGray,
         child: Column(
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(15),
               child: Text(
                 'Manage Assembly Items',
@@ -66,7 +66,7 @@ class _AssemblyItemManagementState extends State<AssemblyItemManagement> {
         products.firstWhere((element) => element.id == item.ingredientId).name;
 
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: CupertinoColors.black,
@@ -74,14 +74,14 @@ class _AssemblyItemManagementState extends State<AssemblyItemManagement> {
       child: CupertinoListTile(
         title: Text(
           '$productName - $ingredientName',
-          style: TextStyle(color: CupertinoColors.white),
+          style: const TextStyle(color: CupertinoColors.white),
         ),
         subtitle: Text(
           'Quantity: ${item.quantity.toString()}, Unit: ${item.unit}',
-          style: TextStyle(color: CupertinoColors.white),
+          style: const TextStyle(color: CupertinoColors.white),
         ),
         trailing: IconButton(
-          icon: Icon(CupertinoIcons.delete,
+          icon: const Icon(CupertinoIcons.delete,
               color: CupertinoColors.destructiveRed),
           onPressed: () {
             // Add your delete functionality here
