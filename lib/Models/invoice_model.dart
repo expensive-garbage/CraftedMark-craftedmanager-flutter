@@ -19,10 +19,11 @@ class Invoice {
   });
 
   factory Invoice.fromJson(Map<String, dynamic> json) {
-    List<OrderedItem> orderedItems = [];
-    if (json['ordered_items'] != null) {
-      orderedItems = List.from(json['ordered_items'])
+    List<OrderedItem>? orderedItems = [];
+    if (json['ordereditems'] != null) {
+      orderedItems = List.from(json['ordereditems'])
           .map((item) => OrderedItem.fromJson(item))
+          .cast<OrderedItem>()
           .toList();
     }
     return Invoice(

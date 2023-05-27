@@ -1,5 +1,6 @@
 import 'package:crafted_manager/Assembly_Items/assembly_Item_list.dart';
 import 'package:crafted_manager/Customer_Based_Pricing/customer_based_pricing_screen.dart';
+import 'package:crafted_manager/Financial/finances_list.dart';
 import 'package:crafted_manager/Orders/orders_list.dart';
 import 'package:crafted_manager/Products/product_page.dart';
 import 'package:crafted_manager/contacts/contact_lists.dart';
@@ -71,6 +72,23 @@ class MenuViewState extends State<MenuView> {
               iconData: CupertinoIcons.money_dollar_circle_fill,
               destination: AssemblyItemManagement()) // New menu item added.
         ]),
+    MenuItem(
+        title: "Accounting",
+        iconData: CupertinoIcons.cube_box_fill,
+        subItems: [
+          MenuItem(
+              title: "Expenses",
+              iconData: CupertinoIcons.money_dollar_circle_fill,
+              destination: FinancialScreen()),
+          // MenuItem(
+          //     title: "Customer Based Pricing",
+          //     iconData: CupertinoIcons.money_dollar_circle_fill,
+          //     destination: CustomerBasedPricingScreen()),
+          // MenuItem(
+          //     title: "Assembly Items",
+          //     iconData: CupertinoIcons.money_dollar_circle_fill,
+          //     destination: AssemblyItemManagement()) // New menu item added.
+        ]),
     // Add more menu items/categories here if needed.
   ];
 
@@ -87,7 +105,7 @@ class MenuViewState extends State<MenuView> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 MenuItem menuItem = menuItems[index];
                 return menuItem.subItems == null
                     ? CupertinoListTile(
