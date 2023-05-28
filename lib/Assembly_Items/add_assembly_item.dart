@@ -27,18 +27,18 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text('Add Assembly Item'),
       ),
       child: Container(
         color: CupertinoColors.darkBackgroundGray,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text(
+                const Text(
                   'Add Assembly Item',
                   style: TextStyle(
                     color: CupertinoColors.white,
@@ -46,17 +46,17 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildProductDropdown(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildIngredientDropdown(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildQuantityInput(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildUnitInput(),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 CupertinoButton.filled(
-                  child: Text('Create Assembly Item'),
+                  child: const Text('Create Assembly Item'),
                   onPressed: _submitForm,
                 ),
               ],
@@ -69,7 +69,8 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
 
   Widget _buildProductDropdown() {
     return CupertinoFormSection(
-      header: Text('Product', style: TextStyle(color: CupertinoColors.white)),
+      header:
+          const Text('Product', style: TextStyle(color: CupertinoColors.white)),
       children: [
         CupertinoFormRow(
           child: CupertinoPicker(
@@ -80,7 +81,7 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
             },
             children: products.map((product) {
               return Text(product.name,
-                  style: TextStyle(color: CupertinoColors.white));
+                  style: const TextStyle(color: CupertinoColors.white));
             }).toList(),
           ),
         ),
@@ -90,8 +91,8 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
 
   Widget _buildIngredientDropdown() {
     return CupertinoFormSection(
-      header:
-          Text('Ingredient', style: TextStyle(color: CupertinoColors.white)),
+      header: const Text('Ingredient',
+          style: TextStyle(color: CupertinoColors.white)),
       children: [
         CupertinoFormRow(
           child: CupertinoPicker(
@@ -102,7 +103,7 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
             },
             children: products.map((product) {
               return Text(product.name,
-                  style: TextStyle(color: CupertinoColors.white));
+                  style: const TextStyle(color: CupertinoColors.white));
             }).toList(),
           ),
         ),
@@ -112,12 +113,13 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
 
   Widget _buildQuantityInput() {
     return CupertinoFormSection(
-      header: Text('Quantity', style: TextStyle(color: CupertinoColors.white)),
+      header: const Text('Quantity',
+          style: TextStyle(color: CupertinoColors.white)),
       children: [
         CupertinoFormRow(
           child: CupertinoTextField(
             placeholder: 'Enter quantity',
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onSubmitted: (String? value) {
               // Handle quantity input here
             },
@@ -129,7 +131,8 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
 
   Widget _buildUnitInput() {
     return CupertinoFormSection(
-      header: Text('Unit', style: TextStyle(color: CupertinoColors.white)),
+      header:
+          const Text('Unit', style: TextStyle(color: CupertinoColors.white)),
       children: [
         CupertinoFormRow(
           child: CupertinoTextField(

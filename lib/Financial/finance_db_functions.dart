@@ -1,3 +1,5 @@
+import 'package:crafted_manager/Financial/finances_db_manager.dart';
+
 class FinanceDbManager {
   // Tables
   static const String paymentTable = 'payment';

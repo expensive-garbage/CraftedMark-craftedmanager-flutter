@@ -1,35 +1,120 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'package:crafted_manager/menu/menu.dart';
+import 'package:crafted_manager/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_zoom_drawer/config.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+final _drawerController = ZoomDrawerController();
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  runApp(MyApp());
+}
 
-  await _initializeNotifications();
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('es', ''),
+      ],
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: CupertinoColors.activeBlue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
 
-  runApp(const CraftedManager());
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ZoomDrawer(
+      controller: _drawerController,
+      borderRadius: 24,
+      style: DrawerStyle.style3,
+      showShadow: true,
+      openCurve: Curves.fastOutSlowIn,
+      slideWidth: MediaQuery.of(context).size.width * 0.65,
+      duration: const Duration(milliseconds: 500),
+      angle: 0.0,
+      menuScreen: MenuView(),
+      mainScreen: MainScreen(drawerController: _drawerController),
+    );
+  }
+}
+
+// class MenuView extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: Theme.of(context).scaffoldBackgroundColor,
+//       child: Center(
+//           child: Text('Menu Screen', style: TextStyle(color: Colors.white))),
+//     );
+//   }
+// }
+
+class MainScreen extends StatelessWidget {
+  final ZoomDrawerController drawerController;
+
+  MainScreen({required this.drawerController});
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.black,
+        middle: const Text(
+          'Home',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: GestureDetector(
+          onTap: () => drawerController.toggle?.call(),
+          child: const Icon(CupertinoIcons.bars, size: 28, color: Colors.white),
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'Welcome to Crafted Manager App!',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 }
 
 Future<void> _initializeNotifications() async {
-  // Initialize the plugin with the app icon for Android
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  // Initialize the plugin with the settings for iOS
+      AndroidInitializationSettings('@mipmap/ic_launcher');
   const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
           onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-
-  // Initialize the plugin with the settings for Linux
   const LinuxInitializationSettings initializationSettingsLinux =
       LinuxInitializationSettings(defaultActionName: 'Open notification');
 
-  // Combine the initialization settings for all platforms
   final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
@@ -41,36 +126,9 @@ Future<void> _initializeNotifications() async {
 }
 
 Future<void> onDidReceiveLocalNotification(
-    int id, String? title, String? body, String? payload) async {
-  // Handle local notification received while the app is in the foreground
-}
+    int id, String? title, String? body, String? payload) async {}
 
 Future<void> onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse) async {
-  final String? payload = notificationResponse.payload;
-  if (payload != null) {
-    debugPrint('notification payload: $payload');
-  }
-  // Handle notification tapped and app opened from notification
-}
-
-class CraftedManager extends StatelessWidget {
-  const CraftedManager({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const CupertinoApp(
-      title: 'Crafted Manager',
-      theme: CupertinoThemeData(
-        brightness: Brightness.dark,
-        primaryColor: CupertinoColors.activeBlue,
-        scaffoldBackgroundColor: CupertinoColors.darkBackgroundGray,
-      ),
-      home: MenuView(
-          //onMenuItemSelected: (Product product) {
-          // Handle menu item selection here
-          // },
-          ),
-    );
-  }
+  debugPrint('notification payload: ${notificationResponse.payload}');
 }

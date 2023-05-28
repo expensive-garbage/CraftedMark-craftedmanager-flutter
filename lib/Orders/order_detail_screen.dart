@@ -217,7 +217,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Ordered Items:',
           style: TextStyle(
             fontSize: 22,
@@ -240,7 +240,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 children: [
                   Text(
                     'Product Name: ${orderedItem.productName}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: CupertinoColors.white,
                     ),
@@ -248,7 +248,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'Quantity: ${orderedItem.quantity}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: CupertinoColors.white,
                     ),
@@ -256,7 +256,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'Price: \$${orderedItem.price}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: CupertinoColors.white,
                     ),

@@ -3,7 +3,8 @@ import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Orders/order_postgres.dart';
 import 'package:crafted_manager/Orders/search_people_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:crafted_manager/refreshable_list_view.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../Models/people_model.dart';
@@ -28,30 +29,31 @@ class _OrdersListState extends State<OrdersList> {
     return [];
   }
 
+  Future<void> _refreshOrdersList() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('build');
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.black,
-        middle: const Text('Orders'),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => SearchPeopleScreen(),
-              ),
-            );
-          },
-          child: const Icon(
-            CupertinoIcons.add,
-            size: 28,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text('Orders', style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPeopleScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.add, size: 28, color: Colors.white),
           ),
-        ),
+        ],
       ),
-      child: SafeArea(
+      body: SafeArea(
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: OrderPostgres.fetchAllOrders(),
           builder: (_, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
@@ -62,19 +64,26 @@ class _OrdersListState extends State<OrdersList> {
                   rawOrders.map((rawOrder) => Order.fromMap(rawOrder)).toList();
               orders.sort((o1, o2) => o1.orderDate.compareTo(o2.orderDate));
 
-              return ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _orderWidget(orders[index]);
-                },
-              );
+              if (orders != null) {
+                return RefreshableListView(
+                  itemCount: orders.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _orderWidget(orders[index]);
+                  },
+                  onRefresh: _refreshOrdersList,
+                );
+              } else {
+                return const Center(
+                  child: Text('Some error occurred with the data.'),
+                );
+              }
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
             } else {
               return const Center(
-                child: CupertinoActivityIndicator(),
+                child: CircularProgressIndicator(),
               );
             }
           },
@@ -101,7 +110,7 @@ class _OrdersListState extends State<OrdersList> {
     return Container(
       decoration: const BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: CupertinoColors.black),
+          bottom: BorderSide(color: Colors.black),
         ),
       ),
       child: FutureBuilder<People>(
@@ -115,9 +124,6 @@ class _OrdersListState extends State<OrdersList> {
                     // Fetch customer, orderedItems, and products data here
                     final customer =
                         await _getCustomerById(int.parse(order.customerId));
-                    // if (customer == null) {
-                    //   return;
-                    // }
                     List<OrderedItem> orderedItems =
                         await fetchOrderedItems(order.id);
                     List<Product> products = await fetchProducts(orderedItems);
@@ -125,7 +131,7 @@ class _OrdersListState extends State<OrdersList> {
                     // ignore: use_build_context_synchronously
                     Navigator.push(
                       context,
-                      CupertinoPageRoute(
+                      MaterialPageRoute(
                         builder: (context) => OrderDetailScreen(
                           order: order,
                           customer: customer,
@@ -158,7 +164,6 @@ class _OrdersListState extends State<OrdersList> {
                         ),
                         Text(
                             'Customer: ${customer.firstName} ${customer.lastName}'),
-                        //Text('Last Name: ${order.lastName}'),
                       ],
                     ),
                   ));
@@ -168,7 +173,7 @@ class _OrdersListState extends State<OrdersList> {
               );
             } else {
               return const Center(
-                child: CupertinoActivityIndicator(),
+                child: CircularProgressIndicator(),
               );
             }
           }),

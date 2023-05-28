@@ -67,7 +67,7 @@ class _AddNewFinanceItemState extends State<AddNewFinanceItem> {
       keyboardType: keyboardType,
       onChanged: onChanged,
       placeholder: labelText,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(color: CupertinoColors.systemGrey, width: 0.0),
         ),
@@ -82,7 +82,7 @@ class _AddNewFinanceItemState extends State<AddNewFinanceItem> {
           context: context,
           initialDateTime: selectedDate ?? DateTime.now(),
           minimumDate: DateTime(2020, 1, 1),
-          maximumDate: DateTime.now().add(Duration(days: 365)),
+          maximumDate: DateTime.now().add(const Duration(days: 365)),
         );
 
         setState(() {});
@@ -182,7 +182,7 @@ class _AddNewFinanceItemState extends State<AddNewFinanceItem> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Collected by Mark'),
+                          const Text('Collected by Mark'),
                           CupertinoSwitch(
                             value: _collectedbymark,
                             onChanged: (value) {

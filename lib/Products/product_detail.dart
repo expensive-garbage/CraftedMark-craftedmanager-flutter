@@ -59,7 +59,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.black,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.darkBackgroundGray,
+        backgroundColor: CupertinoColors.black,
         middle: Text(widget.isNewProduct ? 'New Product' : 'Edit Product',
             style: const TextStyle(color: CupertinoColors.white)),
       ),
