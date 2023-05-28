@@ -1,8 +1,6 @@
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/postgres.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../Models/people_model.dart';
 import 'contact_detail_widget.dart';
@@ -16,7 +14,6 @@ class ContactsList extends StatefulWidget {
 
 class ContactsListState extends State<ContactsList> {
   List<People>? _contacts;
-  final RefreshController _refreshController = RefreshController();
 
   @override
   void initState() {
@@ -31,7 +28,7 @@ class ContactsListState extends State<ContactsList> {
   Future<void> openContactDetails(People contact) async {
     final updatedContact = await Navigator.push<People>(
       context,
-      CupertinoPageRoute(
+      MaterialPageRoute(
         builder: (context) => ContactDetailWidget(contact),
       ),
     );
@@ -44,7 +41,7 @@ class ContactsListState extends State<ContactsList> {
     final newContact = People.empty();
     final createdContact = await Navigator.push<People>(
       context,
-      CupertinoPageRoute(
+      MaterialPageRoute(
         builder: (context) => ContactDetailWidget(newContact),
       ),
     );
@@ -58,91 +55,58 @@ class ContactsListState extends State<ContactsList> {
     setState(() {
       _contacts = updatedList;
     });
-    _refreshController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTheme(
-      data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
-      child: CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.black,
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: CupertinoColors.black,
-          middle: const Text('Contacts'),
-          trailing: CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const Icon(CupertinoIcons.add),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Contacts'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
             onPressed: () {
               addNewContact();
             },
           ),
-        ),
-        child: Material(
-          color: const Color.fromARGB(255, 0, 0, 0),
-          child: _contacts == null
-              ? const Center(child: CupertinoActivityIndicator())
-              : SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: refreshContacts,
-                  child: ListView.separated(
-                    itemCount: _contacts!.length,
-                    itemBuilder: (context, index) {
-                      final contact = _contacts![index];
-                      return GestureDetector(
-                        onTap: () {
-                          openContactDetails(contact);
-                        },
-                        child: Container(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          child: ListTile(
-                            title: Text(
-                              '${contact.firstName} ${contact.lastName ?? ''}',
-                              style: TextStyle(
-                                color: CupertinoTheme.of(context)
-                                    .textTheme
-                                    .textStyle
-                                    .color,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  contact.brand,
-                                  style: TextStyle(
-                                    color: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .textStyle
-                                        .color
-                                        ?.withAlpha(150),
-                                  ),
-                                ),
-                                Text(
-                                  contact.phone,
-                                  style: TextStyle(
-                                    color: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .textStyle
-                                        .color
-                                        ?.withAlpha(150),
-                                  ),
-                                ),
-                              ],
-                            ),
+        ],
+      ),
+      body: _contacts == null
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.separated(
+              itemCount: _contacts!.length,
+              itemBuilder: (context, index) {
+                final contact = _contacts![index];
+                return GestureDetector(
+                  onTap: () {
+                    openContactDetails(contact);
+                  },
+                  child: Container(
+                    child: ListTile(
+                      title: Text(
+                        '${contact.firstName} ${contact.lastName ?? ''}',
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            contact.brand,
                           ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) => const Divider(
-                      thickness: 0.5,
-                      height: 1,
-                      color: CupertinoColors.systemGrey,
+                          Text(
+                            contact.phone,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-        ),
-      ),
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(
+                thickness: 0.5,
+                height: 1,
+              ),
+            ),
     );
   }
 }

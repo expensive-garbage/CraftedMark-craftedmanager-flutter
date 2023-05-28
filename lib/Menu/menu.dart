@@ -26,7 +26,7 @@ class MenuViewState extends State<MenuView> {
     if (menuItem.destination != null) {
       Navigator.push(
         context,
-        CupertinoPageRoute(builder: (context) => menuItem.destination!),
+        MaterialPageRoute(builder: (context) => menuItem.destination!),
       );
     }
   }
@@ -94,48 +94,42 @@ class MenuViewState extends State<MenuView> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-      child: CustomScrollView(
-        slivers: [
-          const CupertinoSliverNavigationBar(
-            backgroundColor: Color.fromARGB(255, 0, 0, 0),
-            largeTitle:
-                Text('Crafted Manager', style: TextStyle(color: Colors.white)),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                MenuItem menuItem = menuItems[index];
-                return menuItem.subItems == null
-                    ? CupertinoListTile(
-                        leading: Icon(menuItem.iconData, color: Colors.white),
-                        title: Text(menuItem.title,
-                            style: const TextStyle(color: Colors.white)),
-                        onTap: () => _onMenuItemSelected(menuItem))
-                    : Material(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        child: ExpansionTile(
-                          leading: Icon(menuItem.iconData, color: Colors.white),
-                          title: Text(menuItem.title,
-                              style: const TextStyle(color: Colors.white)),
-                          children: menuItem.subItems!
-                              .map((subItem) => CupertinoListTile(
-                                    leading: Icon(subItem.iconData,
-                                        color: Colors.white),
-                                    title: Text(subItem.title,
-                                        style: const TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255))),
-                                    onTap: () => _onMenuItemSelected(subItem),
-                                  ))
-                              .toList(),
-                        ));
-              },
-              childCount: menuItems.length,
-            ),
-          ),
-        ],
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Crafted Manager'),
+        ),
+        body: ListView.builder(
+          itemCount: menuItems.length,
+          itemBuilder: (BuildContext context, int index) {
+            MenuItem menuItem = menuItems[index];
+            return menuItem.subItems == null
+                ? ListTile(
+                    leading: Icon(menuItem.iconData,
+                        color: Theme.of(context).iconTheme.color),
+                    title: Text(menuItem.title),
+                    onTap: () => _onMenuItemSelected(menuItem),
+                  )
+                : ExpansionTile(
+                    leading: Icon(menuItem.iconData,
+                        color: Theme.of(context).iconTheme.color),
+                    title: Text(menuItem.title),
+                    children: menuItem.subItems!
+                        .map(
+                          (subItem) => ListTile(
+                            leading: Icon(
+                              subItem.iconData,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            title: Text(subItem.title),
+                            onTap: () => _onMenuItemSelected(subItem),
+                          ),
+                        )
+                        .toList(),
+                  );
+          },
+        ),
       ),
     );
   }

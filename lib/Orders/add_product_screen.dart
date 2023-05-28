@@ -30,7 +30,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(8),
         middle: const Text('Add Product'),
         trailing: GestureDetector(
           onTap: _saveProduct,

@@ -27,6 +27,7 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   late Future<List<Product>> _products;
   int _currentSegmentIndex = 0;
+  final TextStyle textStyle = const TextStyle(color: Colors.white);
 
   @override
   void initState() {
@@ -76,24 +77,30 @@ class _ProductListPageState extends State<ProductListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Products List'),
+        title:
+            const Text('Products List', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             onPressed: createNewProduct,
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Colors.white),
           ),
         ],
       ),
+      backgroundColor: Colors.grey.shade900,
       body: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Card(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade700),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  padding: const EdgeInsets.all(4.0),
                   child: DropdownButton<int>(
                     value: _currentSegmentIndex,
                     onChanged: (int? newValue) {
@@ -106,22 +113,24 @@ class _ProductListPageState extends State<ProductListPage> {
                         );
                       }
                     },
+                    underline: SizedBox.shrink(),
+                    dropdownColor: Colors.grey.shade800,
                     items: [
                       DropdownMenuItem(
                         value: 0,
-                        child: const Text('Products'),
+                        child: Text('Products', style: textStyle),
                       ),
                       DropdownMenuItem(
                         value: 1,
-                        child: const Text('Services'),
+                        child: Text('Services', style: textStyle),
                       ),
                       DropdownMenuItem(
                         value: 2,
-                        child: const Text('Ingredients'),
+                        child: Text('Ingredients', style: textStyle),
                       ),
                       DropdownMenuItem(
                         value: 3,
-                        child: const Text('Assembly Items'),
+                        child: Text('Assembly Items', style: textStyle),
                       ),
                     ],
                   ),
@@ -140,8 +149,24 @@ class _ProductListPageState extends State<ProductListPage> {
                           const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final product = snapshot.data![index];
-                        print('Product at index $index: $product');
-                        return GestureDetector(
+                        return ListTile(
+                          tileColor: Color(0xFF2C2C2E),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          title: Text(
+                            product.name,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            'Retail Price: \$${product.retailPrice}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          trailing: const Icon(Icons.chevron_right,
+                              color: Colors.white),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -156,32 +181,6 @@ class _ProductListPageState extends State<ProductListPage> {
                               ),
                             );
                           },
-                          child: Card(
-                            child: ListTile(
-                              title: Text(
-                                product.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
-                              ),
-                              subtitle: Text(
-                                  'Retail Price: \$${product.retailPrice}'),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductDetailPage(
-                                      product: product,
-                                      onProductSaved: () {
-                                        // Refresh product list after updating a product
-                                        _fetchProducts();
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
                         );
                       },
                     );

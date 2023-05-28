@@ -103,7 +103,7 @@ class _EditProductPageState extends State<EditProductPage> {
         );
       }
     }
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +167,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _manufacturingPrice.toString(),
                 decoration:
-                const InputDecoration(labelText: 'Manufacturing Price'),
+                    const InputDecoration(labelText: 'Manufacturing Price'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _manufacturingPrice = double.parse(value!),
               ),
@@ -198,13 +198,13 @@ class _EditProductPageState extends State<EditProductPage> {
                 decoration: const InputDecoration(labelText: 'Backordered'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) =>
-                _backordered = value == 'true' ? true : false,
+                    _backordered = value == 'true' ? true : false,
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 initialValue: _supplier,
                 decoration: const InputDecoration(labelText: 'Supplier'),
-                onSaved: (value) => _supplier =  value ?? '',
+                onSaved: (value) => _supplier = value ?? '',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a supplier';
@@ -228,7 +228,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _manufacturerName,
                 decoration:
-                const InputDecoration(labelText: 'Manufacturer Name'),
+                    const InputDecoration(labelText: 'Manufacturer Name'),
                 onSaved: (value) => _manufacturerName = value ?? '',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -260,7 +260,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 initialValue: _quantityInStock.toString(),
                 decoration:
-                const InputDecoration(labelText: 'Quantity In Stock'),
+                    const InputDecoration(labelText: 'Quantity In Stock'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _quantityInStock = int.parse(value!),
               ),
@@ -269,5 +269,6 @@ class _EditProductPageState extends State<EditProductPage> {
           ),
         ),
       ),
-    );  }
+    );
+  }
 }
