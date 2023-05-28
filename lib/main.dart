@@ -1,28 +1,24 @@
-import 'package:flutter/cupertino.dart';
+import 'package:crafted_manager/Menu/menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_zoom_drawer/config.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-
-import 'Menu/menu.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-final _drawerController = ZoomDrawerController();
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // Extract theme data into a separate method
   ThemeData _buildThemeData() {
     return ThemeData(
       brightness: Brightness.dark,
-      primaryColor: CupertinoColors.activeBlue,
+      primaryColor: Colors.blueAccent,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.black,
+      ),
     );
   }
 
@@ -39,7 +35,7 @@ class MyApp extends StatelessWidget {
         Locale('es', ''),
       ],
       theme: _buildThemeData(),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -52,86 +48,146 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<SliderDrawerState> _sliderDrawerKey =
+      GlobalKey<SliderDrawerState>();
+  late String title;
+
   @override
-  initState() {
+  void initState() {
+    title = "Home";
     super.initState();
-    _initializeNotifications();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ZoomDrawer(
-      controller: _drawerController,
-      borderRadius: 24,
-      style: DrawerStyle.style1,
-      showShadow: true,
-      openCurve: Curves.fastOutSlowIn,
-      slideWidth: MediaQuery.of(context).size.width * 0.65,
-      duration: const Duration(milliseconds: 500),
-      angle: 0.0,
-      menuScreen: const MenuView(),
-      mainScreen: MainScreen(drawerController: _drawerController),
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  final ZoomDrawerController drawerController;
-
-  const MainScreen({Key? key, required this.drawerController})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.black,
-        middle: const Text(
-          'Home',
-          style: TextStyle(color: Colors.white),
+    return Scaffold(
+      body: SliderDrawer(
+        appBar: SliderAppBar(
+            appBarColor: Colors.black,
+            title: Text(title,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
+        key: _sliderDrawerKey,
+        sliderOpenSize: 350,
+        slider: _SliderView(
+          onItemClick: (title) {
+            _sliderDrawerKey.currentState!.closeSlider();
+            setState(() {
+              this.title = title;
+            });
+          },
         ),
-        leading: GestureDetector(
-          onTap: () => drawerController.toggle?.call(),
-          child: const Icon(CupertinoIcons.bars, size: 28, color: Colors.white),
-        ),
-      ),
-      child: const Center(
-        child: Text(
-          'Welcome to Crafted Manager App!',
-          style: TextStyle(color: Colors.white),
+        child: Center(
+          child: Text('Your app body'),
         ),
       ),
     );
   }
 }
 
-// Initialize Notification settings
-Future<void> _initializeNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  const DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings(
-          onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-  const LinuxInitializationSettings initializationSettingsLinux =
-      LinuxInitializationSettings(defaultActionName: 'Open notification');
+class _SliderView extends StatelessWidget {
+  final Function(String)? onItemClick;
+  final Color backgroundColor;
+  final EdgeInsets padding;
+  final TextStyle menuTitleStyle;
+  final EdgeInsets menuContentPadding;
+  final EdgeInsets expansionTilePadding;
 
-  const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-      macOS: initializationSettingsDarwin,
-      linux: initializationSettingsLinux);
+  const _SliderView({
+    Key? key,
+    this.onItemClick,
+    this.backgroundColor = Colors.black,
+    this.padding = const EdgeInsets.only(top: 30),
+    this.menuTitleStyle = const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+    ),
+    this.menuContentPadding = const EdgeInsets.symmetric(horizontal: 16),
+    this.expansionTilePadding = const EdgeInsets.symmetric(horizontal: 2),
+  }) : super(key: key);
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-}
-
-// Handle the reception of a local notification
-Future<void> onDidReceiveLocalNotification(
-    int id, String? title, String? body, String? payload) async {}
-
-// Handle the user's response to a notification
-Future<void> onDidReceiveNotificationResponse(
-    NotificationResponse notificationResponse) async {
-  debugPrint('notification payload: ${notificationResponse.payload}');
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: backgroundColor,
+      padding: padding,
+      child: ListView(
+        children: <Widget>[
+          const SizedBox(
+            height: 30,
+          ),
+          CircleAvatar(
+            radius: 65,
+            backgroundColor: Colors.grey,
+            child: CircleAvatar(
+              radius: 60,
+              backgroundImage: Image.network(
+                      'https://nikhilvadoliya.github.io/assets/images/nikhil_1.webp')
+                  .image,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Crafted Manager',
+            textAlign: TextAlign.left,
+            style: menuTitleStyle,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ...menuItems.map<Widget>((menuItem) {
+            return menuItem.subItems.isNotEmpty
+                ? ExpansionTile(
+                    tilePadding: expansionTilePadding,
+                    title: Text(menuItem.title, style: menuTitleStyle),
+                    leading: Icon(
+                      menuItem.iconData,
+                      color: menuTitleStyle.color,
+                    ),
+                    children: menuItem.subItems.map<Widget>((subItem) {
+                      return ListTile(
+                        contentPadding: menuContentPadding,
+                        leading: Icon(
+                          subItem.iconData,
+                          color: menuTitleStyle.color,
+                        ),
+                        title: Text(
+                          subItem.title,
+                          style: menuTitleStyle,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => subItem.destination,
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  )
+                : ListTile(
+                    contentPadding: menuContentPadding,
+                    title: Text(menuItem.title, style: menuTitleStyle),
+                    leading: Icon(
+                      menuItem.iconData,
+                      color: menuTitleStyle.color,
+                    ),
+                    onTap: () {
+                      onItemClick?.call(menuItem.title);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => menuItem.destination,
+                        ),
+                      );
+                    },
+                  );
+          }).toList(),
+        ],
+      ),
+    );
+  }
 }

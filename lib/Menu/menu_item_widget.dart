@@ -3,6 +3,7 @@ import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:crafted_manager/menu/menu_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MainMenuWidget extends StatelessWidget {
   final MenuItem item;
@@ -34,14 +35,20 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Menu'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Menu',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      child: Builder(builder: (context) {
+      backgroundColor: Colors.black,
+      body: Builder(builder: (context) {
         return CupertinoScrollbar(
           child: FutureBuilder<List<Product>>(
-            future: ProductPostgres.getAllProducts(),
+            future: ProductPostgres.getAllProductsExceptIngredients(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -55,11 +62,10 @@ class MainMenu extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       final product = products[index];
 
-                      // Replace this with your custom product menu item widget
                       return MainMenuWidget(
                         item: MenuItem(
                           title: product.name,
-                          iconData: Icons.arrow_right, // Add the IconData here
+                          iconData: Icons.arrow_right,
                         ),
                         onTap: () => onMenuItemSelected(product),
                       );

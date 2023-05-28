@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'menu_item.dart';
 
 class MenuView extends StatefulWidget {
-  const MenuView({Key? key}) : super(key: key);
+  final ZoomDrawerController drawerController;
+
+  const MenuView({Key? key, required this.drawerController}) : super(key: key);
 
   @override
   MenuViewState createState() => MenuViewState();
@@ -24,6 +26,8 @@ class MenuViewState extends State<MenuView> {
 
   void _onMenuItemSelected(MenuItem menuItem) {
     if (menuItem.destination != null) {
+      widget.drawerController.close!();
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => menuItem.destination!),
@@ -43,7 +47,7 @@ class MenuViewState extends State<MenuView> {
           MenuItem(
               title: "Invoices",
               iconData: CupertinoIcons.money_dollar,
-              destination: const OrdersList(title: "Invoices"))
+              destination: OrdersList(title: "Invoices"))
         ]),
     MenuItem(
         title: "Contacts",
@@ -88,7 +92,8 @@ class MenuViewState extends State<MenuView> {
           //     title: "Assembly Items",
           //     iconData: CupertinoIcons.money_dollar_circle_fill,
           //     destination: AssemblyItemManagement()) // New menu item added.
-        ]),
+        ],
+        destination: null),
     // Add more menu items/categories here if needed.
   ];
 

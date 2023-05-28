@@ -1,7 +1,6 @@
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
 import 'package:crafted_manager/menu/menu_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'menu_item_widget.dart';
@@ -16,14 +15,14 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Menu'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Menu'),
       ),
-      child: Builder(builder: (context) {
-        return CupertinoScrollbar(
+      body: Builder(builder: (context) {
+        return Scrollbar(
           child: FutureBuilder<List<Product>>(
-            future: ProductPostgres.getAllProducts(),
+            future: ProductPostgres.getAllProducts('Product'),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
