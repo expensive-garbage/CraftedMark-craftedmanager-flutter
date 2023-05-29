@@ -20,127 +20,109 @@ class ContactsListState extends State<ContactsList> {
   @override
   void initState() {
     super.initState();
-    fetchData('people').then((contacts) {
-      setState(() {
-        _contacts = contacts.map((e) => People.fromMap(e)).toList();
-        _filteredContacts = _contacts;
-      });
-    });
-
-    _searchController.addListener(() {
-      setState(() {
-        _filteredContacts = _contacts
-            ?.where((contact) =>
-                (contact.firstName + ' ' + (contact.lastName ?? ''))
-                    .toLowerCase()
-                    .contains(_searchController.text.toLowerCase()))
-            .toList();
-      });
-    });
-  }
-
-  Future<void> openContactDetails(People contact) async {
-    final updatedContact = await Navigator.push<People>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ContactDetailWidget(contact),
-      ),
-    );
-    if (updatedContact != null) {
+    connectToPostgres().then((_) {
       refreshContacts();
-    }
-  }
-
-  Future<void> addNewContact() async {
-    final newContact = People.empty();
-    final createdContact = await Navigator.push<People>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ContactDetailWidget(newContact),
-      ),
-    );
-    if (createdContact is People) {
-      refreshContacts();
-    }
+    });
   }
 
   Future<void> refreshContacts() async {
-    final updatedList = await PeoplePostgres.refreshCustomerList();
+    final contacts = await PeoplePostgres.refreshCustomerList();
     setState(() {
-      _contacts = updatedList;
-      _filteredContacts = _contacts;
+      _contacts = contacts;
+      _filteredContacts = contacts;
     });
+  }
+
+  Future<void> deleteCustomer(People customer) async {
+    await PeoplePostgres.deleteCustomer(customer.id);
+    await refreshContacts();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Contacts'),
+        title: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {
+                    _filteredContacts = _contacts!
+                        .where((contact) =>
+                            contact.firstName
+                                .toLowerCase()
+                                .contains(value.toLowerCase()) ||
+                            contact.lastName
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                        .toList();
+                  });
+                },
+                decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.search),
+                    hintText: 'Search Contacts...'),
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: Icon(Icons.add),
             onPressed: () {
-              addNewContact();
+              // Create a new contact with default values
+              People newContact = People(
+                  id: 0, firstName: '', lastName: '', phone: '', email: '');
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ContactDetailWidget(
+                    contact: newContact,
+                    refresh: refreshContacts,
+                  ),
+                ),
+              );
             },
           ),
         ],
+        backgroundColor: Colors.black,
       ),
-      body: _contacts == null
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                        labelText: 'Search',
-                        hintText: 'Search contacts',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)))),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: _filteredContacts?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final contact = _filteredContacts![index];
-                      return GestureDetector(
-                        onTap: () {
-                          openContactDetails(contact);
-                        },
-                        child: Container(
-                          child: ListTile(
-                            title: Text(
-                              '${contact.firstName} ${contact.lastName ?? ''}',
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  contact.brand,
-                                ),
-                                Text(
-                                  contact.phone,
-                                ),
-                              ],
-                            ),
+      body: _filteredContacts == null
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _filteredContacts!.length,
+              itemBuilder: (BuildContext context, int index) {
+                final contact = _filteredContacts![index];
+                return Dismissible(
+                  key: Key(contact.id.toString()),
+                  background: Container(color: Colors.red),
+                  onDismissed: (direction) {
+                    deleteCustomer(contact);
+                  },
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ContactDetailWidget(
+                            contact: contact,
+                            refresh: refreshContacts,
                           ),
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) => const Divider(
-                      thickness: 0.5,
-                      height: 1,
+                    child: ListTile(
+                      title: _filteredContacts != null
+                          ? Text('${contact.firstName} ${contact.lastName}')
+                          : CircularProgressIndicator(),
+                      subtitle: Text(contact.phone),
                     ),
                   ),
-                ),
-              ],
-            ),
+                );
+              }),
     );
   }
 }

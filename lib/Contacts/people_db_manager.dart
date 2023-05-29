@@ -63,6 +63,17 @@ class PeoplePostgres {
         : null;
   }
 
+  static Future<void> deleteCustomer(int customerId) async {
+    if (customerId <= 0) {
+      throw Exception('Invalid ID: Customer ID must be a positive integer');
+    }
+
+    final connection = await connectToPostgres();
+    await connection.execute('DELETE FROM people WHERE id = @customerId',
+        substitutionValues: {'customerId': customerId});
+    await connection.close();
+  }
+
   static Future<List<People>> fetchCustomersByDetails(
       String firstName, String lastName, String phone) async {
     List<People> customers = [];

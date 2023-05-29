@@ -3,12 +3,12 @@ import 'package:crafted_manager/Models/people_model.dart';
 import 'package:flutter/material.dart';
 
 class ContactDetailWidget extends StatefulWidget {
-  final People initialValue;
+  final People contact;
+  final Function() refresh;
 
   const ContactDetailWidget(
-    this.initialValue, {
-    Key? key,
-  }) : super(key: key);
+      {Key? key, required this.contact, required this.refresh})
+      : super(key: key);
 
   @override
   State<ContactDetailWidget> createState() => _ContactDetailWidgetState();
@@ -20,7 +20,7 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
 
   @override
   void initState() {
-    value = widget.initialValue;
+    value = widget.contact;
     if (value.id <= 0) {
       _editing = true;
     }
@@ -55,16 +55,16 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                       _editing = false;
                       value = updatedContact ?? value;
                     });
-                    Navigator.pop(context, updatedContact);
+                    widget.refresh();
                   } else {
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: Text('Error'),
-                        content: Text('Failed to save contact.'),
+                        title: const Text('Error'),
+                        content: const Text('Failed to save contact.'),
                         actions: [
                           TextButton(
-                            child: Text('OK'),
+                            child: const Text('OK'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],

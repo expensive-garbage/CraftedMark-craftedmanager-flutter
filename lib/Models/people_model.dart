@@ -4,7 +4,7 @@ class People {
   final String lastName;
   final String phone;
   final String email;
-  final String brand;
+  final String? brand;
   final String? address1;
   final String? address2;
   final String? city;
@@ -13,7 +13,7 @@ class People {
   final bool? customerBasedPricing;
   final String? accountNumber;
   final String? type;
-  final String notes;
+  final String? notes;
   final DateTime? createdDate;
   final String? createdBy;
   final DateTime? updatedDate;
@@ -25,7 +25,7 @@ class People {
     required this.lastName,
     required this.phone,
     required this.email,
-    required this.brand,
+    this.brand,
     this.address1,
     this.address2,
     this.city,
@@ -34,7 +34,7 @@ class People {
     this.customerBasedPricing,
     this.accountNumber,
     this.type,
-    required this.notes,
+    this.notes,
     this.createdDate,
     this.createdBy,
     this.updatedDate,
