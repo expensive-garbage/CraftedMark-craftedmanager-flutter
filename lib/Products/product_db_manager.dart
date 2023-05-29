@@ -53,7 +53,7 @@ class ProductPostgres {
     final connection = await _createConnection();
     try {
       await connection.execute(
-        'INSERT INTO products (product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock) VALUES (@product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @supplier, @manufacturer_id, @manufacturer_name, @item_source, @quantity_sold, @quantity_in_stock)',
+        'INSERT INTO products (product_name, category, sub_category, subcat2, flavor, description, cost_of_good, manufacturing_price, wholesale_price, retail_price, stock_quantity, backordered, supplier, manufacturer_id, manufacturer_name, item_source, quantity_sold, quantity_in_stock, image_url, per_gram_cost, bulk_pricing, weight_in_grams, package_weight_measure, package_weight) VALUES (@product_name, @category, @sub_category, @subcat2, @flavor, @description, @cost_of_good, @manufacturing_price, @wholesale_price, @retail_price, @stock_quantity, @backordered, @supplier, @manufacturer_id, @manufacturer_name, @item_source, @quantity_sold, @quantity_in_stock, @image_url, @per_gram_cost, @bulk_pricing, @weight_in_grams, @package_weight_measure, @package_weight)',
         substitutionValues: {
           'product_name': product.name,
           'category': product.category,
@@ -73,6 +73,12 @@ class ProductPostgres {
           'item_source': product.itemSource,
           'quantity_sold': product.quantitySold,
           'quantity_in_stock': product.quantityInStock,
+          'image_url': product.imageUrl,
+          'per_gram_cost': product.perGramCost,
+          'bulk_pricing': product.bulkPricing,
+          'weight_in_grams': product.weightInGrams,
+          'package_weight_measure': product.packageWeightMeasure,
+          'package_weight': product.packageWeight,
         },
       );
       print('Product added successfully');
@@ -112,7 +118,7 @@ class ProductPostgres {
   static Future<void> updateProduct(Product product) async {
     final connection = await _createConnection();
     await connection.execute(
-      'UPDATE products SET product_name = @product_name, category = @category, sub_category = @sub_category, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @cost_of_good, manufacturing_price = @manufacturing_price, wholesale_price = @wholesale_price, retail_price = @retail_price, stock_quantity = @stock_quantity, backordered = @backordered, manufacturer_name = @manufacturer_name, supplier_name = @supplier_name, item_source = @item_source, quantity_sold = @quantity_sold, quantity_in_stock = @quantity_in_stock WHERE product_id = @product_id',
+      'UPDATE products SET product_name = @product_name, category = @category, sub_category = @sub_category, subcat2 = @subcat2, flavor = @flavor, description = @description, cost_of_good = @cost_of_good, manufacturing_price = @manufacturing_price, wholesale_price = @wholesale_price, retail_price = @retail_price, stock_quantity = @stock_quantity, backordered = @backordered, manufacturer_name = @manufacturer_name, supplier_name = @supplier_name, item_source = @item_source, quantity_sold = @quantity_sold, quantity_in_stock = @quantity_in_stock, image_url = @image_url, per_gram_cost = @per_gram_cost, bulk_pricing = @bulk_pricing, weight_in_grams = @weight_in_grams, package_weight_measure = @package_weight_measure, package_weight = @package_weight WHERE product_id = @product_id',
       substitutionValues: {
         'product_id': product.id,
         'product_name': product.name,
@@ -132,6 +138,12 @@ class ProductPostgres {
         'item_source': product.itemSource,
         'quantity_sold': product.quantitySold,
         'quantity_in_stock': product.quantityInStock,
+        'image_url': product.imageUrl,
+        'per_gram_cost': product.perGramCost,
+        'bulk_pricing': product.bulkPricing,
+        'weight_in_grams': product.weightInGrams,
+        'package_weight_measure': product.packageWeightMeasure,
+        'package_weight': product.packageWeight,
       },
     );
     await closeConnection(connection);

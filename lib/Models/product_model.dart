@@ -23,6 +23,11 @@ class Product {
   final String type;
   final List<AssemblyItem> assemblyItems;
   final String imageUrl;
+  final String packageWeightMeasure;
+  final int packageWeight;
+  final int weightInGrams;
+  final int bulkPricing;
+  final int perGramCost;
 
   Product({
     this.id,
@@ -47,6 +52,11 @@ class Product {
     this.type = '',
     required this.assemblyItems,
     this.imageUrl = '',
+    this.packageWeightMeasure = '',
+    this.packageWeight = 0,
+    this.weightInGrams = 0,
+    this.bulkPricing = 0,
+    this.perGramCost = 0,
   });
 
   static Product empty = Product(
@@ -89,7 +99,12 @@ class Product {
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
       type: map['type'] ?? '',
-      imageUrl: map['imgurl'] ?? '',
+      imageUrl: map['image_url'] ?? '',
+      packageWeightMeasure: map['package_wieght_measure'] ?? '',
+      packageWeight: map['package_wieght'] ?? 0,
+      weightInGrams: map['wieght_in_grams'] ?? 0,
+      bulkPricing: map['bulk_pricing'] ?? 0,
+      perGramCost: map['per_gram_cost'] ?? 0,
       assemblyItems: map['assembly_items'] != null
           ? List<AssemblyItem>.from(
               map['assembly_items'].map((x) => AssemblyItem.fromMap(x)))
@@ -104,6 +119,11 @@ class Product {
       'description': description,
       'retailPrice': retailPrice,
       'imageUrl': imageUrl,
+      'packageWeightMeasure': packageWeightMeasure,
+      'packageWeight': packageWeight,
+      'weightInGrams': weightInGrams,
+      'bulkPricing': bulkPricing,
+      'perGramCost': perGramCost,
     };
   }
 }

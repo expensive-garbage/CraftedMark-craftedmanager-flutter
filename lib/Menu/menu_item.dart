@@ -68,7 +68,7 @@ List<MenuItem> menuItems = [
       ),
       MenuItem(
         title: "Assembly Items",
-        iconData: CupertinoIcons.money_dollar_circle_fill,
+        iconData: CupertinoIcons.cube_box,
         destination: AssemblyItemManagement(),
       ),
     ],

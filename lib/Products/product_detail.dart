@@ -1,6 +1,6 @@
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -32,6 +32,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final _itemSourceController = TextEditingController();
   final _manufacturerNameController = TextEditingController();
   final _supplierController = TextEditingController();
+  final _imageUrlController = TextEditingController();
+  final _perGramCostController = TextEditingController();
+  final _bulkPricingController = TextEditingController();
+  final _weightInGramsController = TextEditingController();
+  final _packageWeightMeasureController = TextEditingController();
+  final _packageWeightController = TextEditingController();
 
   @override
   void initState() {
@@ -50,154 +56,376 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _stockQuantityController.text = widget.product.stockQuantity.toString();
     _itemSourceController.text = widget.product.itemSource;
     _manufacturerNameController.text = widget.product.manufacturerName;
-    _supplierController.text = widget.product
-        .supplier; // Assuming you have a supplier field in your Product model
+    _supplierController.text = widget.product.supplier;
+    _imageUrlController.text = widget.product.imageUrl;
+    _perGramCostController.text = widget.product.perGramCost.toString();
+    _bulkPricingController.text = widget.product.bulkPricing.toString();
+    _weightInGramsController.text = widget.product.weightInGrams.toString();
+    _packageWeightMeasureController.text = widget.product.packageWeightMeasure;
+    _packageWeightController.text = widget.product.packageWeight.toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.black,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.black,
-        middle: Text(widget.isNewProduct ? 'New Product' : 'Edit Product',
-            style: const TextStyle(color: CupertinoColors.white)),
-      ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CupertinoTextFormFieldRow(
-                    controller: _nameController,
-                    style: const TextStyle(color: CupertinoColors.white),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: CupertinoColors.white),
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.isNewProduct ? 'New Product' : 'Edit Product'),
+          backgroundColor: Colors.black,
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _nameController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Name:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
                     ),
-                    prefix: const Text('Name: ',
-                        style: TextStyle(color: CupertinoColors.white)),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _categoryController,
-                    style: const TextStyle(color: CupertinoColors.white),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: CupertinoColors.white),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _categoryController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Category:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
                     ),
-                    prefix: const Text('Category: ',
-                        style: TextStyle(color: CupertinoColors.white)),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _subCategoryController,
-                    style: const TextStyle(color: CupertinoColors.white),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: CupertinoColors.white),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _subCategoryController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Subcategory:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
                     ),
-                    prefix: const Text('Subcategory: ',
-                        style: TextStyle(color: CupertinoColors.white)),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _subcat2Controller,
-                    prefix: const Text('Subcategory 2: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _flavorController,
-                    prefix: const Text('Flavor: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _descriptionController,
-                    prefix: const Text('Description: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _costOfGoodController,
-                    keyboardType: TextInputType.number,
-                    prefix: const Text('Cost of Good: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _manufacturingPriceController,
-                    keyboardType: TextInputType.number,
-                    prefix: const Text('Manufacturing Price: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _wholesalePriceController,
-                    keyboardType: TextInputType.number,
-                    prefix: const Text('Wholesale Price: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _retailPriceController,
-                    keyboardType: TextInputType.number,
-                    prefix: const Text('Retail Price: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _stockQuantityController,
-                    keyboardType: TextInputType.number,
-                    prefix: const Text('Stock Quantity: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _itemSourceController,
-                    prefix: const Text('Item Source: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _manufacturerNameController,
-                    prefix: const Text('Manufacturer Name: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoTextFormFieldRow(
-                    controller: _supplierController,
-                    prefix: const Text('Supplier: '),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CupertinoButton.filled(
-                    child: const Text('Save'),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        try {
-                          await saveProduct();
-                          widget.onProductSaved();
-                          Navigator.pop(context);
-                        } catch (e) {
-                          print('Error: $e');
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CupertinoAlertDialog(
-                                title: const Text('Error'),
-                                content: const Text(
-                                    'An error occurred while saving the product.'),
-                                actions: <Widget>[
-                                  CupertinoDialogAction(
-                                    child: const Text('OK'),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _subcat2Controller,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Subcategory 2:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _flavorController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Flavor:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _descriptionController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Description:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _costOfGoodController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Cost of Good:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _manufacturingPriceController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Manufacturing Price:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _wholesalePriceController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Wholesale Price:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _retailPriceController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Retail Price:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _stockQuantityController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Stock Quantity:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _itemSourceController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Item Source:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _manufacturerNameController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Manufacturer Name:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _supplierController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Supplier:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _imageUrlController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Image URL:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _perGramCostController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Per Gram Cost:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _bulkPricingController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Bulk Pricing:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _weightInGramsController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Weight in Grams:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _packageWeightMeasureController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Package Weight Measure:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _packageWeightController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Package Weight:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            await saveProduct();
+                            widget.onProductSaved();
+                            Navigator.pop(context);
+                          } catch (e) {
+                            print('Error: $e');
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Error'),
+                                  content: const Text(
+                                      'An error occurred while saving the product.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
-                      }
-                    },
-                  ),
-                ],
+                      },
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -228,6 +456,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       quantitySold: widget.product.quantitySold,
       quantityInStock: widget.product.quantityInStock,
       assemblyItems: [],
+      imageUrl: _imageUrlController.text,
+      perGramCost: int.parse(_perGramCostController.text),
+      bulkPricing: int.parse(_bulkPricingController.text),
+      weightInGrams: int.parse(_weightInGramsController.text),
+      packageWeightMeasure: _packageWeightMeasureController.text,
+      packageWeight: int.parse(_packageWeightController.text),
     );
 
     if (widget.isNewProduct) {

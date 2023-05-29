@@ -1,6 +1,10 @@
+// contact_detail_widget.dart
+import 'package:contacts_service/contacts_service.dart';
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:flutter/material.dart';
+
+import 'syscontact_list.dart';
 
 class ContactDetailWidget extends StatefulWidget {
   final People contact;
@@ -25,6 +29,22 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
       _editing = true;
     }
     super.initState();
+  }
+
+  // Function to navigate and display contacts from the system
+  Future<void> _navigateAndDisplayContacts(BuildContext context) async {
+    final Contact? contact = await showSystemContactList(context);
+    if (contact != null) {
+      setState(() {
+        // Import the contact information into your app's Contact object
+        value = value.copyWith(
+          firstName: contact.givenName!,
+          lastName: contact.familyName!,
+          phone: contact.phones!.isNotEmpty ? contact.phones![0].value : '',
+          email: contact.emails!.isNotEmpty ? contact.emails![0].value : '',
+        );
+      });
+    }
   }
 
   @override
@@ -115,6 +135,28 @@ class _ContactDetailWidgetState extends State<ContactDetailWidget> {
                       (n) => value = value.copyWith(customerBasedPricing: n)),
                   _buildTextField('Notes', value.notes,
                       (n) => value = value.copyWith(notes: n)),
+                  // Add a Load System Contacts button
+                  ElevatedButton(
+                    onPressed: () async {
+                      final Contact? systemContact =
+                          await showSystemContactList(context);
+                      if (systemContact != null) {
+                        setState(() {
+                          value = value.copyWith(
+                            firstName: systemContact.givenName!,
+                            lastName: systemContact.familyName!,
+                            phone: systemContact.phones!.isNotEmpty
+                                ? systemContact.phones![0].value
+                                : '',
+                            email: systemContact.emails!.isNotEmpty
+                                ? systemContact.emails![0].value
+                                : '',
+                          );
+                        });
+                      }
+                    },
+                    child: Text('Load System Contacts'),
+                  ),
                 ],
               ),
             ),

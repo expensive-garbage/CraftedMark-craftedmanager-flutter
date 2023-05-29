@@ -73,7 +73,7 @@ class MenuViewState extends State<MenuView> {
               destination: CustomerBasedPricingScreen()),
           MenuItem(
               title: "Assembly Items",
-              iconData: CupertinoIcons.money_dollar_circle_fill,
+              iconData: CupertinoIcons.cube_box,
               destination: AssemblyItemManagement()) // New menu item added.
         ]),
     MenuItem(
