@@ -14,6 +14,8 @@ class ContactsList extends StatefulWidget {
 
 class ContactsListState extends State<ContactsList> {
   List<People>? _contacts;
+  List<People>? _filteredContacts;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -21,6 +23,18 @@ class ContactsListState extends State<ContactsList> {
     fetchData('people').then((contacts) {
       setState(() {
         _contacts = contacts.map((e) => People.fromMap(e)).toList();
+        _filteredContacts = _contacts;
+      });
+    });
+
+    _searchController.addListener(() {
+      setState(() {
+        _filteredContacts = _contacts
+            ?.where((contact) =>
+                (contact.firstName + ' ' + (contact.lastName ?? ''))
+                    .toLowerCase()
+                    .contains(_searchController.text.toLowerCase()))
+            .toList();
       });
     });
   }
@@ -54,6 +68,7 @@ class ContactsListState extends State<ContactsList> {
     final updatedList = await PeoplePostgres.refreshCustomerList();
     setState(() {
       _contacts = updatedList;
+      _filteredContacts = _contacts;
     });
   }
 
@@ -74,38 +89,57 @@ class ContactsListState extends State<ContactsList> {
       ),
       body: _contacts == null
           ? const Center(child: CircularProgressIndicator())
-          : ListView.separated(
-              itemCount: _contacts!.length,
-              itemBuilder: (context, index) {
-                final contact = _contacts![index];
-                return GestureDetector(
-                  onTap: () {
-                    openContactDetails(contact);
-                  },
-                  child: Container(
-                    child: ListTile(
-                      title: Text(
-                        '${contact.firstName} ${contact.lastName ?? ''}',
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            contact.brand,
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                        labelText: 'Search',
+                        hintText: 'Search contacts',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0)))),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: _filteredContacts?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final contact = _filteredContacts![index];
+                      return GestureDetector(
+                        onTap: () {
+                          openContactDetails(contact);
+                        },
+                        child: Container(
+                          child: ListTile(
+                            title: Text(
+                              '${contact.firstName} ${contact.lastName ?? ''}',
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  contact.brand,
+                                ),
+                                Text(
+                                  contact.phone,
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            contact.phone,
-                          ),
-                        ],
-                      ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 0.5,
+                      height: 1,
                     ),
                   ),
-                );
-              },
-              separatorBuilder: (context, index) => const Divider(
-                thickness: 0.5,
-                height: 1,
-              ),
+                ),
+              ],
             ),
     );
   }
