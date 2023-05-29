@@ -39,6 +39,7 @@ class _EditProductPageState extends State<EditProductPage> {
   late int _weightInGrams;
   late String _packageWeightMeasure;
   late int _packageWeight;
+  late String _type;
 
   @override
   void initState() {
@@ -67,6 +68,7 @@ class _EditProductPageState extends State<EditProductPage> {
     _weightInGrams = widget.product.weightInGrams;
     _packageWeightMeasure = widget.product.packageWeightMeasure;
     _packageWeight = widget.product.packageWeight;
+    _type = widget.product.type;
   }
 
   Future<void> _updateProduct() async {
@@ -99,6 +101,7 @@ class _EditProductPageState extends State<EditProductPage> {
         weightInGrams: _weightInGrams,
         packageWeightMeasure: _packageWeightMeasure,
         packageWeight: _packageWeight,
+        type: _type,
         assemblyItems: [],
       );
 
@@ -149,8 +152,12 @@ class _EditProductPageState extends State<EditProductPage> {
                   initialValue: _name,
                   decoration: const InputDecoration(labelText: 'Name'),
                   onSaved: (value) => _name = value!,
+                ), // Add TextFormField for the existing fields
+                TextFormField(
+                  initialValue: _type,
+                  decoration: const InputDecoration(labelText: 'Type'),
+                  onSaved: (value) => _type = value!,
                 ),
-                // Add TextFormField for the existing fields
                 TextFormField(
                   initialValue: _category,
                   decoration: const InputDecoration(labelText: 'Category'),

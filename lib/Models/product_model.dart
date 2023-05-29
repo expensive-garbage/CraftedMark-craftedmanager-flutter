@@ -98,7 +98,7 @@ class Product {
       itemSource: map['item_source'] ?? '',
       quantitySold: map['quantity_sold'] ?? 0,
       quantityInStock: map['quantity_in_stock'] ?? 0,
-      type: map['type'] ?? '',
+      type: map['type'] ?? 'Product',
       imageUrl: map['image_url'] ?? '',
       packageWeightMeasure: map['package_wieght_measure'] ?? '',
       packageWeight: map['package_wieght'] ?? 0,
@@ -124,6 +124,8 @@ class Product {
       'weightInGrams': weightInGrams,
       'bulkPricing': bulkPricing,
       'perGramCost': perGramCost,
+      'assemblyItems': assemblyItems.map((x) => x.toMap()).toList(),
+      'type': type
     };
   }
 }

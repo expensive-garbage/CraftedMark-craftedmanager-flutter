@@ -38,6 +38,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final _weightInGramsController = TextEditingController();
   final _packageWeightMeasureController = TextEditingController();
   final _packageWeightController = TextEditingController();
+  final _typeController = TextEditingController();
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _weightInGramsController.text = widget.product.weightInGrams.toString();
     _packageWeightMeasureController.text = widget.product.packageWeightMeasure;
     _packageWeightController.text = widget.product.packageWeight.toString();
+    _typeController.text = widget.product.packageWeight.toString();
   }
 
   @override
@@ -88,6 +90,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: 'Name:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _typeController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Type:',
                         labelStyle: TextStyle(color: Colors.white),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -462,6 +479,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       weightInGrams: int.parse(_weightInGramsController.text),
       packageWeightMeasure: _packageWeightMeasureController.text,
       packageWeight: int.parse(_packageWeightController.text),
+      type: _typeController.text,
     );
 
     if (widget.isNewProduct) {
