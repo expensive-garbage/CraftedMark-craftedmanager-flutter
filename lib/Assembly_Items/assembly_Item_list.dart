@@ -16,43 +16,45 @@ class _AssemblyItemManagementState extends State<AssemblyItemManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text("Assembly Item Management"),
-        trailing: GestureDetector(
-          child: const Icon(CupertinoIcons.add),
-          onTap: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => AddAssemblyItem()),
-            );
-          },
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: const Text("Assembly Item Management"),
+          trailing: GestureDetector(
+            child: const Icon(CupertinoIcons.add),
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => AddAssemblyItem()),
+              );
+            },
+          ),
         ),
-      ),
-      child: Container(
-        color: CupertinoColors.darkBackgroundGray,
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: Text(
-                'Manage Assembly Items',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: CupertinoColors.white,
+        child: Container(
+          color: CupertinoColors.darkBackgroundGray,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 45),
+                child: Text(
+                  'Manage Assembly Items',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: CupertinoColors.white,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: assemblyItems.length,
-                itemBuilder: (context, index) {
-                  return _buildItemTile(assemblyItems[index]);
-                },
+              Expanded(
+                child: ListView.builder(
+                  itemCount: assemblyItems.length,
+                  itemBuilder: (context, index) {
+                    return _buildItemTile(assemblyItems[index]);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
