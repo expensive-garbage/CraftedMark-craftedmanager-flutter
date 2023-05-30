@@ -128,7 +128,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 itemCount: orderedItems.length,
                 itemBuilder: (context, index) {
                   return CupertinoListTile(
-                    title: Text(orderedItems[index].productDescription),
+                    title: Text(orderedItems[index].productName),
                     trailing:
                         Text('\$${orderedItems[index].productRetailPrice}'),
                     subtitle: Row(
