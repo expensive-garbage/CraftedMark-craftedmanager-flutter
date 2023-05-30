@@ -15,10 +15,10 @@
 *.ipr
 *.iws
 .idea/
-
 #artem
-windows/
 .fvm/
+windows/
+android/
 # Visual Studio Code related
 .classpath
 .project

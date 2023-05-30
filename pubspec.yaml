@@ -33,7 +33,7 @@ dependencies:
   contacts_service:
   permission_handler: ^8.2.2
   woosignal: ^3.5.0
-  onesignal_flutter: ^3.5.0
+  onesignal_flutter: ^3.5.1
 
 
 
