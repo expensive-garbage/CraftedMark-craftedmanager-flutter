@@ -87,7 +87,7 @@ class OrderedItem {
       'ordered_item_id': id,
       'order_id': orderId,
       'product_id': productId,
-      'name': name,
+      'product_name': name,
       'quantity': quantity,
       'price': price,
       'discount': discount,

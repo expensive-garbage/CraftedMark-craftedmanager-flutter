@@ -117,13 +117,14 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
             'orderId': order.id,
           }}');
           await ctx.query('''
-            INSERT INTO ordered_items 
-              (order_id, product_id, quantity, price, discount, description)
-            VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
-          ''', substitutionValues: {
+  INSERT INTO ordered_items 
+    (order_id, product_id, product_name, quantity, price, discount, description)
+  VALUES (@orderId, @productId, @productName, @quantity, @price, @discount, @description)
+''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,
             'productId': item.productId,
+            'productName': item.productName,
           });
           print('Updated ordered item inserted');
         }
@@ -232,13 +233,14 @@ VALUES (@order_id, @customerId, @orderDate, @shippingAddress, @billingAddress, @
             'orderId': order.id,
           }}');
           await ctx.query('''
-INSERT INTO ordered_items 
-  (order_id, product_id, quantity, price, discount, description)
-VALUES (@orderId, @productId, @quantity, @price, @discount, @description)
+  INSERT INTO ordered_items
+    (order_id, product_id, product_name, quantity, price, discount, description)
+  VALUES (@orderId, @productId, @productName, @quantity, @price, @discount, @description)
 ''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,
             'productId': item.productId,
+            'productName': item.productName,
           });
           print('Ordered item inserted');
         }

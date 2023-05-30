@@ -100,9 +100,9 @@ class Product {
       quantityInStock: map['quantity_in_stock'] ?? 0,
       type: map['type'] ?? 'Product',
       imageUrl: map['image_url'] ?? '',
-      packageWeightMeasure: map['package_wieght_measure'] ?? '',
-      packageWeight: map['package_wieght'] ?? 0,
-      weightInGrams: map['wieght_in_grams'] ?? 0,
+      packageWeightMeasure: map['package_weight_measure'] ?? '',
+      packageWeight: map['package_weight'] ?? 0,
+      weightInGrams: map['weight_in_grams'] ?? 0,
       bulkPricing: map['bulk_pricing'] ?? 0,
       perGramCost: map['per_gram_cost'] ?? 0,
       assemblyItems: map['assembly_items'] != null
