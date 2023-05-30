@@ -85,4 +85,9 @@ List<MenuItem> menuItems = [
       ),
     ],
   ),
+//   MenuItem(
+//     title: "Woocommerce",
+//     iconData: CupertinoIcons.cube_box_fill,
+//     Destination: WooCommerce(),
+//   )
 ];
