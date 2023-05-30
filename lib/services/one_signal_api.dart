@@ -7,11 +7,11 @@ class OneSignalAPI {
 
   static const String companyName = "CraftedManager";
 
-  static Future<void> sendNotification(String message, List<String> ids) async {
+  static Future<void> sendNotification(String message) async {
     var uri = Uri.parse(_url);
 
     var payload = {
-      "included_segments": ids,
+      "included_segments": "Subscribed Users",
       "app_id": _appKey,
       "contents": {
         "en": message,
