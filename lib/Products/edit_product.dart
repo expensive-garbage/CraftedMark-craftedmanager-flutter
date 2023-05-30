@@ -332,12 +332,7 @@ class _EditProductPageState extends State<EditProductPage> {
             ),
           ),
         ),
-        ],
       ),
-    ),)
-    ,
-    )
-    ,
     );
   }
 }

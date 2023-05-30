@@ -66,6 +66,7 @@ class MainMenu extends StatelessWidget {
                         item: MenuItem(
                           title: product.name,
                           iconData: Icons.arrow_right,
+                          destination: Text('Placeholder'),//TODO:FIX
                         ),
                         onTap: () => onMenuItemSelected(product),
                       );
