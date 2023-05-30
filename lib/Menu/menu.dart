@@ -6,6 +6,7 @@ import 'package:crafted_manager/Products/product_page.dart';
 import 'package:crafted_manager/contacts/contact_lists.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 
 import 'menu_item.dart';
 
@@ -48,7 +49,9 @@ class MenuViewState extends State<MenuView> {
               title: "Invoices",
               iconData: CupertinoIcons.money_dollar,
               destination: OrdersList(title: "Invoices"))
-        ]),
+        ],
+      destination: Text('Placeholder'),//TODO:FIX
+    ),
     MenuItem(
         title: "Contacts",
         iconData: CupertinoIcons.person_2_fill,
@@ -58,7 +61,9 @@ class MenuViewState extends State<MenuView> {
             iconData: CupertinoIcons.person_crop_circle_fill,
             destination: const ContactsList(),
           ),
-        ]),
+        ],
+      destination: Text('Placeholder'),//TODO:FIX
+    ),
     MenuItem(
         title: "Product Management",
         iconData: CupertinoIcons.cube_box_fill,
@@ -75,7 +80,9 @@ class MenuViewState extends State<MenuView> {
               title: "Assembly Items",
               iconData: CupertinoIcons.cube_box,
               destination: AssemblyItemManagement()) // New menu item added.
-        ]),
+        ],
+      destination: Text('Placeholder'),//TODO:FIX
+    ),
     MenuItem(
         title: "Accounting",
         iconData: CupertinoIcons.cube_box_fill,
@@ -93,7 +100,8 @@ class MenuViewState extends State<MenuView> {
           //     iconData: CupertinoIcons.money_dollar_circle_fill,
           //     destination: AssemblyItemManagement()) // New menu item added.
         ],
-        destination: null),
+      destination: Text('Placeholder'),//TODO:FIX
+    ),
     // Add more menu items/categories here if needed.
   ];
 
