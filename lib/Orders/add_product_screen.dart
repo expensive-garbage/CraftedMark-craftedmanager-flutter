@@ -54,7 +54,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               controller: _descriptionController,
               placeholder: 'Enter product description',
               decoration: BoxDecoration(
-                color: CupertinoColors.systemGrey6,
+                color: CupertinoColors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),

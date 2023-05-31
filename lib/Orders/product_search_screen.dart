@@ -1,5 +1,4 @@
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProductSearchScreen extends StatefulWidget {
@@ -33,87 +32,89 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      theme: const CupertinoThemeData(
+    return MaterialApp(
+      theme: ThemeData(
         brightness: Brightness.dark,
+        appBarTheme: AppBarTheme(backgroundColor: Colors.black),
       ),
-      home: CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(
-          middle: Text('Search Product'),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Search Product'),
         ),
-        child: SafeArea(
+        body: SafeArea(
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: CupertinoTextField(
+                child: TextField(
                   controller: _searchController,
                   onChanged: _filterProducts,
-                  placeholder: 'Search product',
+                  decoration: InputDecoration(
+                    labelText: 'Search product',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
                   itemCount: filteredProducts.length,
                   itemBuilder: (context, index) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: CupertinoListTile(
-                        title: Text(filteredProducts[index].name),
-                        subtitle: Text(filteredProducts[index].description),
-                        trailing:
-                            Text('\$${filteredProducts[index].retailPrice}'),
-                        onTap: () {
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CupertinoAlertDialog(
-                                title: const Text('Add to Order'),
-                                content: Column(
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    Text(filteredProducts[index]
-                                        .name), // Changed this line
-                                    const SizedBox(height: 8),
-                                    CupertinoPicker(
-                                      itemExtent: 32,
-                                      onSelectedItemChanged: (value) {
-                                        selectedQuantity = value + 1;
-                                      },
-                                      children: List.generate(
-                                        100,
-                                        (index) => Text('${index + 1}'),
-                                      ),
+                    return ListTile(
+                      title: Text(filteredProducts[index].name),
+                      subtitle: Text(filteredProducts[index].description),
+                      trailing:
+                          Text('\$${filteredProducts[index].retailPrice}'),
+                      onTap: () {
+                        TextEditingController quantityController =
+                            TextEditingController(text: '1');
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Add to Order'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text(filteredProducts[index].name),
+                                  const SizedBox(height: 8),
+                                  TextFormField(
+                                    controller: quantityController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: 'Quantity',
+                                      border: OutlineInputBorder(),
                                     ),
-                                  ],
-                                ),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    isDefaultAction: true,
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                  CupertinoDialogAction(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(
-                                        context,
-                                        {
-                                          'product': filteredProducts[index],
-                                          'quantity': selectedQuantity,
-                                        },
-                                      );
-                                    },
-                                    child: const Text("Add to Order"),
                                   ),
                                 ],
-                              );
-                            },
-                          );
-                        },
-                      ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    selectedQuantity =
+                                        int.parse(quantityController.text);
+                                    Navigator.pop(context);
+                                    Navigator.pop(
+                                      context,
+                                      {
+                                        'product': filteredProducts[index],
+                                        'quantity': selectedQuantity,
+                                      },
+                                    );
+                                  },
+                                  child: const Text("Add to Order"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
