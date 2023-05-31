@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OneSignalAPI {
   static const _url = "https://onesignal.com/api/v1/notifications";
@@ -24,7 +25,7 @@ class OneSignalAPI {
       "content-type": "application/json"
     };
     try {
-      var result = await http.post(uri, headers: headers, body: payload);
+      var result = await http.post(uri, headers: headers, body: jsonEncode(payload));
 
       print( result.body.toString());
     }catch(e){
