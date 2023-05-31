@@ -12,7 +12,10 @@ class OrderPostgres {
     for (final row in results) {
       orders.add(row.toColumnMap());
     }
-
+    print("------------------------------------");
+    print("Orders received from Postgres");
+    orders.forEach((o) =>print( o["order_id"]));
+    print("------------------------------------");
     await connection.close();
     return orders;
   }
