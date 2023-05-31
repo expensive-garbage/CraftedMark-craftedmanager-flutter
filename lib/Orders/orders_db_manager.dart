@@ -139,6 +139,36 @@ SELECT address1, city, state, zip FROM people WHERE id = @customer_id
     }
   }
 
+  Future<bool> updateOrderStatusAndArchived(Order updatedOrder) async {
+    try {
+      final connection = await openConnection();
+      print('Connection opened');
+
+      await connection.transaction((ctx) async {
+        print(
+            'Updating order status and archived with values: ${updatedOrder.toMap()}');
+        // Update order in orders table
+        await ctx.query('''
+        UPDATE orders
+        SET order_status = @orderStatus, archived = @archived
+        WHERE order_id = @order_id
+      ''', substitutionValues: {
+          'order_id': updatedOrder.id,
+          'orderStatus': updatedOrder.orderStatus,
+          'archived': updatedOrder.archived,
+        });
+        print('Order status and archived updated');
+      });
+
+      await closeConnection(connection);
+      print('Connection closed');
+      return true;
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return false;
+    }
+  }
+
   Future<List<Order>> getAllOrders() async {
     final orders = <Order>[];
     try {
