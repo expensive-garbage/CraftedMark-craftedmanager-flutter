@@ -68,7 +68,7 @@ class Order {
     return Order(
       id: int.parse(map['order_id'].toString()),
       customerId: map['people_id'].toString(),
-      orderDate: parseOrderDate(map['orderDate'].toString()),
+      orderDate: parseOrderDate(map['order_date'].toString()),
       shippingAddress: map['shipping_address'] ?? '',
       billingAddress: map['billing_address'] ?? '',
       totalAmount:
