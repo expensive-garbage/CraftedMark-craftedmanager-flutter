@@ -46,9 +46,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   );
 
   List<String> orderStatuses = [
-    'Processing',
-    'Shipped',
-    'Delivered',
+    'Processing - Pending Payment',
+    'Processing - Paid',
+    'In Production',
+    'Ready to Pickup/ Ship',
+    'Delivered / Shipped',
+    'Completed',
+    'Archived',
     'Cancelled',
   ];
 
