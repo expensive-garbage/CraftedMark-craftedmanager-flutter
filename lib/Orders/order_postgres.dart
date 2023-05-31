@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:crafted_manager/Orders/database_functions.dart'; // Replace path/to/ with the correct path
+import 'package:crafted_manager/postgres.dart';
 
-class OrderPostgres {
+class OrdersPostgres {
   static Future<List<Map<String, dynamic>>> fetchAllOrders() async {
     final connection = await connectToPostgres();
     final results = await connection

@@ -40,20 +40,40 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       productName: '',
       totalAmount: 0,
       orderStatus: '',
+      archived: false,
+      notes: '',
     ),
   );
 
   List<String> orderStatuses = [
-    'Processing',
-    'Shipped',
-    'Delivered',
+    'Processing - Pending Payment',
+    'Processing - Paid',
+    'In Production',
+    'Ready to Pickup/ Ship',
+    'Delivered / Shipped',
+    'Completed',
+    'Archived',
     'Cancelled',
   ];
 
   void onStatusChanged(String newStatus) {
+    bool isArchived = (newStatus == 'Archived' || newStatus == 'Completed');
     _orderNotifier.value = _orderNotifier.value.copyWith(
       orderStatus: newStatus,
+      archived: isArchived,
     );
+
+    final orderPostgres = OrderPostgres();
+    orderPostgres
+        .updateOrderStatusAndArchived(_orderNotifier.value)
+        .then((success) {
+      if (success) {
+        print('Order status and archived updated successfully');
+        widget.onStateChanged();
+      } else {
+        print('Failed to update order status and archived');
+      }
+    });
   }
 
   void updateOrderDetails(Order updatedOrder) {
@@ -128,7 +148,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     const SizedBox(height: 24),
                     _orderedItemsList(),
                     const SizedBox(height: 16),
-                    _updateOrderStatusButton(),
+                    //_updateOrderStatusButton(),
                   ],
                 );
               },
@@ -268,49 +288,50 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ],
     );
   }
-
-  Widget _updateOrderStatusButton() {
-    return CupertinoButton.filled(
-      child: const Text('Update Order Status'),
-      onPressed: () async {
-        final orderPostgres = OrderPostgres();
-        bool success =
-            await orderPostgres.updateOrderStatus(_orderNotifier.value);
-        if (success) {
-          showCupertinoDialog<void>(
-            context: context,
-            builder: (BuildContext context) => CupertinoAlertDialog(
-              title: const Text('Success'),
-              content: const Text('Order status has been updated.'),
-              actions: <CupertinoDialogAction>[
-                CupertinoDialogAction(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close Dialog
-                    Navigator.pop(context); // Close screen
-                  },
-                ),
-              ],
-            ),
-          );
-        } else {
-          showCupertinoDialog<void>(
-            context: context,
-            builder: (BuildContext context) => CupertinoAlertDialog(
-              title: const Text('Error'),
-              content: const Text('Failed to update order status.'),
-              actions: <CupertinoDialogAction>[
-                CupertinoDialogAction(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close Dialog
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-      },
-    );
-  }
 }
+
+//   Widget _updateOrderStatusButton() {
+//     return CupertinoButton.filled(
+//       child: const Text('Update Order Status'),
+//       onPressed: () async {
+//         final orderPostgres = OrderPostgres();
+//         bool success =
+//             await orderPostgres.updateOrderStatus(_orderNotifier.value);
+//         if (success) {
+//           showCupertinoDialog<void>(
+//             context: context,
+//             builder: (BuildContext context) => CupertinoAlertDialog(
+//               title: const Text('Success'),
+//               content: const Text('Order status has been updated.'),
+//               actions: <CupertinoDialogAction>[
+//                 CupertinoDialogAction(
+//                   child: const Text('OK'),
+//                   onPressed: () {
+//                     Navigator.of(context).pop(); // Close Dialog
+//                     Navigator.pop(context); // Close screen
+//                   },
+//                 ),
+//               ],
+//             ),
+//           );
+//         } else {
+//           showCupertinoDialog<void>(
+//             context: context,
+//             builder: (BuildContext context) => CupertinoAlertDialog(
+//               title: const Text('Error'),
+//               content: const Text('Failed to update order status.'),
+//               actions: <CupertinoDialogAction>[
+//                 CupertinoDialogAction(
+//                   child: const Text('OK'),
+//                   onPressed: () {
+//                     Navigator.of(context).pop(); // Close Dialog
+//                   },
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
+//       },
+//     );
+//   }
+// }
