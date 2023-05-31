@@ -1,7 +1,7 @@
 import 'package:crafted_manager/Contacts/people_db_manager.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Orders/create_order_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SearchPeopleScreen extends StatefulWidget {
   @override
@@ -50,61 +50,63 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Search People'),
+    return MaterialApp(
+      theme: ThemeData.dark().copyWith(
+        appBarTheme: AppBarTheme(color: Colors.black),
+        scaffoldBackgroundColor: Colors.black,
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CupertinoTextField(
-                onChanged: _search,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: CupertinoColors.systemGrey,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                placeholder: 'Search',
-                clearButtonMode: OverlayVisibilityMode.editing,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.search,
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  People person = _searchResults[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) =>
-                              CreateOrderScreen(client: person),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom:
-                              BorderSide(color: CupertinoColors.systemGrey4),
-                        ),
-                      ),
-                      child: Text('${person.firstName} ${person.lastName}'),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Search People'),
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: TextField(
+                  onChanged: _search,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                  );
-                },
+                    hintText: 'Search',
+                  ),
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.search,
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _searchResults.length,
+                  itemBuilder: (context, index) {
+                    People person = _searchResults[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                CreateOrderScreen(client: person),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        child: Text('${person.firstName} ${person.lastName}'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
