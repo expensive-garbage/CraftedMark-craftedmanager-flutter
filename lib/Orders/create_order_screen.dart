@@ -3,6 +3,7 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
+import 'package:crafted_manager/services/one_signal_api.dart';
 import 'package:flutter/material.dart';
 
 import '../../Orders/orders_db_manager.dart';
@@ -62,7 +63,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     );
 
     Future<void> createOrder(
-        Order order, List<OrderedItem> orderedItems) async {
+        Order order,
+        List<OrderedItem> orderedItems) async {
       print("Creating new order...");
       print("Order data: ${newOrder.toMap()}");
       print(
@@ -71,8 +73,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       await OrderPostgres().createOrder(newOrder, orderedItems);
     }
 
-    await createOrder(
-        newOrder, orderedItems); // Call the 'createOrder' method here
+    await createOrder(newOrder, orderedItems); // Call the 'createOrder' method here
+    
+    OneSignalAPI.sendNotification("New Order from ${widget.client.firstName}");
   }
 
   @override
@@ -85,6 +88,15 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.lightBlue,
+          ),
+        ),
         title: const Text('Create Order'),
         backgroundColor: Colors.black,
         actions: [
@@ -94,7 +106,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               Navigator.pop(context);
             },
             child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.all(16),
               child: Text(
                 "Save Order",
                 style: TextStyle(color: Colors.blue),

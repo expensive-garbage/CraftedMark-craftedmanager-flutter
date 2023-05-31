@@ -26,40 +26,42 @@ class _AddAssemblyItemState extends State<AddAssemblyItem> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Add Assembly Item'),
-      ),
-      child: Container(
-        color: CupertinoColors.darkBackgroundGray,
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const Text(
-                  'Add Assembly Item',
-                  style: TextStyle(
-                    color: CupertinoColors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Add Assembly Item'),
+        ),
+        child: Container(
+          color: CupertinoColors.darkBackgroundGray,
+          padding: const EdgeInsets.only(top:45 , left: 16, right: 16),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    'Add Assembly Item',
+                    style: TextStyle(
+                      color: CupertinoColors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                _buildProductDropdown(),
-                const SizedBox(height: 16),
-                _buildIngredientDropdown(),
-                const SizedBox(height: 16),
-                _buildQuantityInput(),
-                const SizedBox(height: 16),
-                _buildUnitInput(),
-                const SizedBox(height: 32),
-                CupertinoButton.filled(
-                  child: const Text('Create Assembly Item'),
-                  onPressed: _submitForm,
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  _buildProductDropdown(),
+                  const SizedBox(height: 16),
+                  _buildIngredientDropdown(),
+                  const SizedBox(height: 16),
+                  _buildQuantityInput(),
+                  const SizedBox(height: 16),
+                  _buildUnitInput(),
+                  const SizedBox(height: 32),
+                  CupertinoButton.filled(
+                    child: const Text('Create Assembly Item'),
+                    onPressed: _submitForm,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
