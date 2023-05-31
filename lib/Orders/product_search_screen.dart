@@ -65,6 +65,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                       trailing:
                           Text('\$${filteredProducts[index].retailPrice}'),
                       onTap: () {
+                        TextEditingController quantityController =
+                            TextEditingController(text: '1');
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -76,19 +78,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                                   const SizedBox(height: 8),
                                   Text(filteredProducts[index].name),
                                   const SizedBox(height: 8),
-                                  DropdownButton<int>(
-                                    value: selectedQuantity,
-                                    onChanged: (int? newValue) {
-                                      setState(() {
-                                        selectedQuantity = newValue!;
-                                      });
-                                    },
-                                    items: List.generate(
-                                      100,
-                                      (index) => DropdownMenuItem<int>(
-                                        value: index + 1,
-                                        child: Text('${index + 1}'),
-                                      ),
+                                  TextFormField(
+                                    controller: quantityController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: 'Quantity',
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                 ],
@@ -102,6 +97,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
+                                    selectedQuantity =
+                                        int.parse(quantityController.text);
                                     Navigator.pop(context);
                                     Navigator.pop(
                                       context,
