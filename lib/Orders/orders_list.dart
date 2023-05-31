@@ -55,7 +55,7 @@ class _OrdersListState extends State<OrdersList> {
       ),
       body: SafeArea(
         child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: OrderPostgres.fetchAllOrders(),
+          future: OrdersPostgres.fetchAllOrders(),
           builder: (_, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
               final rawOrders = snapshot.data!;

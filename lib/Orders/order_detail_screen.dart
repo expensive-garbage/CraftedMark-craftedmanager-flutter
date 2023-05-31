@@ -40,6 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       productName: '',
       totalAmount: 0,
       orderStatus: '',
+      //notes: '',
     ),
   );
 
