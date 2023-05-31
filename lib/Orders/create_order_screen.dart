@@ -93,9 +93,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               await saveOrder();
               Navigator.pop(context);
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Text(
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
                 "Save Order",
                 style: TextStyle(color: Colors.blue),
               ),
@@ -141,7 +141,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                           content: TextFormField(
                             controller: quantityController,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Quantity',
                               border: OutlineInputBorder(),
                             ),
@@ -172,10 +172,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     }
                   }
                 },
-                child: const Text('Add Item'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),
+                child: const Text('Add Item'),
               ),
             ),
             Expanded(
@@ -207,7 +207,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   content: TextFormField(
                                     controller: quantityController,
                                     keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       labelText: 'Quantity',
                                       border: OutlineInputBorder(),
                                     ),
