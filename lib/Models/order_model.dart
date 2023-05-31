@@ -7,7 +7,8 @@ class Order {
   double totalAmount;
   String orderStatus;
   String productName;
-  //String notes;
+  String notes;
+  bool archived;
 
   Order({
     required this.id,
@@ -18,7 +19,8 @@ class Order {
     required this.totalAmount,
     required this.orderStatus,
     required this.productName,
-    //required this.notes,
+    required this.notes,
+    required this.archived,
   });
 
   Order copyWith({
@@ -30,7 +32,8 @@ class Order {
     double? totalAmount,
     String? orderStatus,
     String? productName,
-    //String? notes,
+    String? notes,
+    bool? archived,
   }) {
     return Order(
       id: id ?? this.id,
@@ -41,7 +44,8 @@ class Order {
       totalAmount: totalAmount ?? this.totalAmount,
       orderStatus: orderStatus ?? this.orderStatus,
       productName: productName ?? this.productName,
-      //notes: notes ?? this.notes,
+      notes: notes ?? this.notes,
+      archived: archived ?? this.archived,
     );
   }
 
@@ -55,7 +59,7 @@ class Order {
       'totalAmount': totalAmount,
       'orderStatus': orderStatus,
       'productName': productName,
-      //'notes': notes,
+      'notes': notes,
       //'firstName': firstName, // added new field
       //'lastName': lastName, // added new field
     };
@@ -80,7 +84,8 @@ class Order {
           double.tryParse(map['total_amount']?.toString() ?? '0') ?? 0.0,
       orderStatus: map['order_status'] ?? '',
       productName: map['product_name'] ?? '',
-      //notes: map['notes'] ?? '',
+      notes: map['notes'] ?? '',
+      archived: map['archived'] == 1,
       //firstName: map['first_name'] ?? '', // added new field
       //lastName: map['last_name'] ?? '', // added new field
     );

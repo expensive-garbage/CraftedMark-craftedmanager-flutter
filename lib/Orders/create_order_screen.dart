@@ -60,11 +60,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       // Convert the list of product names to a comma-separated string
       totalAmount: totalAmount,
       orderStatus: 'Pending',
+      notes: '',
+      archived: false,
     );
 
     Future<void> createOrder(
-        Order order,
-        List<OrderedItem> orderedItems) async {
+        Order order, List<OrderedItem> orderedItems) async {
       print("Creating new order...");
       print("Order data: ${newOrder.toMap()}");
       print(
@@ -73,8 +74,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       await OrderPostgres().createOrder(newOrder, orderedItems);
     }
 
-    await createOrder(newOrder, orderedItems); // Call the 'createOrder' method here
-    
+    await createOrder(
+        newOrder, orderedItems); // Call the 'createOrder' method here
+
     OneSignalAPI.sendNotification("New Order from ${widget.client.firstName}");
   }
 
