@@ -58,6 +58,15 @@ class _SearchPeopleScreenState extends State<SearchPeopleScreen> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Search People'),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.lightBlueAccent,
+            ),
+          ),
         ),
         body: SafeArea(
           child: Column(

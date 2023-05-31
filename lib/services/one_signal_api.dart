@@ -5,7 +5,7 @@ class OneSignalAPI {
   static const _restApiKey = "MzVhNWRjN2ItZDVmZC00ZTZiLTk5NzYtNzc2NDEyMTU2NWM2";
   static const _appKey = "fed52d24-522d-4653-ae54-3c23d0a735ac";
 
-  static const String companyName = "CraftedManager";
+  static const String _companyName = "CraftedManager";
 
   static Future<void> sendNotification(String message) async {
     var uri = Uri.parse(_url);
@@ -16,7 +16,7 @@ class OneSignalAPI {
       "contents": {
         "en": message,
       },
-      "name": companyName,
+      "name": _companyName,
     };
     var headers = {
       "accept": "application/json",
