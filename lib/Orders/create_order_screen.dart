@@ -116,16 +116,49 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                   final selectedProduct = await showDialog<Product>(
                     context: context,
                     builder: (BuildContext context) {
-                      return SimpleDialog(
-                        title: const Text('Select Product'),
-                        children: products.map((product) {
-                          return ListTile(
-                            title: Text(product.name),
-                            onTap: () {
-                              Navigator.pop(context, product);
-                            },
+                      TextEditingController searchController =
+                          TextEditingController();
+                      List<Product> filteredProducts = products;
+
+                      return StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return SimpleDialog(
+                            title: Column(
+                              children: [
+                                TextField(
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    labelText: "Search",
+                                    hintText: "Search products",
+                                    prefixIcon: Icon(Icons.search),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25.0)),
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      filteredProducts = products
+                                          .where((product) => product.name
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase()))
+                                          .toList();
+                                    });
+                                  },
+                                ),
+                                SizedBox(height: 16),
+                              ],
+                            ),
+                            children: filteredProducts.map((product) {
+                              return ListTile(
+                                title: Text(product.name),
+                                onTap: () {
+                                  Navigator.pop(context, product);
+                                },
+                              );
+                            }).toList(),
                           );
-                        }).toList(),
+                        },
                       );
                     },
                   );
