@@ -214,7 +214,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   child: Text(status),
                   onPressed: () {
                     onStatusChanged(status);
-                    widget.onStateChanged();
+                    // widget.onStateChanged();
                     Navigator.pop(context);
                   },
                 );
