@@ -2,9 +2,7 @@ import 'package:crafted_manager/Models/order_model.dart';
 import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
-import 'package:crafted_manager/Orders/product_search_screen.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Orders/orders_db_manager.dart';
@@ -115,15 +113,63 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                   List<Product> products =
                       await ProductPostgres.getAllProductsExceptIngredients();
 
-                  final result =
-                      await showCupertinoModalPopup<Map<String, dynamic>>(
+                  final selectedProduct = await showDialog<Product>(
                     context: context,
-                    builder: (BuildContext context) =>
-                        ProductSearchScreen(products: products),
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: const Text('Select Product'),
+                        children: products.map((product) {
+                          return ListTile(
+                            title: Text(product.name),
+                            onTap: () {
+                              Navigator.pop(context, product);
+                            },
+                          );
+                        }).toList(),
+                      );
+                    },
                   );
 
-                  if (result != null) {
-                    addOrderedItem(result['product'], result['quantity']);
+                  if (selectedProduct != null) {
+                    TextEditingController quantityController =
+                        TextEditingController(text: '1');
+                    final quantity = await showDialog<int>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Enter Quantity'),
+                          content: TextFormField(
+                            controller: quantityController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Quantity',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(
+                                  context,
+                                  int.parse(quantityController.text),
+                                );
+                              },
+                              child: const Text("Add"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    if (quantity != null) {
+                      addOrderedItem(selectedProduct, quantity);
+                    }
                   }
                 },
                 child: const Text('Add Item'),
@@ -151,24 +197,19 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                               builder: (BuildContext context) {
                                 int updatedQuantity =
                                     orderedItems[index].quantity;
+                                TextEditingController quantityController =
+                                    TextEditingController(
+                                        text: orderedItems[index]
+                                            .quantity
+                                            .toString());
                                 return AlertDialog(
                                   title: const Text('Edit Quantity'),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      children: List.generate(
-                                        100,
-                                        (index) => ListTile(
-                                          title: Text('${index + 1}'),
-                                          onTap: () {
-                                            updatedQuantity = index + 1;
-                                            setState(() {
-                                              orderedItems[index].quantity =
-                                                  updatedQuantity;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
+                                  content: TextFormField(
+                                    controller: quantityController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: 'Quantity',
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                   actions: [
@@ -177,6 +218,17 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         Navigator.pop(context);
                                       },
                                       child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          orderedItems[index].quantity =
+                                              int.parse(
+                                                  quantityController.text);
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Update"),
                                     ),
                                   ],
                                 );
