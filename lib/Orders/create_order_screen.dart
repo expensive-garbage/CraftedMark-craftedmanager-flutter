@@ -76,8 +76,14 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     await createOrder(
         newOrder, orderedItems); // Call the 'createOrder' method here
+    sendNewOrderNotification();
+  }
 
-    OneSignalAPI.sendNotification("New Order from ${widget.client.firstName}");
+  Future<void> sendNewOrderNotification() async {
+    var customerFullName = "${widget.client.firstName} ${widget.client.lastName}";
+    var payload = "New order from: $customerFullName";
+
+    await OneSignalAPI.sendNotification(payload);
   }
 
   @override
