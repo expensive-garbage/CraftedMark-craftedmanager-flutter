@@ -85,27 +85,32 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           previousValue + (element.productRetailPrice * element.quantity),
     );
 
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Create Order'),
-        trailing: GestureDetector(
-          onTap: () async {
-            await saveOrder();
-            Navigator.pop(context);
-          },
-          child: const Text(
-            "Save Order",
-            style: TextStyle(color: CupertinoColors.activeBlue),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Order'),
+        backgroundColor: Colors.black,
+        actions: [
+          GestureDetector(
+            onTap: () async {
+              await saveOrder();
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: const Text(
+                "Save Order",
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
-      child: SafeArea(
+      body: SafeArea(
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
-              child: CupertinoButton.filled(
-                child: const Text('Add Item'),
+              child: ElevatedButton(
                 onPressed: () async {
                   List<Product> products =
                       await ProductPostgres.getAllProductsExceptIngredients();
@@ -121,13 +126,17 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     addOrderedItem(result['product'], result['quantity']);
                   }
                 },
+                child: const Text('Add Item'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                ),
               ),
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: orderedItems.length,
                 itemBuilder: (context, index) {
-                  return CupertinoListTile(
+                  return ListTile(
                     title: Text(orderedItems[index].productName),
                     trailing:
                         Text('\$${orderedItems[index].productRetailPrice}'),
@@ -135,58 +144,49 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Qty: ${orderedItems[index].quantity}'),
-                        CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            "Edit Qty",
-                            style: TextStyle(color: CupertinoColors.activeBlue),
-                          ),
+                        TextButton(
                           onPressed: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 int updatedQuantity =
                                     orderedItems[index].quantity;
-                                return CupertinoAlertDialog(
+                                return AlertDialog(
                                   title: const Text('Edit Quantity'),
-                                  content: CupertinoPicker(
-                                    itemExtent: 32,
-                                    onSelectedItemChanged: (value) {
-                                      updatedQuantity = value + 1;
-                                    },
-                                    children: List.generate(
-                                      100,
-                                      (index) => Text('${index + 1}'),
-                                    ),
-                                    scrollController:
-                                        FixedExtentScrollController(
-                                      initialItem:
-                                          orderedItems[index].quantity - 1,
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      children: List.generate(
+                                        100,
+                                        (index) => ListTile(
+                                          title: Text('${index + 1}'),
+                                          onTap: () {
+                                            updatedQuantity = index + 1;
+                                            setState(() {
+                                              orderedItems[index].quantity =
+                                                  updatedQuantity;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   actions: [
-                                    CupertinoDialogAction(
-                                      isDefaultAction: true,
+                                    TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                       child: const Text("Cancel"),
-                                    ),
-                                    CupertinoDialogAction(
-                                      onPressed: () {
-                                        setState(() {
-                                          orderedItems[index].quantity =
-                                              updatedQuantity;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Update"),
                                     ),
                                   ],
                                 );
                               },
                             );
                           },
+                          child: const Text(
+                            "Edit Qty",
+                            style: TextStyle(color: Colors.blue),
+                          ),
                         ),
                       ],
                     ),
