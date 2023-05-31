@@ -62,13 +62,16 @@ class _OrdersListState extends State<OrdersList> {
 
               final orders =
                   rawOrders.map((rawOrder) => Order.fromMap(rawOrder)).toList();
-              orders.sort((o1, o2) => o1.orderDate.compareTo(o2.orderDate));
+              var sortedOrders = _sortOrderByStatus(orders);
+              // orders.sort((o1, o2) => o1.orderDate.compareTo(o2.orderDate));
 
-              if (orders != null) {
+
+
+              if (sortedOrders != null) {
                 return RefreshableListView(
-                  itemCount: orders.length,
+                  itemCount: sortedOrders.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _orderWidget(orders[index]);
+                    return _orderWidget(sortedOrders[index]);
                   },
                   onRefresh: _refreshOrdersList,
                 );
@@ -91,6 +94,14 @@ class _OrdersListState extends State<OrdersList> {
       ),
     );
   }
+
+  List<Order> _sortOrderByStatus(List<Order> orders){
+    var archivedOrders = orders.where((o) => o.orderStatus == "Archived").toList();
+    var cancelledOrders = orders.where((o) => o.orderStatus == "Cancelled").toList();
+    var otherOrders = orders.where((o) =>o.orderStatus !="Cancelled" && o.orderStatus != "Archived").toList();
+
+    return [...otherOrders, ...cancelledOrders, ...archivedOrders];
+}
 
   Future<People> _getCustomerById(int customerId) async {
     //TODO: find out why the customer can be null
