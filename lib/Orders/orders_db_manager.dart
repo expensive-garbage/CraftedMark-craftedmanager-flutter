@@ -264,8 +264,8 @@ VALUES (@order_id, @customerId, @orderDate, @shippingAddress, @billingAddress, @
           }}');
           await ctx.query('''
   INSERT INTO ordered_items
-    (order_id, product_id, product_name, quantity, price, discount, description)
-  VALUES (@orderId, @productId, @productName, @quantity, @price, @discount, @description)
+    (order_id, product_id, product_name, quantity, price, discount, description, status)
+  VALUES (@orderId, @productId, @productName, @quantity, @price, @discount, @description, @status )
 ''', substitutionValues: {
             ...item.toMap(),
             'orderId': order.id,

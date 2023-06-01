@@ -66,6 +66,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   }
 
   void addOrderedItem(Product product, int quantity) {
+    //TODO: replace by variable
+    var newOrderItemStatus = 'Processing - Pending Payment';
+
     int existingIndex = _orderedItems
         .indexWhere((orderedItem) => orderedItem.productId == product.id);
 
@@ -89,6 +92,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           discount: 0,
           productDescription: product.description,
           productRetailPrice: product.retailPrice,
+          status: newOrderItemStatus,
         ));
         _subTotal = calculateSubtotal();
       });

@@ -22,6 +22,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   double shippingCost = 10.0; // Default shipping cost
 
   void addOrderedItem(Product product, int quantity) {
+    //TODO: replace by variable
+    var newOrderItemStatus = 'Processing - Pending Payment';
+
     setState(() {
       orderedItems.add(OrderedItem(
         id: orderedItems.length + 1,
@@ -34,6 +37,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         discount: 0,
         productDescription: product.description,
         productRetailPrice: product.retailPrice,
+        status: newOrderItemStatus,
       ));
     });
   }
@@ -41,8 +45,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   Future<void> saveOrder() async {
     double subTotal = orderedItems.fold(
       0.0,
-      (previousValue, element) =>
-          previousValue + (element.price * element.quantity),
+      (prev, current) => prev + (current.price * current.quantity),
     );
     double totalAmount = subTotal + shippingCost;
 

@@ -281,6 +281,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       color: CupertinoColors.white,
                     ),
                   ),
+                  Text(
+                    'Item status: ${orderedItem.status}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.white,
+                    ),
+                  ),
                 ],
               ),
             ),

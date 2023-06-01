@@ -83,7 +83,7 @@ class OrderedItem {
       productDescription: map['description'] as String? ?? '',
       // Add the null check and default value here
       productRetailPrice: parseNum(map['retail_price']).toDouble(),
-      status: map['status'],
+      status: map['status'] ?? "Unknown",
     );
   }
 
