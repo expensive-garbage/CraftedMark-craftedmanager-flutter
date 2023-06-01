@@ -96,12 +96,21 @@ class _OrdersListState extends State<OrdersList> {
   }
 
   List<Order> _sortOrderByStatus(List<Order> orders){
-    var archivedOrders = orders.where((o) => o.orderStatus == "Archived").toList();
-    var cancelledOrders = orders.where((o) => o.orderStatus == "Cancelled").toList();
     var otherOrders = orders.where((o) =>o.orderStatus !="Cancelled" && o.orderStatus != "Archived").toList();
+    var cancelledOrders = orders.where((o) => o.orderStatus == "Cancelled").toList();
+    var archivedOrders = orders.where((o) => o.orderStatus == "Archived").toList();
+
+    _sortOrderByDate(otherOrders);
+    _sortOrderByDate(cancelledOrders);
+    _sortOrderByDate(archivedOrders);
+
 
     return [...otherOrders, ...cancelledOrders, ...archivedOrders];
 }
+  void _sortOrderByDate(List<Order> orders){
+    orders.sort((o1, o2)=>o2.orderDate.compareTo(o1.orderDate));
+  }
+
 
   Future<People> _getCustomerById(int customerId) async {
     //TODO: find out why the customer can be null
