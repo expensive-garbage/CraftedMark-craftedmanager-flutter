@@ -80,7 +80,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   }
 
   Future<void> sendNewOrderNotification() async {
-    var customerFullName = "${widget.client.firstName} ${widget.client.lastName}";
+    var customerFullName =
+        "${widget.client.firstName} ${widget.client.lastName}";
     var payload = "New order from: $customerFullName";
 
     await OneSignalAPI.sendNotification(payload);
@@ -93,6 +94,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       (previousValue, element) =>
           previousValue + (element.productRetailPrice * element.quantity),
     );
+    void updateOrderedItemPrice(int index, double newPrice) {
+      setState(() {
+        orderedItems[index].price = newPrice;
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -236,9 +242,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 itemCount: orderedItems.length,
                 itemBuilder: (context, index) {
                   return ListTile(
+                    // Add the 'return' statement here
                     title: Text(orderedItems[index].productName),
-                    trailing:
-                        Text('\$${orderedItems[index].productRetailPrice}'),
+                    trailing: Text('\$${orderedItems[index].price}'),
+                    // Use 'price' instead of 'productRetailPrice'
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -255,15 +262,35 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         text: orderedItems[index]
                                             .quantity
                                             .toString());
+                                // Add TextEditingController for the price
+                                TextEditingController priceController =
+                                    TextEditingController(
+                                        text: orderedItems[index]
+                                            .price
+                                            .toString());
                                 return AlertDialog(
-                                  title: const Text('Edit Quantity'),
-                                  content: TextFormField(
-                                    controller: quantityController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Quantity',
-                                      border: OutlineInputBorder(),
-                                    ),
+                                  title: const Text('Edit Quantity and Price'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        controller: quantityController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                          labelText: 'Quantity',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      TextFormField(
+                                        controller: priceController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                          labelText: 'Price',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   actions: [
                                     TextButton(
@@ -278,6 +305,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                           orderedItems[index].quantity =
                                               int.parse(
                                                   quantityController.text);
+                                          // Update the price of the ordered item
+                                          orderedItems[index].price =
+                                              double.parse(
+                                                  priceController.text);
                                         });
                                         Navigator.pop(context);
                                       },
@@ -289,7 +320,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             );
                           },
                           child: const Text(
-                            "Edit Qty",
+                            "Edit",
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
