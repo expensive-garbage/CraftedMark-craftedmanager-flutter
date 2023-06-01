@@ -30,17 +30,20 @@ List<MenuItem> menuItems = [
       MenuItem(
         title: "Open Orders",
         iconData: CupertinoIcons.doc_text_fill,
-        destination: OrdersList(title: "Orders"),
+        destination: const OrdersList(title: "Orders"),
       ),
       MenuItem(
         title: "Archived Orders",
         iconData: CupertinoIcons.archivebox_fill,
-        destination: const OrdersList(title: "Archive", listType: OrderListType.archived,),
+        destination: const OrdersList(
+          title: "Archive",
+          listType: OrderListType.archived,
+        ),
       ),
       MenuItem(
         title: "Invoices",
         iconData: CupertinoIcons.money_dollar,
-        destination: OrdersList(title: "Invoices"),
+        destination: const OrdersList(title: "Invoices"),
       ),
     ],
   ),
