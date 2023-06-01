@@ -9,6 +9,7 @@ class OrderedItem {
   double discount;
   String productDescription;
   double productRetailPrice;
+  String status;
 
   OrderedItem copyWith({
     int? id,
@@ -21,6 +22,7 @@ class OrderedItem {
     double? discount,
     String? productDescription,
     double? productRetailPrice,
+    String? status,
   }) {
     return OrderedItem(
       id: id ?? this.id,
@@ -33,6 +35,7 @@ class OrderedItem {
       discount: discount ?? this.discount,
       productDescription: productDescription ?? this.productDescription,
       productRetailPrice: productRetailPrice ?? this.productRetailPrice,
+      status: status ?? this.status,
     );
   }
 
@@ -47,6 +50,7 @@ class OrderedItem {
     required this.discount,
     required this.productDescription,
     required this.productRetailPrice,
+    required this.status,
   });
 
   // // Add the setter for quantity
@@ -79,6 +83,7 @@ class OrderedItem {
       productDescription: map['description'] as String? ?? '',
       // Add the null check and default value here
       productRetailPrice: parseNum(map['retail_price']).toDouble(),
+      status: map['status'] ?? "Unknown",
     );
   }
 
@@ -93,6 +98,7 @@ class OrderedItem {
       'discount': discount,
       'description': productDescription,
       'retail_price': productRetailPrice,
+      'status': status,
     };
   }
 
