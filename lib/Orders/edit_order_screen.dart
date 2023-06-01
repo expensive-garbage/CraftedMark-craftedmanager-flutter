@@ -3,7 +3,6 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Orders/orders_db_manager.dart';
@@ -113,78 +112,74 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      theme: CupertinoThemeData(
+    return MaterialApp(
+      theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: CupertinoColors.activeBlue,
+        primaryColor: Colors.blue,
       ),
-      home: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          middle: const Text('Edit Order'),
-          trailing: GestureDetector(
-            onTap: () async {
-              final updatedOrder = await updateOrder();
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Order'),
+          backgroundColor: Colors.black,
+          actions: [
+            GestureDetector(
+              onTap: () async {
+                final updatedOrder = await updateOrder();
 
-              if (updatedOrder != null) {
-                Navigator.pop(context, updatedOrder);
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (_) => CupertinoAlertDialog(
-                    title: const Text("Error"),
-                    content: const Text("Failed to update order."),
-                    actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        child: const Text("OK"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-            child: const Text(
-              "Save",
-              style: TextStyle(color: CupertinoColors.activeBlue),
+                if (updatedOrder != null) {
+                  Navigator.pop(context, updatedOrder);
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text("Error"),
+                      content: const Text("Failed to update order."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  "Save",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-        child: SafeArea(
+        backgroundColor: Colors.black,
+        body: SafeArea(
           child: ListView(
             children: [
               SizedBox(height: 12.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: CupertinoFormSection.insetGrouped(
-                  header: const Text('Order information'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CupertinoTextFormFieldRow(
-                      prefix: const Text('Customer:'),
+                    const Text('Order information',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    SizedBox(height: 12),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Customer:',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(),
+                      ),
                       enabled: false,
                       initialValue: widget.customer.firstName +
                           ' ' +
                           widget.customer.lastName,
-                    ),
-                    SizedBox(height: 12),
-                    CupertinoFormRow(
-                      prefix: const Text('Status:'),
-                      child: CupertinoSlidingSegmentedControl<String>(
-                        thumbColor: CupertinoColors.activeBlue,
-                        children: const <String, Widget>{
-                          'Pending': Text('Pending'),
-                          'In-Progress': Text('In-Progress'),
-                          'Completed': Text('Completed'),
-                        },
-                        groupValue: _status,
-                        onValueChanged: (String? value) {
-                          setState(() {
-                            _status = value ?? '-';
-                          });
-                        },
-                      ),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
@@ -192,14 +187,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: CupertinoButton.filled(
-                  child: const Text('Add Item'),
+                child: ElevatedButton(
                   onPressed: () async {
                     List<Product> products =
                         await ProductPostgres.getAllProductsExceptIngredients();
 
-                    final result =
-                        await showCupertinoModalPopup<Map<String, dynamic>>(
+                    final result = await showDialog<Map<String, dynamic>>(
                       context: context,
                       builder: (BuildContext context) =>
                           ProductSearchScreen(products: products),
@@ -209,6 +202,10 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                       addOrderedItem(result['product'], result['quantity']);
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                  child: const Text('Add Item'),
                 ),
               ),
               SizedBox(height: 10.0),
@@ -217,35 +214,72 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _orderedItems.length,
                 itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: Key(_orderedItems[index].id.toString()),
-                    onDismissed: (direction) {
-                      setState(() {
-                        _orderedItems.removeAt(index);
-                        _subTotal = calculateSubtotal();
-                      });
-                    },
-                    background:
-                        Container(color: CupertinoColors.destructiveRed),
-                    child: CupertinoFormRow(
+                  return Card(
+                    color: Colors.black,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Text(_orderedItems[index].productName),
-                              const SizedBox(width: 10.0),
-                              Text('Qty: ${_orderedItems[index].quantity}'),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              editOrderedItem(index);
-                            },
-                            child: const Icon(
-                              CupertinoIcons.minus_circled,
-                              color: CupertinoColors.destructiveRed,
+                          Expanded(
+                            child: Text(
+                              _orderedItems[index].productName,
+                              style: const TextStyle(color: Colors.white),
                             ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Quantity',
+                                labelStyle: TextStyle(color: Colors.white),
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.number,
+                              initialValue:
+                                  _orderedItems[index].quantity.toString(),
+                              onChanged: (value) {
+                                int newQuantity = int.tryParse(value) ?? 0;
+                                setState(() {
+                                  _orderedItems[index] =
+                                      _orderedItems[index].copyWith(
+                                    quantity: newQuantity,
+                                  );
+                                  _subTotal = calculateSubtotal();
+                                });
+                              },
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Price',
+                                labelStyle: TextStyle(color: Colors.white),
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.number,
+                              initialValue:
+                                  _orderedItems[index].price.toString(),
+                              onChanged: (value) {
+                                double newPrice = double.tryParse(value) ?? 0.0;
+                                setState(() {
+                                  _orderedItems[index] =
+                                      _orderedItems[index].copyWith(
+                                    price: newPrice,
+                                  );
+                                  _subTotal = calculateSubtotal();
+                                });
+                              },
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            onPressed: () => editOrderedItem(index),
+                            icon: const Icon(Icons.remove_circle_outline,
+                                color: Colors.red),
                           ),
                         ],
                       ),
@@ -253,27 +287,45 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                   );
                 },
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 10.0),
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Subtotal:',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Text(
-                          '\$${_subTotal.toStringAsFixed(2)}',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ],
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Sub Total:',
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(),
+                  ),
+                  enabled: false,
+                  initialValue: '\$$_subTotal',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Order Status:',
+                    labelStyle: const TextStyle(color: Colors.white),
+                    border: const OutlineInputBorder(),
+                  ),
+                  value: _status,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _status = newValue!;
+                    });
+                  },
+                  items: ['Pending', 'In-Progress', 'Completed']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: 10.0),
             ],
           ),
         ),

@@ -1,14 +1,14 @@
 class OrderedItem {
-  final int id;
-  final int orderId;
-  final String productName;
-  final int productId;
-  final String name;
-  final int quantity;
-  final double price;
-  final double discount;
-  final String productDescription;
-  final double productRetailPrice;
+  int id;
+  int orderId;
+  String productName;
+  int productId;
+  String name;
+  int quantity;
+  double price;
+  double discount;
+  String productDescription;
+  double productRetailPrice;
 
   OrderedItem copyWith({
     int? id,
@@ -49,10 +49,10 @@ class OrderedItem {
     required this.productRetailPrice,
   });
 
-  // Add the setter for quantity
-  set quantity(int newQuantity) {
-    this.quantity = newQuantity;
-  }
+  // // Add the setter for quantity
+  // set quantity(int newQuantity) {
+  //   this.quantity = newQuantity;
+  // }
 
   factory OrderedItem.fromMap(Map<String, dynamic> map) {
     num parseNum(dynamic value) {
@@ -95,4 +95,9 @@ class OrderedItem {
       'retail_price': productRetailPrice,
     };
   }
+
+// // Add a setter for the 'price' field
+//   set price(double newPrice) {
+//     this.price = newPrice;
+//   }
 }
