@@ -3,6 +3,7 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'edit_order_screen.dart';
 import 'orders_db_manager.dart';
@@ -233,6 +234,68 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
+  static const ORDERED_ITEMS_STATUSES = [
+    "test", "test2", "test3", "Unknown"
+  ];
+
+  void _updateItem(OrderedItem item, String newStatus) {}
+
+  void _applyUpdateTo(OrderedItem item) {
+    print("New status for $item: ${selection}");
+    Navigator.of(context).pop();
+  }
+
+  var selection = "";
+
+  Future<void> _changeItemStatus(OrderedItem item) async {
+    final res = await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        // The Bottom margin is provided to align the popup above the system navigation bar.
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        // Provide a background color for the popup.
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        // Use a SafeArea widget to avoid system overlaps.
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 150,
+                child: CupertinoPicker(
+                  magnification: 1.22,
+                  squeeze: 1.2,
+                  useMagnifier: true,
+                  itemExtent: 32,
+                  // This sets the initial item.
+                  scrollController: FixedExtentScrollController(
+                    initialItem: 0,
+                  ),
+                  // This is called when selected item is changed.
+                  onSelectedItemChanged: (int selectedItem) {
+                    selection = ORDERED_ITEMS_STATUSES[selectedItem];
+                  },
+                  children: List<Widget>.generate(ORDERED_ITEMS_STATUSES.length, (int index) {
+                    return Center(child: Text(ORDERED_ITEMS_STATUSES[index]));
+                  }),
+                ),
+              ),
+              TextButton(
+                onPressed: () => _applyUpdateTo(item),
+                child: const Text("Save")
+              )
+            ],
+          )
+        ),
+      ),
+    );
+  }
+
   Widget _orderedItemsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,11 +344,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       color: CupertinoColors.white,
                     ),
                   ),
-                  Text(
-                    'Item status: ${orderedItem.status}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: CupertinoColors.white,
+                  TextButton(
+                    onPressed: () => _changeItemStatus(orderedItem),
+                    child: Text(
+                      'Item status: ${orderedItem.status}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: CupertinoColors.white,
+                      ),
                     ),
                   ),
                 ],
