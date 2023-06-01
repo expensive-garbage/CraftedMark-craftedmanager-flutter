@@ -12,8 +12,21 @@ import '../Models/product_model.dart';
 import 'order_detail_screen.dart';
 import 'ordered_item_postgres.dart';
 
+
+enum OrderListType{
+  productionAndCancelled,
+  archived,
+}
+
 class OrdersList extends StatefulWidget {
-  const OrdersList({Key? key, required String title}) : super(key: key);
+  final OrderListType listType;
+  final String title;
+
+  const OrdersList({
+    Key? key,
+    required this.title,
+    this.listType = OrderListType.productionAndCancelled,
+  }) : super(key: key);
 
   @override
   _OrdersListState createState() => _OrdersListState();
@@ -38,7 +51,7 @@ class _OrdersListState extends State<OrdersList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Orders', style: TextStyle(color: Colors.white)),
+        title: Text(widget.title, style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             onPressed: () {
@@ -58,16 +71,20 @@ class _OrdersListState extends State<OrdersList> {
           future: OrdersPostgres.fetchAllOrders(),
           builder: (_, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
-              final rawOrders = snapshot.data!;
+              final rawOrders = snapshot.data;
 
-              final orders =
-                  rawOrders.map((rawOrder) => Order.fromMap(rawOrder)).toList();
-              var sortedOrders = _sortOrderByStatus(orders);
-              // orders.sort((o1, o2) => o1.orderDate.compareTo(o2.orderDate));
+              if (rawOrders != null && rawOrders.isNotEmpty) {
+                final orders = rawOrders.map((rawOrder) => Order.fromMap(rawOrder)).toList();
 
+                var sortedOrders = <Order>[];
+                if(widget.listType == OrderListType.archived){
+                  var archivedOrders = _getArchivedOrders(orders);
+                  _sortOrderByDate(archivedOrders);
+                  sortedOrders = archivedOrders;
+                }else{
+                  sortedOrders =  _sortOrder(orders);
+                }
 
-
-              if (sortedOrders != null) {
                 return RefreshableListView(
                   itemCount: sortedOrders.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -84,7 +101,8 @@ class _OrdersListState extends State<OrdersList> {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
-            } else {
+            }
+            else {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -95,18 +113,20 @@ class _OrdersListState extends State<OrdersList> {
     );
   }
 
-  List<Order> _sortOrderByStatus(List<Order> orders){
+  List<Order> _getArchivedOrders(List<Order> orders){
+    return orders.where((o) => o.orderStatus == "Archived").toList();
+  }
+
+  List<Order> _sortOrder(List<Order> orders){
     var otherOrders = orders.where((o) =>o.orderStatus !="Cancelled" && o.orderStatus != "Archived").toList();
     var cancelledOrders = orders.where((o) => o.orderStatus == "Cancelled").toList();
-    var archivedOrders = orders.where((o) => o.orderStatus == "Archived").toList();
 
     _sortOrderByDate(otherOrders);
     _sortOrderByDate(cancelledOrders);
-    _sortOrderByDate(archivedOrders);
 
+    return [...otherOrders, ...cancelledOrders];
+  }
 
-    return [...otherOrders, ...cancelledOrders, ...archivedOrders];
-}
   void _sortOrderByDate(List<Order> orders){
     orders.sort((o1, o2)=>o2.orderDate.compareTo(o1.orderDate));
   }
