@@ -33,6 +33,11 @@ List<MenuItem> menuItems = [
         destination: OrdersList(title: "Orders"),
       ),
       MenuItem(
+        title: "Archived Orders",
+        iconData: CupertinoIcons.archivebox_fill,
+        destination: const OrdersList(title: "Archive", listType: OrderListType.archived,),
+      ),
+      MenuItem(
         title: "Invoices",
         iconData: CupertinoIcons.money_dollar,
         destination: OrdersList(title: "Invoices"),
