@@ -235,7 +235,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   static const ORDERED_ITEMS_STATUSES = [
-    "test", "test2", "test3", "Unknown"
+    "In-Process",
+    "Ready for Delivery",
+    "Delivered",
   ];
 
   void _updateItem(OrderedItem item, String newStatus) {}
