@@ -26,6 +26,53 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
     });
   }
 
+  Future<Map<String, String>?> _showAddPricingListDialog(
+      BuildContext context) async {
+    TextEditingController _nameController = TextEditingController();
+    TextEditingController _descriptionController = TextEditingController();
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Pricing List Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                String name = _nameController.text.trim();
+                String description = _descriptionController.text.trim();
+                if (name.isNotEmpty) {
+                  Navigator.of(context)
+                      .pop({'name': name, 'description': description});
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final brightness = MediaQuery.of(context).platformBrightness;
@@ -108,15 +155,58 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                       CupertinoIcons.right_chevron,
                       color: CupertinoColors.activeOrange,
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CustomerPricingListScreen(
-                            customerId: _searchResults[index]['people']['id'],
+                    onTap: () async {
+                      int customerId = _searchResults[index]['people']['id'];
+                      print('Selected customer: $customerId');
+                      await CustomerBasedPricingDbManager.instance
+                          .updateCustomerBasedPricing(customerId, true);
+
+                      int? existingPricingListId = _searchResults[index]
+                          ['people']['assigned_pricing_list_id'];
+
+                      if (existingPricingListId != null) {
+                        print(
+                            "Existing pricing list found with id: $existingPricingListId");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CustomerPricingListScreen(
+                              customerId: customerId,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        Map<String, String>? pricingListData =
+                            await _showAddPricingListDialog(context);
+                        if (pricingListData != null) {
+                          int? pricingListId =
+                              await CustomerBasedPricingDbManager.instance
+                                  .addPricingList(
+                            customerId: customerId,
+                            name: pricingListData['name']!,
+                            description: pricingListData['description']!,
+                          );
+
+                          if (pricingListId != null) {
+                            // Update the assigned_pricing_list_id after creating the pricing list
+                            await CustomerBasedPricingDbManager.instance
+                                .updateCustomerPricingListId(
+                                    customerId, pricingListId);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CustomerPricingListScreen(
+                                  customerId: customerId,
+                                ),
+                              ),
+                            );
+                          } else {
+                            print(
+                                'Failed to create a new pricing list for customer: $customerId');
+                          }
+                        }
+                      }
                     },
                   ),
                 );
