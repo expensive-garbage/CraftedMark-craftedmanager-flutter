@@ -1,5 +1,8 @@
-import 'package:crafted_manager/Customer_Based_Pricing/cbp_db_manager.dart';
+import 'package:crafted_manager/CBP/cbp_db_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'cbp_list_product_screen.dart';
 
 class CustomerSearchScreen extends StatefulWidget {
   @override
@@ -14,8 +17,10 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
     List<Map<String, dynamic>> results =
         await CustomerBasedPricingDbManager.instance.search(
             'people',
-            'firstName ILIKE @searchText OR email ILIKE @searchText',
+            'firstname ILIKE @searchText OR email ILIKE @searchText',
             {'searchText': '%${_searchController.text}%'});
+    print(
+        'Search Results: $results'); // Add this line to print the search results
     setState(() {
       _searchResults = results;
     });
@@ -26,46 +31,48 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
     final brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
 
-    return CupertinoPageScaffold(
-      backgroundColor:
-          darkModeOn ? CupertinoColors.black : CupertinoColors.white,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor:
-            darkModeOn ? CupertinoColors.black : CupertinoColors.white,
-        middle: const Text(
+    return Scaffold(
+      backgroundColor: darkModeOn ? Colors.black : Colors.white,
+      appBar: AppBar(
+        backgroundColor: darkModeOn ? Colors.black : Colors.white,
+        title: const Text(
           'Customer Search',
-          style: TextStyle(color: CupertinoColors.activeGreen),
+          style: TextStyle(color: Colors.green),
+        ),
+        iconTheme: IconThemeData(
+          color: darkModeOn ? Colors.white : Colors.black,
         ),
       ),
-      child: Column(
+      body: Column(
         children: [
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: CupertinoTextField(
+            child: TextField(
               controller: _searchController,
               onChanged: (_) => _searchCustomers(),
-              placeholder: 'Search Customer',
+              decoration: InputDecoration(
+                hintText: 'Search Customer',
+                hintStyle: TextStyle(
+                  color: darkModeOn
+                      ? CupertinoColors.systemGrey
+                      : CupertinoColors.systemGrey3,
+                ),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Colors.orange,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                filled: true,
+                fillColor:
+                    darkModeOn ? Colors.black : CupertinoColors.systemGrey6,
+              ),
               style: TextStyle(
                   color: darkModeOn
                       ? CupertinoColors.white
-                      : CupertinoColors.black),
-              placeholderStyle: darkModeOn
-                  ? const TextStyle(color: CupertinoColors.systemGrey)
-                  : const TextStyle(color: CupertinoColors.systemGrey3),
-              prefix: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  CupertinoIcons.search,
-                  color: CupertinoColors.activeOrange,
-                ),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: darkModeOn
-                    ? CupertinoColors.black
-                    : CupertinoColors.systemGrey6,
-              ),
+                      : CupertinoColors.white),
             ),
           ),
           Expanded(
@@ -84,14 +91,14 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                   ),
                   child: CupertinoListTile(
                     title: Text(
-                      '${_searchResults[index]['firstname'] ?? ''} ${_searchResults[index]['lastname'] ?? ''} ',
+                      '${_searchResults[index]['people']['firstname'] ?? ''} ${_searchResults[index]['people']['lastname'] ?? ''} ',
                       style: TextStyle(
                           color: darkModeOn
                               ? CupertinoColors.white
                               : CupertinoColors.black),
                     ),
                     subtitle: Text(
-                      _searchResults[index]['email'] ?? '',
+                      _searchResults[index]['people']['email'] ?? '',
                       style: TextStyle(
                           color: darkModeOn
                               ? CupertinoColors.systemGrey
@@ -102,7 +109,14 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                       color: CupertinoColors.activeOrange,
                     ),
                     onTap: () {
-                      // Push pricing list creation screen with selected customerId.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CustomerPricingListScreen(
+                            customerId: _searchResults[index]['people']['id'],
+                          ),
+                        ),
+                      );
                     },
                   ),
                 );
