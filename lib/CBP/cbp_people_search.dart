@@ -126,6 +126,7 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
             child: ListView.builder(
               itemCount: _searchResults.length,
               itemBuilder: (BuildContext context, int index) {
+                final people = _searchResults[index]['people'] as Map<String, dynamic>;
                 return Container(
                   decoration: BoxDecoration(
                     border: darkModeOn
@@ -138,14 +139,14 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                   ),
                   child: CupertinoListTile(
                     title: Text(
-                      '${_searchResults[index]['people']['firstname'] ?? ''} ${_searchResults[index]['people']['lastname'] ?? ''} ',
+                      '${people['firstname'] ?? ''} ${people['lastname'] ?? ''} ',
                       style: TextStyle(
                           color: darkModeOn
                               ? CupertinoColors.white
                               : CupertinoColors.black),
                     ),
                     subtitle: Text(
-                      _searchResults[index]['people']['email'] ?? '',
+                      people['email'] ?? '',
                       style: TextStyle(
                           color: darkModeOn
                               ? CupertinoColors.systemGrey
@@ -155,65 +156,64 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                       CupertinoIcons.right_chevron,
                       color: CupertinoColors.activeOrange,
                     ),
-                    onTap: () async {
-                      int customerId = _searchResults[index]['people']['id'];
-                      print('Selected customer: $customerId');
-                      await CustomerBasedPricingDbManager.instance
-                          .updateCustomerBasedPricing(customerId, true);
-
-                      int? existingPricingListId = _searchResults[index]
-                          ['people']['assigned_pricing_list_id'];
-
-                      if (existingPricingListId != null) {
-                        print(
-                            "Existing pricing list found with id: $existingPricingListId");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CustomerPricingListScreen(
-                              customerId: customerId,
-                            ),
-                          ),
-                        );
-                      } else {
-                        Map<String, String>? pricingListData =
-                            await _showAddPricingListDialog(context);
-                        if (pricingListData != null) {
-                          int? pricingListId =
-                              await CustomerBasedPricingDbManager.instance
-                                  .addPricingList(
-                            customerId: customerId,
-                            name: pricingListData['name']!,
-                            description: pricingListData['description']!,
-                          );
-
-                          if (pricingListId != null) {
-                            // Update the assigned_pricing_list_id after creating the pricing list
-                            await CustomerBasedPricingDbManager.instance
-                                .updateCustomerPricingListId(
-                                    customerId, pricingListId);
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CustomerPricingListScreen(
-                                  customerId: customerId,
-                                ),
-                              ),
-                            );
-                          } else {
-                            print(
-                                'Failed to create a new pricing list for customer: $customerId');
-                          }
-                        }
-                      }
-                    },
+                    onTap: () => onTileTap(people),
                   ),
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future <void> onTileTap(Map<String,dynamic> peopleData) async {
+    int customerId = peopleData['id'];
+    print('Selected customer: $customerId');
+    await CustomerBasedPricingDbManager.instance
+        .updateCustomerBasedPricing(customerId, true);
+
+    int? existingPricingListId = peopleData['assigned_pricing_list_id'];
+
+    if (existingPricingListId != null) {
+      print(
+          "Existing pricing list found with id: $existingPricingListId");
+
+      _navigateToCPListScreen(customerId);
+    } else {
+      Map<String, String>? pricingListData =
+      await _showAddPricingListDialog(context);
+      if (pricingListData != null) {
+        int? pricingListId =
+        await CustomerBasedPricingDbManager.instance
+            .addPricingList(
+          customerId: customerId,
+          name: pricingListData['name']!,
+          description: pricingListData['description']!,
+        );
+
+        if (pricingListId != null) {
+          // Update the assigned_pricing_list_id after creating the pricing list
+          await CustomerBasedPricingDbManager.instance
+              .updateCustomerPricingListId(
+              customerId, pricingListId);
+
+          _navigateToCPListScreen(customerId);
+        } else {
+          print(
+              'Failed to create a new pricing list for customer: $customerId');
+        }
+      }
+    }
+  }
+
+  void _navigateToCPListScreen(int customerId){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CustomerPricingListScreen(
+          customerId: customerId,
+        ),
       ),
     );
   }
