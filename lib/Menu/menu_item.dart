@@ -1,10 +1,10 @@
+import 'package:crafted_manager/CBP/cbp_people_search.dart';
 import 'package:crafted_manager/Orders/orders_list.dart';
 import 'package:crafted_manager/Products/product_page.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../Assembly_Items/assembly_Item_list.dart';
 import '../Contacts/contact_lists.dart';
-import '../Customer_Based_Pricing/customer_based_pricing_screen.dart';
 import '../Financial/finances_list.dart';
 
 class MenuItem {
@@ -72,7 +72,7 @@ List<MenuItem> menuItems = [
       MenuItem(
         title: "Customer Based Pricing",
         iconData: CupertinoIcons.money_dollar_circle_fill,
-        destination: CustomerBasedPricingScreen(),
+        destination: CustomerSearchScreen(),
       ),
       MenuItem(
         title: "Assembly Items",
