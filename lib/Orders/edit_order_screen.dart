@@ -92,7 +92,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           discount: 0,
           productDescription: product.description,
           productRetailPrice: product.retailPrice,
-          status: newOrderItemStatus,
+          status: widget.order.orderStatus,
         ));
         _subTotal = calculateSubtotal();
       });
