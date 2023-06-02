@@ -14,6 +14,16 @@ class CustomerPricingListScreen extends StatefulWidget {
 class _CustomerPricingListScreenState extends State<CustomerPricingListScreen> {
   TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _searchResults = [];
+  int? _pricingListId;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      _pricingListId = await CustomerBasedPricingDbManager.instance
+          .getPricingListIdByCustomerId(widget.customerId);
+    });
+  }
 
   void _searchProducts() async {
     List<Map<String, dynamic>> results =
@@ -59,13 +69,17 @@ class _CustomerPricingListScreenState extends State<CustomerPricingListScreen> {
               onPressed: () async {
                 double newPrice = double.tryParse(_priceController.text) ?? 0;
                 if (newPrice > 0) {
-                  // Save the new price for the selected product and customer in the database.
+                  print(
+                      'Saving new price: $newPrice for product: $productId and customer: ${widget.customerId}');
                   await CustomerBasedPricingDbManager.instance
                       .addOrUpdateCustomerProductPricing(
                     productId: productId,
                     customerId: widget.customerId,
                     price: newPrice,
                   );
+                  setState(() {
+                    _searchProducts();
+                  });
                 }
                 Navigator.of(context).pop();
               },
