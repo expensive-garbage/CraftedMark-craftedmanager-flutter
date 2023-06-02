@@ -3,6 +3,8 @@
 import 'dart:io';
 
 import 'package:crafted_manager/Menu/menu_item.dart';
+import 'package:crafted_manager/WooCommerce/woosignal-service.dart';
+import 'package:crafted_manager/config.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,7 +20,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if(!Platform.isWindows){
-    await OneSignal.shared.setAppId("fed52d24-522d-4653-ae54-3c23d0a735ac");
+    await OneSignal.shared.setAppId(AppConfig.ONESIGNAL_APP_KEY);
     OneSignal.shared.promptUserForPushNotificationPermission();
 
     OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
@@ -26,6 +28,7 @@ Future<void> main() async {
       // TODO: open appropriate page
     });
   }
+  WooSignalService.init(AppConfig.WOOSIGNAL_APP_KEY);
   runApp(MyApp());
 }
 
