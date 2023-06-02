@@ -65,7 +65,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     }
   }
 
-  void addOrderedItem(Product product, int quantity) {
+  void addOrderedItem(Product product, int quantity, String itemSource) {
     //TODO: replace by variable
     var newOrderItemStatus = 'Processing - Pending Payment';
 
@@ -93,6 +93,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           productDescription: product.description,
           productRetailPrice: product.retailPrice,
           status: newOrderItemStatus,
+          itemSource: itemSource, // Add the item_source field here
         ));
         _subTotal = calculateSubtotal();
       });
@@ -203,7 +204,8 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                     );
 
                     if (result != null) {
-                      addOrderedItem(result['product'], result['quantity']);
+                      addOrderedItem(result['product'], result['quantity'],
+                          'Your item source here');
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -274,6 +276,26 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                                     price: newPrice,
                                   );
                                   _subTotal = calculateSubtotal();
+                                });
+                              },
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Item Source',
+                                labelStyle: TextStyle(color: Colors.white),
+                                border: OutlineInputBorder(),
+                              ),
+                              initialValue: _orderedItems[index].itemSource,
+                              onChanged: (value) {
+                                setState(() {
+                                  _orderedItems[index] =
+                                      _orderedItems[index].copyWith(
+                                    itemSource: value,
+                                  );
                                 });
                               },
                               style: const TextStyle(color: Colors.white),

@@ -21,7 +21,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   List<OrderedItem> orderedItems = [];
   double shippingCost = 10.0; // Default shipping cost
 
-  void addOrderedItem(Product product, int quantity) {
+  void addOrderedItem(Product product, int quantity, String item_source) {
     //TODO: replace by variable
     var newOrderItemStatus = 'Processing - Pending Payment';
 
@@ -38,6 +38,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         productDescription: product.description,
         productRetailPrice: product.retailPrice,
         status: newOrderItemStatus,
+        itemSource: item_source,
       ));
     });
   }
@@ -230,7 +231,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     );
 
                     if (quantity != null) {
-                      addOrderedItem(selectedProduct, quantity);
+                      addOrderedItem(selectedProduct, quantity, 'created');
                     }
                   }
                 },
