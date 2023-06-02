@@ -14,4 +14,17 @@ class OrderedItemPostgres {
         ? result.map((row) => OrderedItem.fromMap(row.toColumnMap())).toList()
         : [];
   }
+
+
+  static Future<void> updateOrderedItemStatus(int orderedItemId, String status) async {
+    final connection = await connectToPostgres();
+
+    final query = "UPDATE ordered_items SET status = @status WHERE ordered_item_id = @orderedItemId";
+    final values = {
+      'status': status,
+      'orderedItemId': orderedItemId
+    };
+
+    final result = await connection.query(query, substitutionValues: values);
+  }
 }

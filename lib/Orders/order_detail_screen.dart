@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'edit_order_screen.dart';
+import 'ordered_item_postgres.dart';
 import 'orders_db_manager.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -240,10 +241,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     "Delivered",
   ];
 
-  void _updateItem(OrderedItem item, String newStatus) {}
 
   void _applyUpdateTo(OrderedItem item) {
-    print("New status for $item: ${selection}");
+    final index = widget.orderedItems.indexOf(item);
+    widget.orderedItems[index].status = selection;
+    setState(() {});
+
+    OrderedItemPostgres.updateOrderedItemStatus(item.id, selection);
     Navigator.of(context).pop();
   }
 
@@ -282,9 +286,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   onSelectedItemChanged: (int selectedItem) {
                     selection = ORDERED_ITEMS_STATUSES[selectedItem];
                   },
-                  children: List<Widget>.generate(ORDERED_ITEMS_STATUSES.length, (int index) {
-                    return Center(child: Text(ORDERED_ITEMS_STATUSES[index]));
-                  }),
+                  children: List<Widget>.generate(
+                    ORDERED_ITEMS_STATUSES.length,
+                    (int index) {
+                      return Center(child: Text(ORDERED_ITEMS_STATUSES[index],),
+                      );
+                    },
+                  ),
                 ),
               ),
               TextButton(
