@@ -1,46 +1,59 @@
+
 import 'package:woosignal/models/response/customer.dart';
+import 'package:woosignal/models/response/order.dart';
 import 'package:woosignal/models/response/product.dart';
 import 'package:woosignal/woosignal.dart';
-import 'package:flutter/material.dart';
 
-import 'package:woosignal/woosignal.dart';
 
+/// WooSignal wrapper
+///
+/// Must be initialized before use
 class WooSignalService {
-  static const _appKey = "app_842c37c5a8066c3c8a8384b48ffc75";
 
-  WooSignalService._();
-  static final WooSignalService service = WooSignalService._();
-
-  static WooSignal? _api;
-
-  static Future<WooSignal> get _instance async {
-    if (_api != null){
-      return _api!;
-    }
-    else {
-      await WooSignal.instance.init(appKey: _appKey);
-      _api = WooSignal.instance;
-      return _api!;
-    }
+  static Future<void> init(String appKey) async{
+    await WooSignal.instance.init(appKey: appKey);
   }
 
-
-  Future <List<Product>> getProduct() async {
-    var ins = await _instance;
-    return  await ins.getProducts();//Unhandled Exception: type 'Null' is not a subtype of type 'List<dynamic>' in type cast
+  static Future <List<Product>> getProducts() async {
+    return WooSignal.instance.getProducts();
   }
 
-  // Future <List<Customer>> getCustomers() async {
-  //   return (await _instance).getCustomers();
-  // }
+  static Future <List<Customer>> getCustomers() async {
+    return WooSignal.instance.getCustomers();
+  }
 
-  // WooSignalService._();
-  // static  WooSignalService get instnce => WooSignalService._();
-  //
-  //
-  // static Future<void> initializeWooSignal() async {
-  //     WooSignal.instance.init(appKey: _appKey);
+  static Future<List<Order>> getOrders() async {
+    return WooSignal.instance.getOrders();
+  }
+
+  // static Future<> getOrders() async {
+  //   return WooSignal.instance.
   // }
   //
-  // static WooSignal getInstance() => instance;
+  // static Future<>  () async {
+  //   return WooSignal.instance.
+  // }
+  //
+  // static Future< >  () async {
+  //   return WooSignal.instance.
+  // }
+  //
+  // static Future< >  () async {
+  //   return WooSignal.instance.
+  // }
+  //
+  // static Future< >  () async {
+  //   return WooSignal.instance.
+  // }
+  // static Future< >  () async {
+  //   return WooSignal.instance.
+  // }
+  //
+  // static Future< >  () async {
+  //   return WooSignal.instance.
+  // }
+  //
+
+
+
 }

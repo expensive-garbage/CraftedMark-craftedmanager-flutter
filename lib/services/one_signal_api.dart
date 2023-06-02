@@ -1,10 +1,9 @@
+import 'package:crafted_manager/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class OneSignalAPI {
   static const _url = "https://onesignal.com/api/v1/notifications";
-  static const _restApiKey = "MzVhNWRjN2ItZDVmZC00ZTZiLTk5NzYtNzc2NDEyMTU2NWM2";
-  static const _appKey = "fed52d24-522d-4653-ae54-3c23d0a735ac";
 
   static const String _companyName = "CraftedManager";
 
@@ -13,7 +12,7 @@ class OneSignalAPI {
 
     var payload = {
       "included_segments": "Subscribed Users",
-      "app_id": _appKey,
+      "app_id": AppConfig.ONESIGNAL_APP_KEY,
       "contents": {
         "en": message,
       },
@@ -21,7 +20,7 @@ class OneSignalAPI {
     };
     var headers = {
       "accept": "application/json",
-      "Authorization": "Basic $_restApiKey",
+      "Authorization": "Basic ${AppConfig.ONESIGNAL_REST_API_KEY}",
       "content-type": "application/json"
     };
     try {
