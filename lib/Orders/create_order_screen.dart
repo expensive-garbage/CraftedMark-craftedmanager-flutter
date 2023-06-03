@@ -66,7 +66,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         name: product.name,
         quantity: quantity,
         price: customPrice ?? product.retailPrice,
-        // Use custom price if it exists, otherwise use the retail price
+        // check this line
         discount: 0,
         productDescription: product.description,
         productRetailPrice: product.retailPrice,
