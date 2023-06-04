@@ -3,6 +3,7 @@ import 'package:crafted_manager/Models/ordered_item_model.dart';
 import 'package:crafted_manager/Models/people_model.dart';
 import 'package:crafted_manager/Models/product_model.dart';
 import 'package:crafted_manager/Products/product_db_manager.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
 import '../../Orders/orders_db_manager.dart';
@@ -29,6 +30,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   late List<OrderedItem> _orderedItems;
   double _subTotal = 0.0;
   String _status = '';
+  EasyRefreshController _controller = EasyRefreshController();
 
   @override
   void initState() {

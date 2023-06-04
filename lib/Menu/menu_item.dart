@@ -1,4 +1,5 @@
 import 'package:crafted_manager/CBP/cbp_people_search.dart';
+import 'package:crafted_manager/Invoice/invoice_screen.dart';
 import 'package:crafted_manager/Orders/orders_list.dart';
 import 'package:crafted_manager/Products/product_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +44,7 @@ List<MenuItem> menuItems = [
       MenuItem(
         title: "Invoices",
         iconData: CupertinoIcons.money_dollar,
-        destination: const OrdersList(title: "Invoices"),
+        destination: InvoicingWidget(title: "Invoices"),
       ),
     ],
   ),
